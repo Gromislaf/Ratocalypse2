@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fa95f0f46948c46be620d3470c8b4a, type: 3}
+  m_Name: PlayerStats
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  baseMaxHp: 100
+  hpPerLevel: 15
+  hpRegenPerSecond: 0
+  baseMaxStamina: 100
+  staminaRegenPerSecond: 20
+  dodgeCost: 25
+  baseDamage: 10
+  damagePerLevel: 2
+  moveSpeed: 5
+  dodgeSpeed: 12
+  dodgeDuration: 0.3
+  baseArmor: 0
+  baseCritChance: 0.05
+  critMultiplier: 2
+  xpForLevel2: 100
+  xpScalingMultiplier: 1.4
+  maxLevel: 20
