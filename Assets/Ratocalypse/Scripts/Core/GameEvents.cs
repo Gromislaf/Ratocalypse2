@@ -1,9 +1,9 @@
 // ============================================================
 //  GameEvents.cs
-//  Ratpocalypse — Core/GameEvents.cs
+//  Ratpocalypse ï¿½ Core/GameEvents.cs
 //
 //  Wszystkie zdarzenia EventBus w jednym miejscu.
-//  Ka¿de zdarzenie to struct — zero alokacji na stercie.
+//  Kaï¿½de zdarzenie to struct ï¿½ zero alokacji na stercie.
 //
 //  Konwencja nazw: On + Kto + CoCzego
 //  np. OnPlayerDamaged, OnEnemyDied, OnItemPickedUp
@@ -11,15 +11,15 @@
 
 // ---- GRACZ -------------------------------------------------
 
-/// <summary>Gracz otrzyma³ obra¿enia.</summary>
+/// <summary>Gracz otrzymaï¿½ obraï¿½enia.</summary>
 public struct OnPlayerDamaged
 {
-    public float amount;        // ile obra¿eñ
-    public float currentHp;     // HP po obra¿eniach
+    public float amount;        // ile obraï¿½eï¿½
+    public float currentHp;     // HP po obraï¿½eniach
     public float maxHp;
 }
 
-/// <summary>Gracz siê uleczy³.</summary>
+/// <summary>Gracz siï¿½ uleczyï¿½.</summary>
 public struct OnPlayerHealed
 {
     public float amount;
@@ -27,17 +27,17 @@ public struct OnPlayerHealed
     public float maxHp;
 }
 
-/// <summary>Gracz zgin¹³.</summary>
+/// <summary>Gracz zginï¿½ï¿½.</summary>
 public struct OnPlayerDied { }
 
-/// <summary>Gracz u¿y³ staminy (uniku, ciê¿kiego ataku).</summary>
+/// <summary>Gracz uï¿½yï¿½ staminy (uniku, ciï¿½kiego ataku).</summary>
 public struct OnPlayerStaminaChanged
 {
     public float current;
     public float max;
 }
 
-/// <summary>Gracz zdoby³ XP.</summary>
+/// <summary>Gracz zdobyï¿½ XP.</summary>
 public struct OnPlayerXPGained
 {
     public float amount;
@@ -45,14 +45,14 @@ public struct OnPlayerXPGained
     public float xpToNextLevel;
 }
 
-/// <summary>Gracz awansowa³ na wy¿szy poziom.</summary>
+/// <summary>Gracz awansowaï¿½ na wyï¿½szy poziom.</summary>
 public struct OnPlayerLevelUp
 {
     public int newLevel;
-    public int skillPointsGained;   // ile punktów do drzewka
+    public int skillPointsGained;   // ile punktï¿½w do drzewka
 }
 
-/// <summary>Gracz zmieni³ aktywn¹ broñ.</summary>
+/// <summary>Gracz zmieniï¿½ aktywnï¿½ broï¿½.</summary>
 public struct OnWeaponChanged
 {
     public WeaponType newWeapon;
@@ -60,7 +60,7 @@ public struct OnWeaponChanged
 
 // ---- WALKA -------------------------------------------------
 
-/// <summary>Wróg otrzyma³ obra¿enia. U¿ywane do floating damage text.</summary>
+/// <summary>Wrï¿½g otrzymaï¿½ obraï¿½enia. Uï¿½ywane do floating damage text.</summary>
 public struct OnEnemyDamaged
 {
     public UnityEngine.GameObject enemy;
@@ -69,7 +69,7 @@ public struct OnEnemyDamaged
     public UnityEngine.Vector3 worldPosition;
 }
 
-/// <summary>Wróg zgin¹³.</summary>
+/// <summary>Wrï¿½g zginï¿½ï¿½.</summary>
 public struct OnEnemyDied
 {
     public UnityEngine.GameObject enemy;
@@ -78,7 +78,7 @@ public struct OnEnemyDied
     public float xpReward;
 }
 
-/// <summary>Gracz trafi³ krytycznie.</summary>
+/// <summary>Gracz trafiï¿½ krytycznie.</summary>
 public struct OnCriticalHit
 {
     public float damage;
@@ -95,36 +95,39 @@ public struct OnStatusEffectApplied
 
 // ---- EKWIPUNEK / LOOT --------------------------------------
 
-/// <summary>Gracz podniós³ przedmiot.</summary>
+/// <summary>Gracz podnisl przedmiot â€” trafil do plecaka.</summary>
 public struct OnItemPickedUp
 {
-    public string itemId;       // tymczasowo string — zast¹pione przez ItemData w kroku 8
+    public ItemData item;
 }
 
-/// <summary>Gracz za³o¿y³ przedmiot.</summary>
+/// <summary>Gracz zalozyl przedmiot.</summary>
 public struct OnItemEquipped
 {
-    public string itemId;
-    public EquipSlot slot;
+    public ItemData item;
+    public EquipmentSlot slot;
 }
 
-/// <summary>Gracz zdj¹³ przedmiot.</summary>
+/// <summary>Gracz zdjal przedmiot â€” wrocil do plecaka.</summary>
 public struct OnItemUnequipped
 {
-    public string itemId;
-    public EquipSlot slot;
+    public ItemData item;
+    public EquipmentSlot slot;
 }
+
+/// <summary>Zawartosc plecaka sie zmienila (dodano / usunieto item).</summary>
+public struct OnInventoryChanged { }
 
 // ---- MISJE -------------------------------------------------
 
-/// <summary>Misja rozpoczêta.</summary>
+/// <summary>Misja rozpoczï¿½ta.</summary>
 public struct OnQuestStarted
 {
     public string questId;
     public string questName;
 }
 
-/// <summary>Postêp misji (np. zabito kolejnego szczura).</summary>
+/// <summary>Postï¿½p misji (np. zabito kolejnego szczura).</summary>
 public struct OnQuestProgressUpdated
 {
     public string questId;
@@ -132,16 +135,16 @@ public struct OnQuestProgressUpdated
     public int required;
 }
 
-/// <summary>Misja ukoñczona.</summary>
+/// <summary>Misja ukoï¿½czona.</summary>
 public struct OnQuestCompleted
 {
     public string questId;
     public float xpReward;
 }
 
-// ---- DRZEWKO UMIEJÊTNOŒCI ----------------------------------
+// ---- DRZEWKO UMIEJï¿½TNOï¿½CI ----------------------------------
 
-/// <summary>Gracz odblokowa³ umiejêtnoœæ.</summary>
+/// <summary>Gracz odblokowaï¿½ umiejï¿½tnoï¿½ï¿½.</summary>
 public struct OnSkillUnlocked
 {
     public string skillId;
@@ -151,7 +154,7 @@ public struct OnSkillUnlocked
 
 // ---- UI / MENU ---------------------------------------------
 
-/// <summary>Ekwipunek otwarty / zamkniêty.</summary>
+/// <summary>Ekwipunek otwarty / zamkniï¿½ty.</summary>
 public struct OnInventoryToggled
 {
     public bool isOpen;
@@ -163,7 +166,7 @@ public struct OnGamePaused
     public bool isPaused;
 }
 
-/// <summary>Gracz dotar³ do punktu zapisu.</summary>
+/// <summary>Gracz dotarï¿½ do punktu zapisu.</summary>
 public struct OnCheckpointReached
 {
     public string checkpointId;
@@ -177,22 +180,22 @@ public struct OnGameSaved
 
 // ---- SCENA -------------------------------------------------
 
-/// <summary>Scena / obszar zosta³ za³adowany.</summary>
+/// <summary>Scena / obszar zostaï¿½ zaï¿½adowany.</summary>
 public struct OnSceneLoaded
 {
     public string sceneName;
 }
 
 // ============================================================
-//  Enumeratory u¿ywane przez zdarzenia
+//  Enumeratory uï¿½ywane przez zdarzenia
 // ============================================================
 
 public enum WeaponType
 {
-    Fists,          // go³e piêœci (domyœlne)
-    OneHanded,      // broñ jednorêczna (nó¿, siekiera)
-    TwoHanded,      // broñ oburêczna (rura, m³ot)
-    Ranged          // broñ dystansowa (uzi, pistolet)
+    Fists,          // goï¿½e piï¿½ci (domyï¿½lne)
+    OneHanded,      // broï¿½ jednorï¿½czna (nï¿½, siekiera)
+    TwoHanded,      // broï¿½ oburï¿½czna (rura, mï¿½ot)
+    Ranged          // broï¿½ dystansowa (uzi, pistolet)
 }
 
 public enum EnemyType
@@ -213,12 +216,14 @@ public enum StatusEffectType
     Slow
 }
 
-public enum EquipSlot
+public enum EquipmentSlot
 {
-    Weapon,
-    Armor,
-    Accessory1,
-    Accessory2
+    MainHand,
+    OffHand,
+    Helmet,
+    Chest,
+    Legs,
+    Boots
 }
 
 public enum SkillBranch

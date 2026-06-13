@@ -3,9 +3,8 @@
 //  Ratpocalypse — Core/FMODEvents.cs
 //
 //  Wszystkie referencje do eventów FMOD w jednym miejscu.
-//  ScriptableObject — ustawiasz ścieżki raz w Inspectorze,
-//  a reszta kodu używa AudioManager.Instance.PlayOneShot(
-//      FMODEvents.Instance.playerFootsteps, position).
+//  ScriptableObject — przypisz asset w Inspectorze GameManagera.
+//  Dostęp z kodu: GameManager.FMODEvents.playerFootsteps
 //
 //  Tworzenie: Assets → Create → Ratpocalypse → FMOD Events
 // ============================================================
@@ -16,20 +15,6 @@ using FMODUnity;
 [CreateAssetMenu(menuName = "Ratpocalypse/FMOD Events", fileName = "FMODEvents")]
 public class FMODEvents : ScriptableObject
 {
-    // --------------------------------------------------------
-    // Singleton — ładowany z Resources
-    // --------------------------------------------------------
-    private static FMODEvents _instance;
-    public static FMODEvents Instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = Resources.Load<FMODEvents>("FMODEvents");
-            return _instance;
-        }
-    }
-
     // --------------------------------------------------------
     // Gracz — ruch
     // --------------------------------------------------------

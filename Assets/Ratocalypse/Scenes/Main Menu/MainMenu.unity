@@ -606,6 +606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerStats: {fileID: 11400000, guid: 08df2da30d0a16943970a981a1e11923, type: 2}
+  fmodEvents: {fileID: 11400000, guid: cf7665ccf0f5cea419aba61f3728496e, type: 2}
   mainMenuSceneName: MainMenu
   firstGameSceneName: Act1_City
 --- !u!4 &482849606

@@ -1,59 +1,43 @@
-﻿// ============================================================
-//  PlayerStats.cs
-//  Ratpocalypse — Player/PlayerStats.cs
-//
-//  ScriptableObject przechowujący wszystkie statystyki gracza.
-//  Dane oddzielone od logiki — wiele systemów może czytać
-//  ten sam asset bez twardych referencji między sobą.
-//
-//  Tworzenie: Assets → Create → Ratpocalypse → Player Stats
-// ============================================================
-
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Ratpocalypse/Player Stats", fileName = "PlayerStats")]
 public class PlayerStats : ScriptableObject
 {
-    // --------------------------------------------------------
-    // Dane bazowe (ustawiane w Inspectorze, nie zmieniają się)
-    // --------------------------------------------------------
-
     [Header("Życie")]
     [Tooltip("Maksymalne HP na poziomie 1")]
     public float baseMaxHp = 100f;
-
     [Tooltip("O ile rośnie maxHP za każdy level")]
     public float hpPerLevel = 15f;
-
     [Tooltip("Regeneracja HP na sekundę (0 = brak)")]
     public float hpRegenPerSecond = 0f;
 
     [Header("Stamina")]
     [Tooltip("Maksymalna stamina")]
     public float baseMaxStamina = 100f;
-
     [Tooltip("Regeneracja staminy na sekundę")]
     public float staminaRegenPerSecond = 20f;
-
     [Tooltip("Koszt staminy na unik")]
     public float dodgeCost = 25f;
 
     [Header("Obrażenia")]
     [Tooltip("Bazowe obrażenia bez broni")]
     public float baseDamage = 10f;
-
     [Tooltip("O ile rosną obrażenia za każdy level")]
     public float damagePerLevel = 2f;
 
     [Header("Szybkość")]
     [Tooltip("Prędkość poruszania się (NavMeshAgent.speed)")]
     public float moveSpeed = 5f;
-
     [Tooltip("Prędkość uniku")]
     public float dodgeSpeed = 12f;
-
     [Tooltip("Czas trwania uniku w sekundach")]
     public float dodgeDuration = 0.3f;
+
+    [Header("Szybkość ataku")]
+    [Tooltip("Mnożnik animacji ataku (1 = normalna, 1.5 = 50% szybciej)")]
+    public float baseAttackSpeed = 1f;
+    [Tooltip("Wzrost szybkości ataku za każdy level")]
+    public float attackSpeedPerLevel = 0.02f;
 
     [Header("Obrona")]
     [Tooltip("Procentowa redukcja obrażeń (0–1)")]
@@ -64,49 +48,41 @@ public class PlayerStats : ScriptableObject
     [Tooltip("Szansa na trafienie krytyczne (0–1)")]
     [Range(0f, 1f)]
     public float baseCritChance = 0.05f;
-
     [Tooltip("Mnożnik obrażeń krytycznych")]
     public float critMultiplier = 2f;
 
     [Header("Progresja — XP")]
     [Tooltip("XP potrzebne do osiągnięcia level 2")]
     public float xpForLevel2 = 100f;
-
     [Tooltip("Mnożnik XP per level (level 3 = xpForLevel2 * multiplier)")]
     public float xpScalingMultiplier = 1.4f;
-
     [Tooltip("Maksymalny poziom gracza")]
     public int maxLevel = 20;
 
-    // --------------------------------------------------------
-    // Dane runtime (zmieniane podczas gry — RESET przy nowej grze)
-    // --------------------------------------------------------
-
+    // ---- Runtime (reset przy każdej nowej grze) ----
     [System.NonSerialized] public float currentHp;
     [System.NonSerialized] public float currentStamina;
     [System.NonSerialized] public float currentXP;
     [System.NonSerialized] public int currentLevel = 1;
     [System.NonSerialized] public int availableSkillPoints = 0;
 
-    // Bonusy z ekwipunku i umiejętności (addytywne)
+    // Bonusy z ekwipunku i umiejętności (addytywne, reset przy przeliczeniu ekwipunku)
     [System.NonSerialized] public float bonusDamage = 0f;
     [System.NonSerialized] public float bonusArmor = 0f;
     [System.NonSerialized] public float bonusCritChance = 0f;
     [System.NonSerialized] public float bonusMoveSpeed = 0f;
     [System.NonSerialized] public float bonusMaxHp = 0f;
+    [System.NonSerialized] public float bonusAttackSpeed = 0f;
 
-    // --------------------------------------------------------
-    // Właściwości obliczane (finalne wartości używane przez kod)
-    // --------------------------------------------------------
-
-    public float MaxHp => baseMaxHp + (hpPerLevel * (currentLevel - 1)) + bonusMaxHp;
-    public float MaxStamina => baseMaxStamina;
-    public float TotalDamage => baseDamage + (damagePerLevel * (currentLevel - 1)) + bonusDamage;
-    public float TotalArmor => Mathf.Clamp01(baseArmor + bonusArmor);
+    // ---- Właściwości obliczane ----
+    public float MaxHp           => baseMaxHp + (hpPerLevel * (currentLevel - 1)) + bonusMaxHp;
+    public float MaxStamina      => baseMaxStamina;
+    public float TotalDamage     => baseDamage + (damagePerLevel * (currentLevel - 1)) + bonusDamage;
+    public float TotalArmor      => Mathf.Clamp01(baseArmor + bonusArmor);
     public float TotalCritChance => Mathf.Clamp01(baseCritChance + bonusCritChance);
-    public float TotalMoveSpeed => moveSpeed + bonusMoveSpeed;
+    public float TotalMoveSpeed  => moveSpeed + bonusMoveSpeed;
+    public float TotalAttackSpeed => baseAttackSpeed + (attackSpeedPerLevel * (currentLevel - 1)) + bonusAttackSpeed;
 
-    /// <summary>XP potrzebne do następnego poziomu od zera.</summary>
     public float XPRequiredForNextLevel
     {
         get
@@ -116,14 +92,12 @@ public class PlayerStats : ScriptableObject
         }
     }
 
-    // --------------------------------------------------------
-    // Metody
-    // --------------------------------------------------------
+    // Resetuje runtime w Editorze między sesjami Play, żeby nie zaczynać z poprzednim stanem.
+    private void OnEnable()
+    {
+        InitializeForNewGame();
+    }
 
-    /// <summary>
-    /// Inicjalizacja na początku nowej gry lub po wczytaniu save'a.
-    /// Wywołaj z GameManager.StartNewGame() lub SaveSystem.Load().
-    /// </summary>
     public void InitializeForNewGame()
     {
         currentLevel = 1;
@@ -134,7 +108,6 @@ public class PlayerStats : ScriptableObject
         ResetBonuses();
     }
 
-    /// <summary>Zeruje bonusy — wywołaj przy każdorazowym przeliczeniu ekwipunku.</summary>
     public void ResetBonuses()
     {
         bonusDamage = 0f;
@@ -142,125 +115,70 @@ public class PlayerStats : ScriptableObject
         bonusCritChance = 0f;
         bonusMoveSpeed = 0f;
         bonusMaxHp = 0f;
+        bonusAttackSpeed = 0f;
     }
 
-    /// <summary>
-    /// Zadaj obrażenia graczowi. Uwzględnia pancerz.
-    /// Zwraca faktyczną ilość zadanych obrażeń po redukcji.
-    /// </summary>
+    // Poniższe metody modyfikują tylko dane — zdarzenia EventBus publikuje PlayerHealthComponent.
+
     public float TakeDamage(float rawDamage)
     {
         float reduced = rawDamage * (1f - TotalArmor);
-        reduced = Mathf.Max(reduced, 1f);   // minimum 1 obrażenie zawsze
+        reduced = Mathf.Max(reduced, 1f);
         currentHp = Mathf.Max(currentHp - reduced, 0f);
-
-        EventBus.Publish(new OnPlayerDamaged
-        {
-            amount = reduced,
-            currentHp = currentHp,
-            maxHp = MaxHp
-        });
-
-        if (currentHp <= 0f)
-            EventBus.Publish(new OnPlayerDied());
-
         return reduced;
     }
 
-    /// <summary>Ulecz gracza. Nie przekroczy MaxHp.</summary>
-    public void Heal(float amount)
+    public float Heal(float amount)
     {
         float actual = Mathf.Min(amount, MaxHp - currentHp);
         currentHp += actual;
-
-        EventBus.Publish(new OnPlayerHealed
-        {
-            amount = actual,
-            currentHp = currentHp,
-            maxHp = MaxHp
-        });
+        return actual;
     }
 
-    /// <summary>
-    /// Używa staminy. Zwraca false jeśli za mało staminy.
-    /// </summary>
     public bool UseStamina(float amount)
     {
         if (currentStamina < amount) return false;
-
         currentStamina = Mathf.Max(currentStamina - amount, 0f);
-        EventBus.Publish(new OnPlayerStaminaChanged
-        {
-            current = currentStamina,
-            max = MaxStamina
-        });
         return true;
     }
 
-    /// <summary>Regeneruje staminę (wywołuj co klatkę z delta time).</summary>
-    public void RegenerateStamina(float deltaTime)
+    // Zwraca true gdy stamina wzrosła — PlayerHealthComponent publikuje event tylko wtedy.
+    public bool RegenerateStamina(float deltaTime)
     {
-        if (currentStamina >= MaxStamina) return;
-
+        if (currentStamina >= MaxStamina) return false;
         currentStamina = Mathf.Min(currentStamina + staminaRegenPerSecond * deltaTime, MaxStamina);
-        EventBus.Publish(new OnPlayerStaminaChanged
-        {
-            current = currentStamina,
-            max = MaxStamina
-        });
+        return true;
     }
 
-    /// <summary>
-    /// Dodaj XP. Automatycznie sprawdza czy należy awansować.
-    /// </summary>
-    public void GainXP(float amount)
+    // Zwraca liczbę zdobytych poziomów (zazwyczaj 0 lub 1).
+    public int GainXP(float amount)
     {
-        if (currentLevel >= maxLevel) return;
-
+        if (currentLevel >= maxLevel) return 0;
         currentXP += amount;
-        EventBus.Publish(new OnPlayerXPGained
-        {
-            amount = amount,
-            totalXP = currentXP,
-            xpToNextLevel = XPRequiredForNextLevel
-        });
-
-        // Sprawdź czy można awansować (możliwy multi-level-up)
+        int levelsGained = 0;
         while (currentXP >= XPRequiredForNextLevel && currentLevel < maxLevel)
         {
             currentXP -= XPRequiredForNextLevel;
             LevelUp();
+            levelsGained++;
         }
+        return levelsGained;
     }
 
-    /// <summary>Prywatna metoda awansu. Wywoływana automatycznie przez GainXP.</summary>
-    void LevelUp()
+    private void LevelUp()
     {
+        float oldMaxHp = MaxHp;
         currentLevel++;
         availableSkillPoints++;
-
-        // Przywróć HP proporcjonalnie (nie pełne — gracz nie powinien leczyć się przez level up)
-        float hpPercent = currentHp / (MaxHp - hpPerLevel);
-        currentHp = Mathf.Min(hpPercent * MaxHp, MaxHp);
-
-        EventBus.Publish(new OnPlayerLevelUp
-        {
-            newLevel = currentLevel,
-            skillPointsGained = 1
-        });
+        // Skaluje HP proporcjonalnie — gracz nie leczy się przez level up, ale nie traci HP
+        currentHp = Mathf.Min((currentHp / oldMaxHp) * MaxHp, MaxHp);
     }
 
-    /// <summary>
-    /// Sprawdza czy atak jest krytyczny (losowanie).
-    /// </summary>
     public bool RollCrit()
     {
         return Random.value < TotalCritChance;
     }
 
-    /// <summary>
-    /// Oblicza finalne obrażenia ataku (z krytykiem jeśli applicable).
-    /// </summary>
     public float CalculateDamage(float weaponDamageBonus = 0f)
     {
         float damage = TotalDamage + weaponDamageBonus;

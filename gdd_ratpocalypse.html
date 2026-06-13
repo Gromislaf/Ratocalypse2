@@ -1,0 +1,282 @@
+
+<style>
+  .gdd { padding: 1.5rem 0; font-size: 15px; color: var(--color-text-primary); }
+  .section { margin-bottom: 2rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .section-header { padding: 0.75rem 1.25rem; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+  .section-body { padding: 1rem 1.25rem; background: var(--color-background-primary); }
+  .s-player { background: #EEEDFE; color: #3C3489; }
+  .s-combat { background: #FAECE7; color: #712B13; }
+  .s-enemy { background: #E1F5EE; color: #085041; }
+  .s-prog { background: #FAC775; color: #633806; }
+  .s-story { background: #E6F1FB; color: #0C447C; }
+  .s-tech { background: #F1EFE8; color: #444441; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+  .card-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-primary); }
+  .card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--border-radius-md); margin: 2px; }
+  .tag-purple { background: #EEEDFE; color: #3C3489; }
+  .tag-coral { background: #FAECE7; color: #712B13; }
+  .tag-teal { background: #E1F5EE; color: #085041; }
+  .tag-amber { background: #FAEEDA; color: #633806; }
+  .tag-blue { background: #E6F1FB; color: #0C447C; }
+  .tag-gray { background: #F1EFE8; color: #444441; }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 0.75rem 0; }
+  .row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .dot-purple { background: #7F77DD; }
+  .dot-coral { background: #D85A30; }
+  .dot-teal { background: #1D9E75; }
+  .dot-amber { background: #BA7517; }
+  .dot-blue { background: #378ADD; }
+  h3 { font-size: 14px; font-weight: 500; margin: 0 0 10px; color: var(--color-text-primary); }
+  .title-bar { display: flex; align-items: baseline; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .game-title { font-size: 22px; font-weight: 500; }
+  .game-sub { font-size: 14px; color: var(--color-text-secondary); }
+  .flag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: var(--border-radius-md); }
+  .enemy-row { display: grid; grid-template-columns: 120px 1fr 1fr; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .enemy-row:last-child { border-bottom: none; }
+  .enemy-name { font-weight: 500; color: var(--color-text-primary); }
+  .skill-tree { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .skill-branch { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem; }
+  .branch-title { font-size: 12px; font-weight: 500; margin-bottom: 8px; }
+  .skill-node { font-size: 11px; color: var(--color-text-secondary); padding: 3px 0; border-left: 2px solid var(--color-border-tertiary); padding-left: 8px; margin-bottom: 4px; }
+</style>
+
+<div class="gdd">
+  <div class="title-bar">
+    <span class="game-title">Ratpocalypse</span>
+    <span class="game-sub">Game Design Document v0.1</span>
+    <span class="flag tag-coral">WIP</span>
+  </div>
+
+  <div class="section">
+    <div class="section-header s-player"><i class="ti ti-run" aria-hidden="true"></i> Gracz i sterowanie</div>
+    <div class="section-body">
+      <div class="grid2">
+        <div>
+          <h3>Ruch</h3>
+          <div class="row"><div class="dot dot-purple"></div>Kliknięcie LPM na ziemię — porusz się do punktu (NavMesh)</div>
+          <div class="row"><div class="dot dot-purple"></div>Kliknięcie LPM na wroga — podejdź i atakuj</div>
+          <div class="row"><div class="dot dot-purple"></div>Kamera izometryczna, stały kąt, zoom scroll</div>
+          <div class="row"><div class="dot dot-purple"></div>Obrót postaci w stronę celu automatyczny</div>
+        </div>
+        <div>
+          <h3>Ataki podstawowe</h3>
+          <div class="row"><div class="dot dot-coral"></div>PPM — atak podstawowy (zależny od broni)</div>
+          <div class="row"><div class="dot dot-coral"></div>Q / W / E / R — umiejętności aktywne (sloty)</div>
+          <div class="row"><div class="dot dot-coral"></div>Shift + PPM — atak z rolką / uniku</div>
+          <div class="row"><div class="dot dot-coral"></div>Cooldown wizualny na ikonach umiejętności</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <h3>Statystyki gracza</h3>
+      <div class="grid3">
+        <div class="card"><div class="card-title">HP</div><div class="card-body">Pasek życia, regeneracja z itemów/umiejętności</div></div>
+        <div class="card"><div class="card-title">Stamina</div><div class="card-body">Koszt uniku i niektórych ataków, regeneruje się</div></div>
+        <div class="card"><div class="card-title">Obrażenia</div><div class="card-body">Bazowe + bonus z broni + bonus ze statystyk</div></div>
+        <div class="card"><div class="card-title">Szybkość ataku</div><div class="card-body">Modyfikowana przez ekwipunek i drzewko</div></div>
+        <div class="card"><div class="card-title">Pancerz</div><div class="card-body">Redukcja obrażeń %, z ekwipunku</div></div>
+        <div class="card"><div class="card-title">Krytyk</div><div class="card-body">% szansa + mnożnik obrażeń krytycznych</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header s-combat"><i class="ti ti-sword" aria-hidden="true"></i> System walki</div>
+    <div class="section-body">
+      <div class="grid2">
+        <div>
+          <h3>Bronie (typy)</h3>
+          <div class="row"><div class="dot dot-coral"></div><b style="color:var(--color-text-primary)">Broń jednoręczna</b> — szybka, krótki zasięg</div>
+          <div class="row"><div class="dot dot-coral"></div><b style="color:var(--color-text-primary)">Broń oburęczna</b> — wolna, duże obrażenia, AoE</div>
+          <div class="row"><div class="dot dot-coral"></div><b style="color:var(--color-text-primary)">Broń dystansowa (Uzi/pistolet)</b> — pocisk, zasięg</div>
+          <div class="row"><div class="dot dot-coral"></div><b style="color:var(--color-text-primary)">Improwizowana</b> — złom, rury, post-apo klimat</div>
+        </div>
+        <div>
+          <h3>Mechaniki walki</h3>
+          <div class="row"><div class="dot dot-amber"></div>Hitbox oparty na animacji (Animation Events → damage window)</div>
+          <div class="row"><div class="dot dot-amber"></div>Knockback przy silnych atakach</div>
+          <div class="row"><div class="dot dot-amber"></div>Iframes podczas uniku (krótka nietykalność)</div>
+          <div class="row"><div class="dot dot-amber"></div>Hit feedback — flash na modelu wroga + dźwięk</div>
+          <div class="row"><div class="dot dot-amber"></div>Liczby obrażeń (floating damage text)</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="grid2">
+        <div>
+          <h3>Umiejętności aktywne (4 sloty)</h3>
+          <div class="row"><div class="dot dot-purple"></div>Każda broń odblokuje własny zestaw umiejętności</div>
+          <div class="row"><div class="dot dot-purple"></div>Umiejętności ulepszane w drzewku</div>
+          <div class="row"><div class="dot dot-purple"></div>Cooldown per umiejętność</div>
+        </div>
+        <div>
+          <h3>Pasywne efekty</h3>
+          <div class="row"><div class="dot dot-teal"></div>Trucizna, krwawienie, ogłuszenie — status effects</div>
+          <div class="row"><div class="dot dot-teal"></div>Wrogowie też mogą aplikować statusy</div>
+          <div class="row"><div class="dot dot-teal"></div>Ikony statusów nad paskiem HP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header s-enemy"><i class="ti ti-bug" aria-hidden="true"></i> Wrogowie — szczury i mutanty</div>
+    <div class="section-body">
+      <div style="margin-bottom: 12px;">
+        <div class="enemy-row" style="font-weight:500; color: var(--color-text-secondary);">
+          <span>Typ</span><span>Zachowanie AI</span><span>Specjalność</span>
+        </div>
+        <div class="enemy-row">
+          <span class="enemy-name">Szczur zwykły</span>
+          <span style="color:var(--color-text-secondary)">Patrol → Chase → Atak bliski</span>
+          <span><span class="tag tag-gray">Grupowy</span></span>
+        </div>
+        <div class="enemy-row">
+          <span class="enemy-name">Opój (tank)</span>
+          <span style="color:var(--color-text-secondary)">Wolny, dużo HP, atak AoE</span>
+          <span><span class="tag tag-coral">Odporny</span></span>
+        </div>
+        <div class="enemy-row">
+          <span class="enemy-name">Spluwacz</span>
+          <span style="color:var(--color-text-secondary)">Ucieka gdy blisko, pluwa jadem</span>
+          <span><span class="tag tag-teal">Trucizna</span></span>
+        </div>
+        <div class="enemy-row">
+          <span class="enemy-name">Skoczek</span>
+          <span style="color:var(--color-text-secondary)">Teleportuje się za gracza</span>
+          <span><span class="tag tag-purple">Flankowanie</span></span>
+        </div>
+        <div class="enemy-row">
+          <span class="enemy-name">Alfa (mini-boss)</span>
+          <span style="color:var(--color-text-secondary)">Budzenie innych, fazy walki</span>
+          <span><span class="tag tag-amber">Fazy</span><span class="tag tag-coral">Wzmacniacz</span></span>
+        </div>
+        <div class="enemy-row">
+          <span class="enemy-name">Król Szczurów (boss)</span>
+          <span style="color:var(--color-text-secondary)">3 fazy, summon, AoE, ucieczka</span>
+          <span><span class="tag tag-coral">Boss</span><span class="tag tag-purple">Summon</span></span>
+        </div>
+      </div>
+      <h3>AI — maszyna stanów</h3>
+      <div class="grid3">
+        <div class="card"><div class="card-title">Patrol</div><div class="card-body">Waypoints, losowe trasy w strefie</div></div>
+        <div class="card"><div class="card-title">Alert</div><div class="card-body">Usłyszał/zobaczył gracza, wzywa grupę</div></div>
+        <div class="card"><div class="card-title">Chase</div><div class="card-body">NavMesh pathfinding, max dystans pogoni</div></div>
+        <div class="card"><div class="card-title">Attack</div><div class="card-body">Atak podstawowy + specjalny (cooldown)</div></div>
+        <div class="card"><div class="card-title">Stunned</div><div class="card-body">Chwilowe ogłuszenie po silnym trafieniu</div></div>
+        <div class="card"><div class="card-title">Dead</div><div class="card-body">Animacja śmierci, drop lootu, XP dla gracza</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header s-prog"><i class="ti ti-trending-up" aria-hidden="true"></i> Progresja — XP, poziomy, drzewko</div>
+    <div class="section-body">
+      <div class="grid2" style="margin-bottom:12px">
+        <div>
+          <h3>System XP i poziomów</h3>
+          <div class="row"><div class="dot dot-amber"></div>XP za zabicie wroga (skalowane typem)</div>
+          <div class="row"><div class="dot dot-amber"></div>XP za ukończenie misji</div>
+          <div class="row"><div class="dot dot-amber"></div>Level up → +1 punkt umiejętności + wzrost statystyk</div>
+          <div class="row"><div class="dot dot-amber"></div>Pasek XP widoczny w HUD</div>
+          <div class="row"><div class="dot dot-amber"></div>Maks poziom: 20 (na start)</div>
+        </div>
+        <div>
+          <h3>Ekwipunek</h3>
+          <div class="row"><div class="dot dot-teal"></div>Sloty: broń, zbroja, 2x akcesorium</div>
+          <div class="row"><div class="dot dot-teal"></div>Drop z wrogów + znajdowanie w świecie</div>
+          <div class="row"><div class="dot dot-teal"></div>Rzadkość: Złom / Ocalały / Zmutowany / Legendarny</div>
+          <div class="row"><div class="dot dot-teal"></div>Porównanie statystyk przy najechaniu</div>
+          <div class="row"><div class="dot dot-teal"></div>Brak craftingu (v1) — możliwe w przyszłości</div>
+        </div>
+      </div>
+      <h3>Drzewko umiejętności (3 gałęzie)</h3>
+      <div class="skill-tree">
+        <div class="skill-branch">
+          <div class="branch-title" style="color:#3C3489"><i class="ti ti-sword" aria-hidden="true"></i> Wojownik</div>
+          <div class="skill-node">Silny cios — ogłuszenie</div>
+          <div class="skill-node">Atak obrotowy — AoE</div>
+          <div class="skill-node">Furia — chwilowy +dmg</div>
+          <div class="skill-node">Ściana tarcz (pasywna)</div>
+          <div class="skill-node">Berserker — HP→DMG</div>
+        </div>
+        <div class="skill-branch">
+          <div class="branch-title" style="color:#085041"><i class="ti ti-bolt" aria-hidden="true"></i> Łowca</div>
+          <div class="skill-node">Strzał precyzyjny — krit</div>
+          <div class="skill-node">Pułapka — unieruchomienie</div>
+          <div class="skill-node">Seria — 3 strzały szybko</div>
+          <div class="skill-node">Oznaczenie celu (pasywna)</div>
+          <div class="skill-node">Eksplodujący pocisk</div>
+        </div>
+        <div class="skill-branch">
+          <div class="branch-title" style="color:#712B13"><i class="ti ti-flame" aria-hidden="true"></i> Ocalały</div>
+          <div class="skill-node">Adrenalina — regen HP</div>
+          <div class="skill-node">Drugi oddech — revive</div>
+          <div class="skill-node">Zatrucie odwrócone</div>
+          <div class="skill-node">Pancerz z odpadów</div>
+          <div class="skill-node">Ostatnia szansa (pasywna)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header s-story"><i class="ti ti-map" aria-hidden="true"></i> Fabuła i misje</div>
+    <div class="section-body">
+      <div class="grid2">
+        <div>
+          <h3>Setting</h3>
+          <div class="row"><div class="dot dot-blue"></div>Rok 2087 — po katastrofie biologicznej</div>
+          <div class="row"><div class="dot dot-blue"></div>Szczury zmutowały przez skażenie, zorganizowały się</div>
+          <div class="row"><div class="dot dot-blue"></div>Ludzie walczą o ostatnie schronienia</div>
+          <div class="row"><div class="dot dot-blue"></div>3 akty — Ruiny miasta / Kanały / Gniazdo Króla</div>
+        </div>
+        <div>
+          <h3>Typy misji</h3>
+          <div class="row"><div class="dot dot-purple"></div><b style="color:var(--color-text-primary)">Główne</b> — fabularne, boss na końcu aktu</div>
+          <div class="row"><div class="dot dot-purple"></div><b style="color:var(--color-text-primary)">Poboczne</b> — ocalali do uratowania, przedmioty do zdobycia</div>
+          <div class="row"><div class="dot dot-purple"></div><b style="color:var(--color-text-primary)">Polowanie</b> — zabij N wrogów danego typu</div>
+          <div class="row"><div class="dot dot-purple"></div><b style="color:var(--color-text-primary)">Obrona</b> — chroń punkt przez N fal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header s-tech"><i class="ti ti-code" aria-hidden="true"></i> Architektura techniczna</div>
+    <div class="section-body">
+      <div class="grid2">
+        <div>
+          <h3>Systemy do zbudowania (kolejność)</h3>
+          <div class="row"><div class="dot dot-purple"></div>1. EventBus — komunikacja między systemami</div>
+          <div class="row"><div class="dot dot-purple"></div>2. PlayerStats (ScriptableObject)</div>
+          <div class="row"><div class="dot dot-purple"></div>3. PlayerController — ruch + kamera</div>
+          <div class="row"><div class="dot dot-purple"></div>4. PlayerCombat — atak + hitbox okno animacji</div>
+          <div class="row"><div class="dot dot-purple"></div>5. EnemyAI — maszyna stanów</div>
+          <div class="row"><div class="dot dot-purple"></div>6. InventorySystem</div>
+          <div class="row"><div class="dot dot-purple"></div>7. XP / LevelSystem</div>
+          <div class="row"><div class="dot dot-purple"></div>8. SkillTree UI</div>
+          <div class="row"><div class="dot dot-purple"></div>9. QuestSystem</div>
+          <div class="row"><div class="dot dot-purple"></div>10. SaveSystem</div>
+        </div>
+        <div>
+          <h3>Zasady kodu</h3>
+          <div class="row"><div class="dot dot-gray"></div>Brak statycznych singletonów z danymi (zamiast: ScriptableObjects)</div>
+          <div class="row"><div class="dot dot-gray"></div>Brak Find() / FindWithTag() w Update()</div>
+          <div class="row"><div class="dot dot-gray"></div>Dane oddzielone od logiki</div>
+          <div class="row"><div class="dot dot-gray"></div>Animation Events do okien obrażeń — nie Trigger/Collider</div>
+          <div class="row"><div class="dot dot-gray"></div>Każdy system w osobnym pliku / folderze</div>
+          <div class="row"><div class="dot dot-gray"></div>Interface'y zamiast twardych referencji (IDamageable)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:1rem;">
+    <button onclick="sendPrompt('Zacznijmy od EventBus i PlayerStats — napisz mi kod dla Unity')" style="margin: 4px;">Zacznij od EventBus i PlayerStats ↗</button>
+    <button onclick="sendPrompt('Napisz PlayerController dla izometrycznej gry Diablo-like w Unity')" style="margin: 4px;">PlayerController ↗</button>
+    <button onclick="sendPrompt('Omów szczegółowo system drzewka umiejętności i jak go zaimplementować')" style="margin: 4px;">Rozwiń drzewko umiejętności ↗</button>
+  </div>
+</div>
