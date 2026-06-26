@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Ustawienia scen")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
-    [SerializeField] private string firstGameSceneName = "Act1_City";
+    [SerializeField] private string firstGameSceneName = "Building";
 
     public bool IsPaused { get; private set; } = false;
     public bool IsGameOver { get; private set; } = false;

@@ -21,14 +21,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. ✅ `EventBus` — komunikacja między systemami
 2. ✅ `PlayerStats` (ScriptableObject) + `PlayerHealthComponent`
 3. ✅ `PlayerController` + `CameraController` — ruch click-to-move NavMesh + kamera izometryczna
-4. ⏳ `PlayerCombat` — atak + hitbox przez Animation Events (odkładamy do czasu EnemyAI)
-5. ⏳ `EnemyAI` — FSM (Patrol/Alert/Chase/Attack/Stunned/Dead)
+4. ✅ `PlayerCombat` — atak + hitbox przez Animation Events (EnemyAI gotowe, można budować)
+5. ✅ `EnemyAI` — FSM (Patrol/Alert/Chase/Attack/Stunned/Dead) + `EnemyData` (ScriptableObject)
 6. ✅ `InventorySystem` backend — `ItemData` (ScriptableObject) + `InventorySystem` (MonoBehaviour)
-   ⏳ `InventoryUI` — panel ekwipunku + plecak (jeszcze nie zaczęte)
-7. ⏳ `XP/LevelSystem` (logika już w PlayerStats/PlayerHealthComponent)
-8. ⏳ `SkillTree UI`
-9. ⏳ `QuestSystem`
-10. ⏳ `SaveSystem` — format do potwierdzenia z użytkownikiem przed implementacją
+   ✅ `InventoryUI` — plecak (20 slotów) + ekwipunek (6 slotów na sylwetce). Klawisz I toggle.
+7. ✅ `PlayerHUD` — pasek HP (HealthFull/Empty, fill pionowy) + Stamina (fill poziomy). Subskrybuje EventBus.
+8. ✅ `XP/LevelSystem` — `XPSystem` (słucha OnEnemyDied/OnQuestCompleted → GainXP) + `XPBarUI` (pasek XP, poziom, notyfikacja "LEVEL UP!")
+9. ✅ `SkillTree` — kod + UI gotowe. Testowanie odłożone do momentu gdy w grze pojawią się wrogowie/XP
+10. ⏳ `QuestSystem`
+11. ⏳ `SaveSystem` — format do potwierdzenia z użytkownikiem przed implementacją
 
 ## Core Systems
 - **Combat** — walka gracza i wrogów
@@ -71,10 +72,24 @@ Przy przenoszeniu skryptów z 2022.3 zwróć uwagę na:
 - **ItemData** to ScriptableObject (jeden asset = jeden typ itemu). Bonusy (`bonusDamage`, `bonusArmor` itd.) mapują się 1:1 na pola `bonus*` w `PlayerStats` — nie dodawaj bonusów których nie ma w PlayerStats bez aktualizacji obu.
 - **EquipmentSlot** enum: `MainHand, OffHand, Helmet, Chest, Legs, Boots`. Broń z `isTwoHanded=true` w MainHand automatycznie zwalnia OffHand (item wraca do plecaka).
 - **OcclusionFader** (na Main Camera) — `OverlapSphere` + filtr Y + filtr kierunku (dot product XZ). Wyłącza renderer I collider razem. Nie modyfikuj logiki bez dyskusji — wymagało 7+ iteracji żeby działało poprawnie. Main Camera Culling Mask **musi** zawierać warstwę "Buildings".
+- **EnemyAI** (`Assets/Ratocalypse/Scripts/Enemy/`) — `EnemyData` (ScriptableObject, jeden asset = jeden typ wroga) + `EnemyAI` (MonoBehaviour + IDamageable). FSM: Patrol (losowy punkt w promieniu `patrolRadius` lub waypoints) → Alert (stoi `alertDelay` sek.) → Chase → Attack → Stunned → Dead. Ataki przez Animation Event `OnAttackHit()`. Gracz nakłada stun przez `ApplyStun(duration)`. Publikuje `OnEnemyDamaged` i `OnEnemyDied`. XP z `xpReward` zostanie odebrane przez XP system (krok 7).
+- **InventoryUI** (`Assets/Ratocalypse/Scripts/UI/`) — `InventorySlotUI` (slot z Image+Button+callback) + `InventoryUI` (panel, toggle I, 20 bag slotów + 6 equip slotów). Klik bag → auto-equip do właściwego slotu lub UseConsumable. Klik equip → Unequip. Subskrybuje OnInventoryChanged/OnItemEquipped/OnItemUnequipped przez EventBus. `background` i `panel` są osobnymi GO (rodzeństwo), oba toggle razem w `Toggle()` i `Start()`.
+- **PlayerHUD** (`Assets/Ratocalypse/Scripts/UI/`) — HP fill (Image.fillAmount pionowy, HealthFull nad HealthEmpty) + Stamina fill (poziomy). Subskrybuje OnPlayerDamaged, OnPlayerHealed, OnPlayerStaminaChanged. Init z PlayerStats w Start().
+- **PlayerCombat** (`Assets/Ratocalypse/Scripts/Player/`) — MonoBehaviour na tym samym GO co PlayerController (RequireComponent). Czyta `CurrentTarget` i `IsInAttackRange` z PlayerController. Animation Events: `OnAttackHit()` (klatka uderzenia) + `OnAttackEnd()` (reset cooldown). Animator: trigger `"Attack"`, float `"AttackSpeed"` = `stats.TotalAttackSpeed`. EnemyAI sam publikuje `OnEnemyDamaged` — PlayerCombat publikuje tylko `OnCriticalHit`. Fallback timer (`1f / TotalAttackSpeed`) działa bez animatora/eventów. `animator.ResetTrigger(HashAttack)` wywoływane w OnAttackEnd i TickFallback — zapobiega stale trigger przy Any State.
+- **PlayerAnimator** (`Assets/Cartoon Heroes/Male/3D/Animation Skeleton/PlayerAnimator.controller`) — DZIAŁA ✅. Parametry: `Speed` (float), `AttackSpeed` (float), `Attack` (trigger), `Dodge` (trigger), `Hit` (trigger), `Die` (trigger). Stany: `Idle/Run` (BlendTree Speed 0→1: Idle/Walk), `Attack`. Przejścia: `Any State → Attack` (trigger Attack, Has Exit Time OFF, Can Transition To Self OFF), `Attack → Idle/Run` (Has Exit Time ON, Exit Time 0.95, Duration 0.1, brak Conditions). Enemy Animator Controller — na razie None (brak animacji wroga, EnemyAI null-safe przez `?.`).
+- **SkillTree** (`Assets/Ratocalypse/Scripts/`) — brak assetów, dane zdefiniowane w kodzie.
+  - `Core/SkillDefinition.cs` — `SkillEffectType` enum + `SkillDefinition` (readonly struct) + `SkillDatabase` (static, 12 skilli, 3 gałęzie × 4 tiery). Prerequisite: tier N wymaga tier N-1 tej samej gałęzi.
+  - `Player/SkillTreeManager.cs` — MonoBehaviour na graczu (obok PlayerController). `HashSet<string> _unlocked`. `TryUnlock(id)` sprawdza punkty + prerequisite, aplikuje bonus do `stats.skillBonus*`, publikuje `OnSkillUnlocked`. `RestoreFromSave(IEnumerable<string>)` do użycia przez SaveSystem.
+  - `UI/SkillNodeUI.cs` — prefab node'a: Image tło (złoty/jasny/ciemny wg stanu) + Button + 2× TMP. `Initialize()` + `Refresh()`.
+  - `UI/SkillTreeUI.cs` — panel, toggle `C`. Buduje 12 node'ów z prefaba w `Start()`, po 4 na kolumnę (warriorColumn / hunterColumn / survivorColumn, VerticalLayoutGroup). Wyświetla licznik punktów.
+  - **PlayerStats** — dodano `skillBonus*` (8 pól NonSerialized), `ResetSkillBonuses()`, `TotalHpRegen`. Bonusy z ekwipunku (`bonus*`) i skilli (`skillBonus*`) są rozdzielone — `ResetBonuses()` nie dotyka skillBonus*.
+  - **PlayerHealthComponent** — dodano HP regen loop w Update() (`stats.TotalHpRegen * deltaTime`), publikuje `OnPlayerHealed`.
+  - Skille jednorazowe (unlock raz), 1 punkt/level, max 20 punktów na poziomie 20, 12 skilli do odblokowania.
+  - ✅ Setup UI w Edytorze zrobiony. SkillTreeUI musi siedzieć na rodzicu panelu (nie na samym panelu) — inaczej SetActive(false) wyłącza Update().
+  - Panel I i C wzajemnie się zamykają przez EventBus: OnInventoryToggled / OnSkillTreeToggled.
 
 ## Znane TODO / Planowane ulepszenia
 - **OcclusionFader fade** — aktualnie instant hide (`renderer.enabled`). Planowany upgrade do płynnego fade'u: otworzyć `Shader Graphs/MIS_Base 1` w Shader Graph Editor → Surface Type: Transparent → dodać właściwość `_Alpha` → podłączyć do Alpha output → w OcclusionFader użyć `MaterialPropertyBlock` zamiast `renderer.enabled`.
-- **InventoryUI** — backend gotowy (`InventorySystem` + `ItemData`). Do zbudowania: panel ekwipunku (6 slotów na sylwetce postaci) + siatka plecaka (20 slotów). UI subskrybuje `OnInventoryChanged`, `OnItemEquipped`, `OnItemUnequipped` przez EventBus.
 
 ## Key Rules for Claude
 - Przy pisaniu nowych skryptów używaj Unity 6 API (nie przestarzałych metod z 2022)

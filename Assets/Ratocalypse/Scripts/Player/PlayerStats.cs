@@ -66,7 +66,7 @@ public class PlayerStats : ScriptableObject
     [System.NonSerialized] public int currentLevel = 1;
     [System.NonSerialized] public int availableSkillPoints = 0;
 
-    // Bonusy z ekwipunku i umiejętności (addytywne, reset przy przeliczeniu ekwipunku)
+    // Bonusy z ekwipunku (reset przy RecalculateBonuses w InventorySystem)
     [System.NonSerialized] public float bonusDamage = 0f;
     [System.NonSerialized] public float bonusArmor = 0f;
     [System.NonSerialized] public float bonusCritChance = 0f;
@@ -74,14 +74,25 @@ public class PlayerStats : ScriptableObject
     [System.NonSerialized] public float bonusMaxHp = 0f;
     [System.NonSerialized] public float bonusAttackSpeed = 0f;
 
+    // Bonusy z drzewka umiejętności (NIE są resetowane przez ResetBonuses — tylko przez ResetSkillBonuses)
+    [System.NonSerialized] public float skillBonusDamage = 0f;
+    [System.NonSerialized] public float skillBonusArmor = 0f;
+    [System.NonSerialized] public float skillBonusCritChance = 0f;
+    [System.NonSerialized] public float skillBonusMoveSpeed = 0f;
+    [System.NonSerialized] public float skillBonusMaxHp = 0f;
+    [System.NonSerialized] public float skillBonusHpRegen = 0f;
+    [System.NonSerialized] public float skillBonusAttackSpeed = 0f;
+    [System.NonSerialized] public float skillBonusMaxStamina = 0f;
+
     // ---- Właściwości obliczane ----
-    public float MaxHp           => baseMaxHp + (hpPerLevel * (currentLevel - 1)) + bonusMaxHp;
-    public float MaxStamina      => baseMaxStamina;
-    public float TotalDamage     => baseDamage + (damagePerLevel * (currentLevel - 1)) + bonusDamage;
-    public float TotalArmor      => Mathf.Clamp01(baseArmor + bonusArmor);
-    public float TotalCritChance => Mathf.Clamp01(baseCritChance + bonusCritChance);
-    public float TotalMoveSpeed  => moveSpeed + bonusMoveSpeed;
-    public float TotalAttackSpeed => baseAttackSpeed + (attackSpeedPerLevel * (currentLevel - 1)) + bonusAttackSpeed;
+    public float MaxHp           => baseMaxHp + (hpPerLevel * (currentLevel - 1)) + bonusMaxHp + skillBonusMaxHp;
+    public float MaxStamina      => baseMaxStamina + skillBonusMaxStamina;
+    public float TotalDamage     => baseDamage + (damagePerLevel * (currentLevel - 1)) + bonusDamage + skillBonusDamage;
+    public float TotalArmor      => Mathf.Clamp01(baseArmor + bonusArmor + skillBonusArmor);
+    public float TotalCritChance => Mathf.Clamp01(baseCritChance + bonusCritChance + skillBonusCritChance);
+    public float TotalMoveSpeed  => moveSpeed + bonusMoveSpeed + skillBonusMoveSpeed;
+    public float TotalAttackSpeed => baseAttackSpeed + (attackSpeedPerLevel * (currentLevel - 1)) + bonusAttackSpeed + skillBonusAttackSpeed;
+    public float TotalHpRegen    => hpRegenPerSecond + skillBonusHpRegen;
 
     public float XPRequiredForNextLevel
     {
@@ -106,6 +117,7 @@ public class PlayerStats : ScriptableObject
         currentXP = 0f;
         availableSkillPoints = 0;
         ResetBonuses();
+        ResetSkillBonuses();
     }
 
     public void ResetBonuses()
@@ -116,6 +128,18 @@ public class PlayerStats : ScriptableObject
         bonusMoveSpeed = 0f;
         bonusMaxHp = 0f;
         bonusAttackSpeed = 0f;
+    }
+
+    public void ResetSkillBonuses()
+    {
+        skillBonusDamage = 0f;
+        skillBonusArmor = 0f;
+        skillBonusCritChance = 0f;
+        skillBonusMoveSpeed = 0f;
+        skillBonusMaxHp = 0f;
+        skillBonusHpRegen = 0f;
+        skillBonusAttackSpeed = 0f;
+        skillBonusMaxStamina = 0f;
     }
 
     // Poniższe metody modyfikują tylko dane — zdarzenia EventBus publikuje PlayerHealthComponent.

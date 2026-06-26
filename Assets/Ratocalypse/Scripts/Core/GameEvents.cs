@@ -160,6 +160,12 @@ public struct OnInventoryToggled
     public bool isOpen;
 }
 
+/// <summary>Drzewko umiejętności otwarte / zamknięte.</summary>
+public struct OnSkillTreeToggled
+{
+    public bool isOpen;
+}
+
 /// <summary>Gra wstrzymana / wznowiona.</summary>
 public struct OnGamePaused
 {

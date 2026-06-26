@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ratocalypse 2.5 — Mechaniki gry</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f13;
+      color: #d4cfc8;
+      line-height: 1.65;
+    }
+
+    /* ── Sidebar ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 240px;
+      height: 100vh;
+      background: #16161d;
+      border-right: 1px solid #2a2a38;
+      overflow-y: auto;
+      padding: 24px 0 40px;
+      z-index: 100;
+    }
+
+    nav h2 {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #e8a030;
+      padding: 0 20px 12px;
+      border-bottom: 1px solid #2a2a38;
+      margin-bottom: 12px;
+    }
+
+    nav a {
+      display: block;
+      padding: 7px 20px;
+      color: #9b9490;
+      text-decoration: none;
+      font-size: 13px;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+
+    nav a:hover {
+      color: #f0ece6;
+      border-left-color: #e8a030;
+      background: #1e1e28;
+    }
+
+    nav .nav-section {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #555;
+      padding: 16px 20px 4px;
+    }
+
+    /* ── Main ── */
+    main {
+      margin-left: 240px;
+      padding: 48px 56px 80px;
+      max-width: 960px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      margin-bottom: 56px;
+      border-bottom: 1px solid #2a2a38;
+      padding-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #f0ece6;
+      letter-spacing: -0.5px;
+    }
+
+    .hero h1 span { color: #e8a030; }
+
+    .hero p {
+      margin-top: 12px;
+      color: #7a7570;
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #1e2a1a;
+      color: #6dbf5a;
+      border: 1px solid #3a5a30;
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 2px 8px;
+      margin-right: 6px;
+      margin-top: 10px;
+    }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 60px;
+    }
+
+    section h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f0ece6;
+      margin-bottom: 6px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8a030;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    section h2 .icon {
+      font-size: 20px;
+    }
+
+    section h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e8a030;
+      margin: 28px 0 10px;
+      letter-spacing: 0.3px;
+    }
+
+    section p {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #c0bbb5;
+    }
+
+    /* ── Cards ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .card {
+      background: #16161d;
+      border: 1px solid #2a2a38;
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+
+    .card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f0ece6;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 12px;
+      color: #8a8580;
+      margin: 0;
+    }
+
+    .card .tag {
+      font-size: 10px;
+      color: #e8a030;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* ── Stat table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      background: #1e1e28;
+      color: #e8a030;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #2a2a38;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #1e1e28;
+      color: #b0aba5;
+      vertical-align: top;
+    }
+
+    tr:hover td { background: #16161d; }
+
+    td code {
+      background: #1e1e28;
+      color: #7ab8f5;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    /* ── FSM diagram ── */
+    .fsm {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin: 20px 0;
+      align-items: center;
+    }
+
+    .fsm-state {
+      background: #1e1e28;
+      border: 1px solid #3a3a50;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #f0ece6;
+      white-space: nowrap;
+    }
+
+    .fsm-state.dead { border-color: #6b2020; color: #c05050; }
+    .fsm-state.attack { border-color: #8b4010; color: #e8a030; }
+    .fsm-state.alert { border-color: #7a7020; color: #d4c840; }
+
+    .fsm-arrow {
+      color: #444;
+      font-size: 18px;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+
+    .fsm-label {
+      font-size: 10px;
+      color: #555;
+      display: block;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    .fsm-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Event flow ── */
+    .event-flow {
+      background: #12121a;
+      border: 1px solid #2a2a38;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+
+    .event-flow .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .event-flow .row:last-child { margin-bottom: 0; }
+
+    .pill {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pill.pub { background: #2a1a0a; color: #e8a030; border: 1px solid #5a3010; }
+    .pill.sub { background: #0a1a2a; color: #5ab8f5; border: 1px solid #103050; }
+    .pill.sys { background: #1a0a2a; color: #b060f5; border: 1px solid #401060; }
+    .pill.data { background: #0a1a0a; color: #60c060; border: 1px solid #103010; }
+
+    .arrow-right { color: #444; }
+
+    /* ── Callout ── */
+    .callout {
+      border-left: 3px solid #e8a030;
+      background: #1a1810;
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 13px;
+      color: #b0a890;
+    }
+
+    .callout.info { border-color: #5ab8f5; background: #101820; color: #90b0d0; }
+    .callout.warn { border-color: #c05050; background: #1a1010; color: #c09090; }
+
+    /* ── Slot grid ── */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .slot {
+      background: #16161d;
+      border: 1px solid #2a2a38;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #9b9490;
+    }
+
+    .slot strong { color: #f0ece6; display: block; margin-bottom: 2px; font-size: 13px; }
+
+    /* ── Formula ── */
+    .formula {
+      background: #12121a;
+      border: 1px solid #2a2a38;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 10px 0;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 13px;
+      color: #7ab8f5;
+    }
+
+    .formula .comment { color: #555; }
+
+    /* ── Footer ── */
+    footer {
+      margin-left: 240px;
+      padding: 20px 56px;
+      border-top: 1px solid #1e1e28;
+      color: #444;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
+<nav>
+  <h2>Ratocalypse 2.5</h2>
+  <span class="nav-section">Fundament</span>
+  <a href="#eventbus">EventBus</a>
+  <a href="#gamemanager">GameManager</a>
+  <a href="#audio">Audio (FMOD)</a>
+
+  <span class="nav-section">Gracz</span>
+  <a href="#stats">Statystyki</a>
+  <a href="#health">Zdrowie i stamina</a>
+  <a href="#movement">Ruch i unik</a>
+  <a href="#combat">Walka</a>
+  <a href="#camera">Kamera</a>
+
+  <span class="nav-section">Wrogowie</span>
+  <a href="#enemy">AI i FSM</a>
+
+  <span class="nav-section">Ekwipunek</span>
+  <a href="#inventory">Plecak i sloty</a>
+  <a href="#items">Przedmioty</a>
+
+  <span class="nav-section">UI</span>
+  <a href="#hud">HUD gracza</a>
+  <a href="#inventoryui">Ekwipunek UI</a>
+
+  <span class="nav-section">Przyszłe systemy</span>
+  <a href="#future">Co zostało</a>
+</nav>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Ratocalypse <span>2.5</span> — Mechaniki gry</h1>
+    <p>Dokument wygenerowany na podstawie analizy kodu źródłowego C# (Unity 6 / URP).</p>
+    <span class="badge">✓ EventBus</span>
+    <span class="badge">✓ PlayerStats</span>
+    <span class="badge">✓ PlayerCombat</span>
+    <span class="badge">✓ EnemyAI FSM</span>
+    <span class="badge">✓ InventorySystem</span>
+    <span class="badge">✓ PlayerHUD</span>
+    <span class="badge">✓ InventoryUI</span>
+  </div>
+
+  <!-- ══════════ EVENTBUS ══════════ -->
+  <section id="eventbus">
+    <h2><span class="icon">📡</span> EventBus — system komunikacji</h2>
+
+    <p>
+      EventBus to centralny "magistrala zdarzeń" całej gry. Zamiast żeby skrypty trzymały
+      bezpośrednie referencje do siebie nawzajem, każdy <strong>publikuje zdarzenia</strong>
+      (Publish) albo <strong>nasłuchuje</strong> (Subscribe) — i nigdy nie wie kto po drugiej stronie.
+    </p>
+
+    <h3>Jak to działa</h3>
+    <div class="event-flow">
+      <div class="row">
+        <span class="pill sys">Skrypt A</span>
+        <span class="arrow-right">→</span>
+        <code style="color:#e8a030;font-size:12px">EventBus.Publish(new OnPlayerDamaged { amount = 20f })</code>
+      </div>
+      <div class="row">
+        <span class="pill sys">EventBus</span>
+        <span class="arrow-right">→</span>
+        <span style="font-size:13px;color:#666">szuka wszystkich nasłuchiwaczy <code style="color:#7ab8f5;font-size:12px">OnPlayerDamaged</code> i wywołuje ich callback</span>
+      </div>
+      <div class="row">
+        <span class="pill sub">PlayerHUD</span>
+        <span class="arrow-right">→</span>
+        <span style="font-size:13px;color:#666">odbiera event i aktualizuje pasek HP</span>
+      </div>
+    </div>
+
+    <h3>Zdarzenia w grze</h3>
+    <table>
+      <tr><th>Zdarzenie</th><th>Kto publikuje</th><th>Kto nasłuchuje</th></tr>
+      <tr><td><code>OnPlayerDamaged</code></td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
+      <tr><td><code>OnPlayerHealed</code></td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
+      <tr><td><code>OnPlayerStaminaChanged</code></td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
+      <tr><td><code>OnPlayerDied</code></td><td>PlayerHealthComponent</td><td>GameManager</td></tr>
+      <tr><td><code>OnPlayerXPGained</code></td><td>PlayerHealthComponent</td><td>(przyszły XPSystem)</td></tr>
+      <tr><td><code>OnPlayerLevelUp</code></td><td>PlayerHealthComponent</td><td>PlayerController, PlayerCombat</td></tr>
+      <tr><td><code>OnEnemyDamaged</code></td><td>EnemyAI</td><td>(przyszły floating text)</td></tr>
+      <tr><td><code>OnEnemyDied</code></td><td>EnemyAI</td><td>(przyszły XPSystem)</td></tr>
+      <tr><td><code>OnCriticalHit</code></td><td>PlayerCombat</td><td>(przyszły efekt wizualny)</td></tr>
+      <tr><td><code>OnItemPickedUp</code></td><td>InventorySystem</td><td>—</td></tr>
+      <tr><td><code>OnItemEquipped</code></td><td>InventorySystem</td><td>PlayerController, PlayerCombat, InventoryUI</td></tr>
+      <tr><td><code>OnItemUnequipped</code></td><td>InventorySystem</td><td>PlayerController, PlayerCombat, InventoryUI</td></tr>
+      <tr><td><code>OnInventoryChanged</code></td><td>InventorySystem</td><td>InventoryUI</td></tr>
+      <tr><td><code>OnGamePaused</code></td><td>GameManager</td><td>—</td></tr>
+      <tr><td><code>OnCheckpointReached</code></td><td>(przyszły trigger)</td><td>GameManager</td></tr>
+      <tr><td><code>OnInventoryToggled</code></td><td>InventoryUI</td><td>—</td></tr>
+    </table>
+
+    <div class="callout warn">
+      <strong>Ważna zasada:</strong> każdy skrypt który wywołuje <code>Subscribe</code> w <code>OnEnable</code>
+      musi wywołać <code>Unsubscribe</code> w <code>OnDisable</code>. Inaczej EventBus będzie wywoływał
+      callback na zniszczonym obiekcie → błąd.
+    </div>
+  </section>
+
+  <!-- ══════════ GAMEMANAGER ══════════ -->
+  <section id="gamemanager">
+    <h2><span class="icon">🎮</span> GameManager — serce gry</h2>
+
+    <p>
+      Singleton <code>DontDestroyOnLoad</code> — jeden obiekt przechodzi przez wszystkie sceny.
+      Zarządza stanem gry, przechowuje globalne referencje i reaguje na śmierć gracza.
+    </p>
+
+    <h3>Stany gry</h3>
+    <div class="fsm" style="margin-bottom:8px">
+      <div class="fsm-step"><div class="fsm-state">MainMenu</div></div>
+      <div class="fsm-arrow">→</div>
+      <div class="fsm-step"><div class="fsm-state">Playing</div></div>
+      <div class="fsm-arrow">→</div>
+      <div class="fsm-step"><div class="fsm-state alert">Paused</div></div>
+      <div class="fsm-arrow">⇄</div>
+      <div class="fsm-step"><div class="fsm-state">Playing</div></div>
+      <div class="fsm-arrow">→</div>
+      <div class="fsm-step"><div class="fsm-state dead">GameOver</div></div>
+    </div>
+    <p style="font-size:12px;color:#555;margin-top:4px">Cutscene — osobny stan dla Timeline/cinematic</p>
+
+    <h3>Globalne referencje</h3>
+    <div class="card-grid">
+      <div class="card">
+        <span class="tag">ScriptableObject</span>
+        <h4>PlayerStats</h4>
+        <p>Dane gracza dostępne przez <code>GameManager.Instance.PlayerStats</code>. Jeden asset, jeden gracz.</p>
+      </div>
+      <div class="card">
+        <span class="tag">ScriptableObject</span>
+        <h4>FMODEvents</h4>
+        <p>Wszystkie eventy dźwiękowe przez <code>GameManager.FMODEvents</code>. Nie używamy <code>Resources.Load</code>.</p>
+      </div>
+    </div>
+
+    <h3>Obsługa Game Over</h3>
+    <p>
+      Gdy <code>PlayerHealthComponent</code> opublikuje <code>OnPlayerDied</code>, GameManager
+      czeka 2 sekundy (coroutine) i przechodzi do stanu GameOver. Pauza przez
+      <code>Time.timeScale = 0</code>.
+    </p>
+  </section>
+
+  <!-- ══════════ AUDIO ══════════ -->
+  <section id="audio">
+    <h2><span class="icon">🔊</span> Audio — FMOD</h2>
+
+    <p>
+      Cały dźwięk idzie przez FMOD, nigdzie nie używamy <code>AudioSource</code> ani <code>AudioClip</code>.
+      Dwa skrypty współpracują ze sobą:
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="tag">ScriptableObject</span>
+        <h4>FMODEvents</h4>
+        <p>Katalog referencji do eventów FMOD: footstepy, ataki, muzyka eksploracji/walki/bossa, ambient (miasto/kanały/gniazdo), efekty statusów.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Singleton MonoBehaviour</span>
+        <h4>AudioManager</h4>
+        <p>Wrapper API: <code>PlayOneShot()</code> do jednorazowych dźwięków, <code>CreateInstance()</code> do pętlowych, <code>PlayMusic()</code> z crossfade.</p>
+      </div>
+    </div>
+
+    <h3>Typy odtwarzania</h3>
+    <table>
+      <tr><th>Metoda</th><th>Kiedy używać</th></tr>
+      <tr><td><code>PlayOneShot(ref, pos)</code></td><td>Ataki, footstepy, pickup itemów — krótki dźwięk 3D</td></tr>
+      <tr><td><code>PlayOneShot(ref)</code></td><td>UI, dźwięki 2D bez pozycji</td></tr>
+      <tr><td><code>CreateInstance(ref)</code></td><td>Pętle z kontrolą (muzyka, ambient) — wymaga ręcznego <code>Release()</code></td></tr>
+      <tr><td><code>CreateAndAttach(ref, transform)</code></td><td>Dźwięk przywiązany do obiektu (np. wróg chodzi)</td></tr>
+      <tr><td><code>PlayMusic(ref)</code></td><td>Muzyka z automatycznym zatrzymaniem poprzedniej i fadeout</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════ STATYSTYKI ══════════ -->
+  <section id="stats">
+    <h2><span class="icon">📊</span> Statystyki gracza</h2>
+
+    <p>
+      <strong>PlayerStats</strong> to ScriptableObject — jeden plik asset w projekcie, nie MonoBehaviour.
+      Przechowuje wszystkie liczby gracza: bazowe wartości ustawiane w Inspectorze oraz runtime
+      (bieżące HP, XP, poziom) i bonusy z ekwipunku.
+    </p>
+
+    <div class="callout info">
+      PlayerStats to czyste dane — zero EventBus.Publish w środku. Zdarzenia publikuje wyłącznie
+      <strong>PlayerHealthComponent</strong>.
+    </div>
+
+    <h3>Wartości bazowe (ustawiane w Inspectorze)</h3>
+    <table>
+      <tr><th>Pole</th><th>Domyślnie</th><th>Opis</th></tr>
+      <tr><td><code>baseMaxHp</code></td><td>100</td><td>Maksymalne HP na poziomie 1</td></tr>
+      <tr><td><code>hpPerLevel</code></td><td>15</td><td>Przyrost HP za każdy level</td></tr>
+      <tr><td><code>baseMaxStamina</code></td><td>100</td><td>Maksymalna stamina</td></tr>
+      <tr><td><code>staminaRegenPerSecond</code></td><td>20</td><td>Regeneracja staminy co sekundę</td></tr>
+      <tr><td><code>dodgeCost</code></td><td>25</td><td>Koszt staminy za unik</td></tr>
+      <tr><td><code>baseDamage</code></td><td>10</td><td>Obrażenia bez broni</td></tr>
+      <tr><td><code>damagePerLevel</code></td><td>2</td><td>Wzrost obrażeń za level</td></tr>
+      <tr><td><code>moveSpeed</code></td><td>5</td><td>Prędkość (NavMeshAgent.speed)</td></tr>
+      <tr><td><code>dodgeSpeed</code></td><td>12</td><td>Prędkość uniku</td></tr>
+      <tr><td><code>dodgeDuration</code></td><td>0.3s</td><td>Czas trwania uniku</td></tr>
+      <tr><td><code>baseAttackSpeed</code></td><td>1.0</td><td>Mnożnik prędkości animacji ataku</td></tr>
+      <tr><td><code>baseArmor</code></td><td>0%</td><td>Procentowa redukcja obrażeń (max 75%)</td></tr>
+      <tr><td><code>baseCritChance</code></td><td>5%</td><td>Szansa na trafienie krytyczne</td></tr>
+      <tr><td><code>critMultiplier</code></td><td>2x</td><td>Mnożnik obrażeń krytycznych</td></tr>
+      <tr><td><code>maxLevel</code></td><td>20</td><td>Maksymalny poziom gracza</td></tr>
+    </table>
+
+    <h3>Wzory obliczeniowe</h3>
+    <div class="formula">
+      MaxHp = baseMaxHp + (hpPerLevel × (level − 1)) + bonusMaxHp<br>
+      TotalDamage = baseDamage + (damagePerLevel × (level − 1)) + bonusDamage<br>
+      TotalArmor = Clamp01(baseArmor + bonusArmor) <span class="comment">// max 100%</span><br>
+      TotalAttackSpeed = baseAttackSpeed + (attackSpeedPerLevel × (level − 1)) + bonusAttackSpeed<br>
+      TotalCritChance = Clamp01(baseCritChance + bonusCritChance)<br>
+      <br>
+      XP do następnego levelu = xpForLevel2 × (1.4 ^ (level − 1))
+    </div>
+
+    <h3>Bonusy z ekwipunku</h3>
+    <p>
+      Pola <code>bonus*</code> (bonusDamage, bonusArmor, bonusCritChance, bonusMoveSpeed,
+      bonusMaxHp, bonusAttackSpeed) są resetowane i przeliczane przez
+      <strong>InventorySystem.RecalculateBonuses()</strong> za każdym razem gdy gracz zakłada
+      lub zdejmuje przedmiot.
+    </p>
+
+    <h3>Level up</h3>
+    <p>
+      Przy awansie HP gracza skaluje się proporcjonalnie (nie leczy, nie traci):
+      <code>currentHp = (currentHp / oldMaxHp) × newMaxHp</code>.
+      Gracz dostaje też 1 punkt umiejętności (<code>availableSkillPoints++</code>).
+    </p>
+  </section>
+
+  <!-- ══════════ ZDROWIE ══════════ -->
+  <section id="health">
+    <h2><span class="icon">❤️</span> Zdrowie i stamina</h2>
+
+    <p>
+      <strong>PlayerHealthComponent</strong> to warstwa logiki i eventów na górze czystych danych
+      z PlayerStats. Implementuje <code>IDamageable</code> i <code>IHealable</code> — wrogowie
+      trafiają gracza przez te interfejsy bez twardej referencji.
+    </p>
+
+    <h3>Przepływ obrażeń</h3>
+    <div class="event-flow">
+      <div class="row">
+        <span class="pill sys">EnemyAI</span>
+        <span class="arrow-right">→</span>
+        <span style="color:#c0bbb5;font-size:13px"><code>playerDamageable.TakeDamage(10f)</code></span>
+      </div>
+      <div class="row">
+        <span class="pill sub">PlayerHealthComponent</span>
+        <span class="arrow-right">→</span>
+        <span style="color:#c0bbb5;font-size:13px">sprawdza IsInvincible → woła <code>stats.TakeDamage()</code> → redukuje przez Armor</span>
+      </div>
+      <div class="row">
+        <span class="pill pub">EventBus</span>
+        <span class="arrow-right">→</span>
+        <span style="color:#c0bbb5;font-size:13px">publikuje <code>OnPlayerDamaged { amount, currentHp, maxHp }</code></span>
+      </div>
+      <div class="row">
+        <span class="pill sub">PlayerHUD</span>
+        <span class="arrow-right">→</span>
+        <span style="color:#c0bbb5;font-size:13px">aktualizuje pasek HP</span>
+      </div>
+    </div>
+
+    <h3>Iframes (nieśmiertelność podczas uniku)</h3>
+    <p>
+      <code>PlayerController</code> ustawia <code>playerHealth.IsInvincible = true</code>
+      na czas trwania uniku. <code>TakeDamage()</code> zwraca wtedy 0 bez żadnego efektu.
+    </p>
+
+    <h3>Regeneracja staminy</h3>
+    <p>
+      Co klatkę w <code>Update()</code> PlayerHealthComponent wywołuje
+      <code>stats.RegenerateStamina(deltaTime)</code>. Jeśli stamina wzrosła, publikuje
+      <code>OnPlayerStaminaChanged</code> → HUD aktualizuje pasek staminy.
+    </p>
+
+    <h3>Wzór redukcji obrażeń</h3>
+    <div class="formula">
+      reduced = rawDamage × (1 − TotalArmor)<br>
+      reduced = max(reduced, 1) <span class="comment">// zawsze co najmniej 1 obrażenie</span>
+    </div>
+  </section>
+
+  <!-- ══════════ RUCH ══════════ -->
+  <section id="movement">
+    <h2><span class="icon">🏃</span> Ruch i unik</h2>
+
+    <p>
+      Gra jest click-to-move w stylu Diablo (izometryczny rzut). Ruch oparty na
+      <strong>NavMeshAgent</strong> — nie physics-based. PlayerController obsługuje
+      input i cel, steruje agentem.
+    </p>
+
+    <h3>Kliknięcie — priorytety</h3>
+    <table>
+      <tr><th>Co trafiło</th><th>Efekt</th></tr>
+      <tr><td>UI (EventSystem)</td><td>Ignorowane — klik nie przechodzi do gry</td></tr>
+      <tr><td>Warstwa wrogów (EnemyLayer)</td><td>Ustawia cel ataku, gracz podchodzi automatycznie</td></tr>
+      <tr><td>Warstwa ziemi (GroundLayer)</td><td>Gracz idzie do punktu, cel ataku czyszczony</td></tr>
+    </table>
+
+    <h3>Podążanie za wrogiem</h3>
+    <p>
+      Gdy gracz ma ustawiony cel, co klatkę sprawdza odległość. Jeśli większa niż
+      <code>attackRange (1.5m)</code> — agent idzie dalej. Jeśli mniejsza — agent zatrzymuje się,
+      gracz obraca się w stronę wroga i <strong>PlayerCombat</strong> może atakować.
+    </p>
+
+    <h3>Unik</h3>
+    <div class="callout">
+      <strong>Wejście:</strong> Shift + Prawy przycisk myszy
+    </div>
+    <p>Sekwencja uniku:</p>
+    <ol style="margin:10px 0 10px 24px;font-size:14px;color:#c0bbb5;line-height:2">
+      <li>Sprawdza czy jest wystarczająco staminy (<code>dodgeCost = 25</code>)</li>
+      <li>Odejmuje staminę, włącza iframes (<code>IsInvincible = true</code>)</li>
+      <li>Wyłącza NavMesh (<code>updatePosition = false</code>) — ruch przez Transform</li>
+      <li>Gracz leci 0.3s z prędkością 12 w kierunku aktualnego ruchu (lub do przodu)</li>
+      <li>NavMesh.SamplePosition — gracz wraca na siatkę NavMesh</li>
+      <li>Iframes wyłączone, NavMesh wznowiony</li>
+    </ol>
+
+    <h3>Obrót gracza</h3>
+    <p>
+      Gracz obraca się przez <code>Quaternion.Slerp</code> z prędkością 15/s.
+      Podczas uniku i gdy ma cel ataku — nie obraca się za ruchem agenta, tylko w stronę celu.
+    </p>
+
+    <h3>Animator — parametry ruchu</h3>
+    <table>
+      <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+      <tr><td><code>Speed</code></td><td>float</td><td><code>velocity.magnitude / TotalMoveSpeed</code> → BlendTree Idle/Walk</td></tr>
+      <tr><td><code>Dodge</code></td><td>trigger</td><td>Odpalany na początku uniku</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════ WALKA ══════════ -->
+  <section id="combat">
+    <h2><span class="icon">⚔️</span> Walka gracza</h2>
+
+    <p>
+      <strong>PlayerCombat</strong> siedzi na tym samym GameObject co PlayerController
+      (RequireComponent). Nie ma własnego inputu — czyta stan z kontrolera przez dwa property:
+      <code>CurrentTarget</code> i <code>IsInAttackRange</code>.
+    </p>
+
+    <h3>Cykl ataku</h3>
+    <div class="event-flow">
+      <div class="row">
+        <span class="pill sys">PlayerCombat.Update</span>
+        <span class="arrow-right">→</span>
+        <span style="font-size:13px;color:#c0bbb5">sprawdza: <code>canAttack && IsInAttackRange && CurrentTarget != null</code></span>
+      </div>
+      <div class="row">
+        <span class="pill sys">TriggerAttack()</span>
+        <span class="arrow-right">→</span>
+        <span style="font-size:13px;color:#c0bbb5">ustawia <code>canAttack = false</code>, ustawia AttackSpeed, odpala trigger <code>"Attack"</code></span>
+      </div>
+      <div class="row">
+        <span class="pill sys">Animation Event</span>
+        <span class="arrow-right">→</span>
+        <span style="font-size:13px;color:#c0bbb5"><code>OnAttackHit()</code> — klatka uderzenia → nakłada obrażenia</span>
+      </div>
+      <div class="row">
+        <span class="pill sys">Animation Event</span>
+        <span class="arrow-right">→</span>
+        <span style="font-size:13px;color:#c0bbb5"><code>OnAttackEnd()</code> — koniec animacji → <code>canAttack = true</code>, reset cooldown</span>
+      </div>
+    </div>
+
+    <h3>Obliczanie obrażeń</h3>
+    <div class="formula">
+      damage = TotalDamage <span class="comment">// base + level + bonusy z ekwipunku</span><br>
+      if (Random.value &lt; TotalCritChance) damage *= critMultiplier <span class="comment">// krit!</span><br>
+      damage = Round(damage)<br>
+      target.TakeDamage(damage, isCritical, knockbackDirection)
+    </div>
+
+    <h3>Fallback timer</h3>
+    <p>
+      Gdy animator nie ma skonfigurowanych Animation Events, fallback timer liczy
+      <code>1 / TotalAttackSpeed</code> sekund i po tym czasie resetuje <code>canAttack</code>.
+      Gra działa bez animatora.
+    </p>
+
+    <h3>Animator — parametry walki</h3>
+    <table>
+      <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+      <tr><td><code>Attack</code></td><td>trigger</td><td>Odpalany przy każdym ataku. Reset w OnAttackEnd i TickFallback.</td></tr>
+      <tr><td><code>AttackSpeed</code></td><td>float</td><td>Mnożnik prędkości animacji = TotalAttackSpeed. Aktualizowany po equipie/levelu.</td></tr>
+    </table>
+
+    <div class="callout warn">
+      <strong>ResetTrigger:</strong> <code>animator.ResetTrigger("Attack")</code> jest wywoływany
+      w OnAttackEnd i TickFallback — zapobiega zakleszczeniu triggera w Any State.
+    </div>
+
+    <h3>Interfejsy walki</h3>
+    <table>
+      <tr><th>Interfejs</th><th>Metody</th><th>Implementuje</th></tr>
+      <tr><td><code>IDamageable</code></td><td><code>IsAlive</code>, <code>TakeDamage()</code></td><td>PlayerHealthComponent, EnemyAI</td></tr>
+      <tr><td><code>IHealable</code></td><td><code>Heal()</code></td><td>PlayerHealthComponent</td></tr>
+      <tr><td><code>IStatusEffectable</code></td><td><code>ApplyStatusEffect()</code></td><td>(przyszłe systemy)</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════ KAMERA ══════════ -->
+  <section id="camera">
+    <h2><span class="icon">🎥</span> Kamera</h2>
+
+    <p>Są dwa skrypty kamerowe — używany jest jeden z nich zależnie od konfiguracji sceny.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="tag">Główna kamera gry</span>
+        <h4>CameraController</h4>
+        <p>Prosta kamera izometryczna bez Cinemachine. Follow przez Lerp + zoom scrollem. Stały kąt = pełna kontrola nad wyglądem.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Cinemachine 3.x</span>
+        <h4>CameraZoom</h4>
+        <p>Zoom dla kamery opartej na CinemachineFollow. Skaluje FollowOffset zachowując kierunek. Cinemachine zostaje do cutscen / Timeline.</p>
+      </div>
+    </div>
+
+    <h3>OcclusionFader — ukrywanie budynków</h3>
+    <p>
+      Skrypt na Main Camera. Gdy budynek zasłania gracza — wyłącza jego renderer i collider
+      (gracz może klikać ziemię pod niewidoczną ścianą). Trzy filtry decydują co ukryć:
+    </p>
+    <table>
+      <tr><th>Filtr</th><th>Opis</th></tr>
+      <tr><td>Wysokość</td><td>Ukrywa tylko elementy wyżej niż <code>hideAbovePlayerY</code> nad graczem</td></tr>
+      <tr><td>Odległość XZ</td><td>Tylko w promieniu <code>occlusionRadiusXZ</code> od gracza</td></tr>
+      <tr><td>Kierunek (dot product)</td><td>Tylko ściany po stronie kamery — próg <code>occlusionDotThreshold</code></td></tr>
+    </table>
+    <div class="callout warn">
+      OcclusionFader wymagał 7+ iteracji. Nie modyfikować logiki bez dyskusji.
+      Upgrade do płynnego fade (Shader Graph + MaterialPropertyBlock) jest planowany.
+    </div>
+  </section>
+
+  <!-- ══════════ ENEMY AI ══════════ -->
+  <section id="enemy">
+    <h2><span class="icon">🐀</span> Wrogowie — AI i FSM</h2>
+
+    <p>
+      Każdy wróg to <strong>EnemyAI</strong> (MonoBehaviour + IDamageable) napędzany danymi
+      z <strong>EnemyData</strong> (ScriptableObject). Jeden asset EnemyData = jeden typ wroga.
+    </p>
+
+    <h3>Maszyna stanów (FSM)</h3>
+    <div class="fsm" style="flex-wrap:wrap;gap:4px;align-items:center">
+      <div class="fsm-step">
+        <div class="fsm-state">Patrol</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <span class="fsm-arrow">→</span>
+        <span class="fsm-label">gracz w zasięgu</span>
+      </div>
+      <div class="fsm-step">
+        <div class="fsm-state alert">Alert</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <span class="fsm-arrow">→</span>
+        <span class="fsm-label">alertDelay minął</span>
+      </div>
+      <div class="fsm-step">
+        <div class="fsm-state">Chase</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <span class="fsm-arrow">→</span>
+        <span class="fsm-label">w zasięgu ataku</span>
+      </div>
+      <div class="fsm-step">
+        <div class="fsm-state attack">Attack</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <span class="fsm-arrow">→</span>
+        <span class="fsm-label">HP ≤ 0</span>
+      </div>
+      <div class="fsm-step">
+        <div class="fsm-state dead">Dead</div>
+      </div>
+    </div>
+    <div class="fsm" style="margin-top:8px">
+      <div class="fsm-step">
+        <div class="fsm-state">Chase / Patrol</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <span class="fsm-arrow">→</span>
+        <span class="fsm-label">ApplyStun()</span>
+      </div>
+      <div class="fsm-step">
+        <div class="fsm-state alert">Stunned</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <span class="fsm-arrow">→</span>
+        <span class="fsm-label">timer minął</span>
+      </div>
+      <div class="fsm-step">
+        <div class="fsm-state">Chase</div>
+      </div>
+    </div>
+
+    <h3>Parametry EnemyData</h3>
+    <table>
+      <tr><th>Pole</th><th>Domyślnie</th><th>Opis</th></tr>
+      <tr><td><code>maxHp</code></td><td>50</td><td>Punkty życia wroga</td></tr>
+      <tr><td><code>moveSpeed</code></td><td>3.5</td><td>Prędkość podczas pogoni</td></tr>
+      <tr><td><code>patrolSpeed</code></td><td>1.5</td><td>Prędkość podczas patrolu</td></tr>
+      <tr><td><code>patrolRadius</code></td><td>4m</td><td>Promień losowania punktu patrolowego</td></tr>
+      <tr><td><code>detectRange</code></td><td>8m</td><td>Zasięg wykrycia gracza → Alert</td></tr>
+      <tr><td><code>losePlayerRange</code></td><td>14m</td><td>Zasięg rezygnacji z pogoni → Patrol</td></tr>
+      <tr><td><code>alertDelay</code></td><td>0.6s</td><td>Czas postoju w Alert przed pogonią</td></tr>
+      <tr><td><code>attackRange</code></td><td>1.5m</td><td>Zasięg ataku wręcz</td></tr>
+      <tr><td><code>attackDamage</code></td><td>10</td><td>Obrażenia zadawane graczowi</td></tr>
+      <tr><td><code>attackCooldown</code></td><td>1.5s</td><td>Minimalny czas między atakami</td></tr>
+      <tr><td><code>stunDuration</code></td><td>2s</td><td>Domyślny czas stuna</td></tr>
+      <tr><td><code>xpReward</code></td><td>25</td><td>XP za zabicie (w OnEnemyDied)</td></tr>
+    </table>
+
+    <h3>Patrol</h3>
+    <p>
+      Jeśli przypisano <code>waypoints[]</code> — wróg chodzi po nich w pętli.
+      Bez waypointów — losuje nowy punkt w promieniu <code>patrolRadius</code>
+      od pozycji startowej (do 8 prób na NavMesh).
+    </p>
+
+    <h3>Atak wroga</h3>
+    <p>
+      Wróg odpala trigger <code>"Attack"</code> w animatorze. Animation Event <code>OnAttackHit()</code>
+      nakłada obrażenia przez <code>playerDamageable.TakeDamage()</code> — wróg nie wie nic
+      o PlayerHealthComponent, tylko o interfejsie.
+    </p>
+
+    <h3>Stun</h3>
+    <p>
+      <code>ApplyStun(duration)</code> może wywołać PlayerCombat (lub dowolny system).
+      Wróg przechodzi do stanu Stunned, NavMesh zatrzymany, po czasie wraca do Chase.
+    </p>
+
+    <h3>Śmierć</h3>
+    <p>
+      Stan Dead: NavMesh wyłączony, collider wyłączony, trigger animacji <code>"Dead"</code>,
+      publikuje <code>OnEnemyDied { xpReward }</code>. Gameobject niszczy się po 3 sekundach.
+    </p>
+  </section>
+
+  <!-- ══════════ INVENTORY ══════════ -->
+  <section id="inventory">
+    <h2><span class="icon">🎒</span> System ekwipunku</h2>
+
+    <p>
+      <strong>InventorySystem</strong> siedzi na graczu. Zarządza dwoma strukturami danych:
+      plecakiem (lista) i ekwipunkiem (słownik).
+    </p>
+
+    <h3>Sloty ekwipunku</h3>
+    <div class="slot-grid">
+      <div class="slot"><strong>MainHand</strong>Broń jednorączna lub dwuręczna</div>
+      <div class="slot"><strong>OffHand</strong>Broń jednoręczna lub tarcza</div>
+      <div class="slot"><strong>Helmet</strong>Hełm</div>
+      <div class="slot"><strong>Chest</strong>Pancerz tułowia</div>
+      <div class="slot"><strong>Legs</strong>Spodnie / nogi</div>
+      <div class="slot"><strong>Boots</strong>Buty</div>
+    </div>
+
+    <h3>Reguły zakładania</h3>
+    <table>
+      <tr><th>Sytuacja</th><th>Co się dzieje</th></tr>
+      <tr><td>Zakładasz item gdy slot zajęty</td><td>Poprzedni item wraca do plecaka</td></tr>
+      <tr><td>Broń dwuręczna w MainHand</td><td>OffHand automatycznie zwalniany → item wraca do plecaka</td></tr>
+      <tr><td>Coś w OffHand gdy MainHand ma dwuręczną</td><td>MainHand zwalniany przed założeniem</td></tr>
+      <tr><td>Plecak pełny przy zdejmowaniu</td><td>Operacja nie może być wykonana</td></tr>
+    </table>
+
+    <h3>Efekt na statystyki</h3>
+    <p>
+      Po każdej zmianie ekwipunku <code>RecalculateBonuses()</code>:
+    </p>
+    <div class="formula">
+      stats.ResetBonuses() <span class="comment">// wyzeruj wszystkie bonus*</span><br>
+      for each item in equipped.Values:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;stats.bonusDamage += item.bonusDamage<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;stats.bonusArmor  += item.bonusArmor<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// ... i wszystkie pozostałe pola bonus*</span>
+    </div>
+
+    <h3>Konsumable</h3>
+    <p>
+      Przedmioty typu Consumable (np. apteczka) nie zajmują slotów ekwipunku.
+      <code>UseConsumable(item)</code> wywołuje <code>health.Heal()</code>
+      i/lub <code>health.RestoreStamina()</code> i usuwa item z plecaka.
+    </p>
+  </section>
+
+  <!-- ══════════ ITEMS ══════════ -->
+  <section id="items">
+    <h2><span class="icon">🗡️</span> Przedmioty (ItemData)</h2>
+
+    <p>
+      Każdy przedmiot to jeden ScriptableObject (ItemData). Dane są tylko do odczytu —
+      nie modyfikujemy assetu w runtime, tylko czytamy bonusy.
+    </p>
+
+    <h3>Typy przedmiotów</h3>
+    <table>
+      <tr><th>ItemType</th><th>Pasuje do slotu</th><th>Specjalne właściwości</th></tr>
+      <tr><td>Weapon</td><td>MainHand (lub OffHand jeśli nie dwuręczna)</td><td><code>weaponType</code>, <code>isTwoHanded</code></td></tr>
+      <tr><td>Shield</td><td>OffHand</td><td>—</td></tr>
+      <tr><td>Helmet</td><td>Helmet</td><td>—</td></tr>
+      <tr><td>Chest</td><td>Chest</td><td>—</td></tr>
+      <tr><td>Legs</td><td>Legs</td><td>—</td></tr>
+      <tr><td>Boots</td><td>Boots</td><td>—</td></tr>
+      <tr><td>Consumable</td><td>Brak (tylko plecak)</td><td><code>healAmount</code>, <code>staminaRestore</code></td></tr>
+    </table>
+
+    <h3>Dostępne bonusy statystyk</h3>
+    <div class="card-grid">
+      <div class="card"><h4>bonusDamage</h4><p>Dodatkowe obrażenia (flat)</p></div>
+      <div class="card"><h4>bonusArmor</h4><p>Procentowa redukcja obrażeń (0–75%)</p></div>
+      <div class="card"><h4>bonusCritChance</h4><p>Dodatkowa szansa na krit (0–100%)</p></div>
+      <div class="card"><h4>bonusMoveSpeed</h4><p>Dodatkowa prędkość ruchu</p></div>
+      <div class="card"><h4>bonusMaxHp</h4><p>Dodatkowe maksymalne HP</p></div>
+      <div class="card"><h4>bonusAttackSpeed</h4><p>Mnożnik prędkości ataku (flat dodany)</p></div>
+    </div>
+  </section>
+
+  <!-- ══════════ HUD ══════════ -->
+  <section id="hud">
+    <h2><span class="icon">🖥️</span> HUD gracza</h2>
+
+    <p>
+      <strong>PlayerHUD</strong> to czyste UI — tylko nasłuchuje i wyświetla. Nie woła żadnej logiki,
+      nie modyfikuje danych. Dwa elementy graficzne:
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="tag">Image — pionowy fill</span>
+        <h4>Pasek HP</h4>
+        <p>HealthFull nad HealthEmpty. <code>fillAmount = currentHp / maxHp</code>. Reaguje na <code>OnPlayerDamaged</code> i <code>OnPlayerHealed</code>.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Image — poziomy fill</span>
+        <h4>Pasek Staminy</h4>
+        <p><code>fillAmount = current / max</code>. Reaguje na <code>OnPlayerStaminaChanged</code> — aktualizuje się przy każdym użyciu uniku i podczas regeneracji.</p>
+      </div>
+    </div>
+
+    <h3>Inicjalizacja</h3>
+    <p>
+      W <code>Start()</code> HUD czyta aktualne wartości z PlayerStats i ustawia paski
+      do właściwego stanu — żeby nie zaczynać od pustych pasków przy wczytaniu sceny.
+    </p>
+  </section>
+
+  <!-- ══════════ INVENTORY UI ══════════ -->
+  <section id="inventoryui">
+    <h2><span class="icon">🎨</span> Ekwipunek UI</h2>
+
+    <p>
+      <strong>InventoryUI</strong> to panel toggle klawiszem <code>I</code>. Dwa oddzielne GameObjecty:
+      <code>panel</code> (zawartość) i <code>background</code> (przyciemnione tło) — oba toggle razem.
+    </p>
+
+    <h3>Układ</h3>
+    <div class="card-grid">
+      <div class="card">
+        <span class="tag">Plecak</span>
+        <h4>20 slotów (bagSlots[])</h4>
+        <p>Pokazuje przedmioty z <code>inventory.Bag</code>. Klik → auto-equip do domyślnego slotu lub UseConsumable.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Sylwetka</span>
+        <h4>6 slotów ekwipunku</h4>
+        <p>MainHand, OffHand, Helmet, Chest, Legs, Boots. Klik → Unequip (item wraca do plecaka).</p>
+      </div>
+    </div>
+
+    <h3>Klik w plecaku — logika auto-equip</h3>
+    <table>
+      <tr><th>Typ itemu</th><th>Akcja</th></tr>
+      <tr><td>Consumable</td><td><code>inventory.UseConsumable(item)</code> — używa natychmiast</td></tr>
+      <tr><td>Weapon</td><td>Equip do MainHand</td></tr>
+      <tr><td>Shield</td><td>Equip do OffHand</td></tr>
+      <tr><td>Helmet / Chest / Legs / Boots</td><td>Equip do odpowiedniego slotu</td></tr>
+    </table>
+
+    <h3>InventorySlotUI</h3>
+    <p>
+      Pojedynczy slot to <code>Image</code> z ikoną + Unity Button. Konfigurowany przez
+      <code>Setup(item, callback)</code> — callback to lambda z zewnątrz (albo equip, albo unequip).
+      Sam slot nic nie wie o logice — tylko wyświetla ikonę i woła callback.
+    </p>
+
+    <h3>Odświeżanie</h3>
+    <p>
+      Panel odświeża się (<code>Refresh()</code>) gdy jest otwarty i dostanie event
+      <code>OnInventoryChanged</code>, <code>OnItemEquipped</code> lub <code>OnItemUnequipped</code>.
+      Gdy jest zamknięty — eventy są ignorowane (pusta klatka bez kosztów).
+    </p>
+  </section>
+
+  <!-- ══════════ FUTURE ══════════ -->
+  <section id="future">
+    <h2><span class="icon">⏳</span> Planowane systemy</h2>
+
+    <p>Logika częściowo gotowa, brakuje implementacji lub UI:</p>
+
+    <table>
+      <tr><th>System</th><th>Stan</th><th>Co jest gotowe</th></tr>
+      <tr>
+        <td>XP / Level System UI</td>
+        <td>⏳ Logika gotowa</td>
+        <td><code>PlayerStats.GainXP()</code>, <code>OnPlayerXPGained</code>, <code>OnPlayerLevelUp</code>, <code>OnEnemyDied.xpReward</code> — brakuje odbiorcy XP i paska doświadczenia</td>
+      </tr>
+      <tr>
+        <td>SkillTree UI</td>
+        <td>⏳ Szkielet eventów</td>
+        <td><code>availableSkillPoints</code> w PlayerStats, <code>OnSkillUnlocked</code>, <code>SkillBranch</code> enum (Warrior/Hunter/Survivor)</td>
+      </tr>
+      <tr>
+        <td>QuestSystem</td>
+        <td>⏳ Eventy gotowe</td>
+        <td><code>OnQuestStarted</code>, <code>OnQuestProgressUpdated</code>, <code>OnQuestCompleted</code> — brakuje managera misji</td>
+      </tr>
+      <tr>
+        <td>SaveSystem</td>
+        <td>⏳ Placeholder</td>
+        <td>Checkpoint trigger i <code>OnCheckpointReached</code> gotowe. Format zapisu (JSON/Binary) do potwierdzenia przed implementacją.</td>
+      </tr>
+      <tr>
+        <td>Floating damage text</td>
+        <td>⏳ Event gotowy</td>
+        <td><code>OnEnemyDamaged { amount, isCritical, worldPosition }</code> — brakuje prefabu tekstu</td>
+      </tr>
+      <tr>
+        <td>OcclusionFader fade</td>
+        <td>⏳ Planowany upgrade</td>
+        <td>Aktualnie instant hide. Plan: Shader Graph (Surface Transparent + _Alpha) + MaterialPropertyBlock</td>
+      </tr>
+      <tr>
+        <td>Status efekty (Poison, Bleed, Slow)</td>
+        <td>⏳ Interfejs gotowy</td>
+        <td><code>IStatusEffectable.ApplyStatusEffect()</code>, <code>OnStatusEffectApplied</code> — brakuje implementacji tick damage</td>
+      </tr>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  Ratocalypse 2.5 — Unity 6000.4.3f1 · URP 17.4.0 · FMOD · Cinemachine 3.1.6 · AI Navigation 2.0.12
+</footer>
+
+</body>
+</html>

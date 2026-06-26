@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e064db53769094884bb629675ea017, type: 3}
+  m_Name: NewEnemyData
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyType: 0
+  displayName: Szczur
+  maxHp: 50
+  moveSpeed: 3.5
+  patrolSpeed: 1.5
+  patrolRadius: 4
+  detectRange: 8
+  losePlayerRange: 14
+  alertDelay: 0.6
+  attackRange: 1.5
+  attackDamage: 10
+  attackCooldown: 1.5
+  stunDuration: 2
+  xpReward: 25

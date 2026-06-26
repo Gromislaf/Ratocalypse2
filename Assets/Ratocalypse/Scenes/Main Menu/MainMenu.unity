@@ -524,7 +524,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 305022978}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 482849605}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: StartNewGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &305022978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -608,7 +620,7 @@ MonoBehaviour:
   playerStats: {fileID: 11400000, guid: 08df2da30d0a16943970a981a1e11923, type: 2}
   fmodEvents: {fileID: 11400000, guid: cf7665ccf0f5cea419aba61f3728496e, type: 2}
   mainMenuSceneName: MainMenu
-  firstGameSceneName: Act1_City
+  firstGameSceneName: Building
 --- !u!4 &482849606
 Transform:
   m_ObjectHideFlags: 0

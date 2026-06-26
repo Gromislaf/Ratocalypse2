@@ -22,6 +22,13 @@ public class PlayerHealthComponent : MonoBehaviour, IDamageable, IHealable
     {
         if (stats.RegenerateStamina(Time.deltaTime))
             EventBus.Publish(new OnPlayerStaminaChanged { current = stats.currentStamina, max = stats.MaxStamina });
+
+        if (stats.TotalHpRegen > 0f && stats.currentHp > 0f && stats.currentHp < stats.MaxHp)
+        {
+            float healed = stats.Heal(stats.TotalHpRegen * Time.deltaTime);
+            if (healed > 0f)
+                EventBus.Publish(new OnPlayerHealed { amount = healed, currentHp = stats.currentHp, maxHp = stats.MaxHp });
+        }
     }
 
     // IDamageable — wywoływane przez wrogów przez interfejs; knockback obsłuży PlayerController
