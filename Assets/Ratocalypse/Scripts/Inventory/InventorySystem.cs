@@ -167,4 +167,43 @@ public class InventorySystem : MonoBehaviour
             _                   => false
         };
     }
+
+    // ---- SaveSystem ----
+
+    public List<string> GetBagNames()
+    {
+        var names = new List<string>(bag.Count);
+        foreach (var item in bag) names.Add(item.itemName);
+        return names;
+    }
+
+    public Dictionary<string, string> GetEquippedNames()
+    {
+        var dict = new Dictionary<string, string>();
+        foreach (var kvp in equipped)
+            dict[kvp.Key.ToString()] = kvp.Value.itemName;
+        return dict;
+    }
+
+    public void RestoreFromSave(List<string> bagNames, Dictionary<string, string> equippedNames, ItemData[] registry)
+    {
+        bag.Clear();
+        equipped.Clear();
+
+        foreach (var name in bagNames)
+        {
+            var item = System.Array.Find(registry, i => i.itemName == name);
+            if (item != null) bag.Add(item);
+        }
+
+        foreach (var kvp in equippedNames)
+        {
+            if (!System.Enum.TryParse<EquipmentSlot>(kvp.Key, out var slot)) continue;
+            var item = System.Array.Find(registry, i => i.itemName == kvp.Value);
+            if (item != null) equipped[slot] = item;
+        }
+
+        RecalculateBonuses();
+        EventBus.Publish(new OnInventoryChanged());
+    }
 }
