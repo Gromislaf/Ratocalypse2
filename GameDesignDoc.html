@@ -263,6 +263,7 @@
       <li><a href="#xp">Doświadczenie i poziomy</a></li>
       <li><a href="#skilltree">Drzewko umiejętności</a></li>
       <li><a href="#quests">System questów</a></li>
+      <li><a href="#story">Fabuła i setting</a></li>
       <li><a href="#minimap">Minimapa</a></li>
       <li><a href="#ui">Interfejs użytkownika (HUD)</a></li>
       <li><a href="#audio">Audio (FMOD)</a></li>
@@ -442,6 +443,19 @@
       <li><span class="label">STUNNED:</span><span class="desc">Wywołane przez PlayerCombat.ApplyStun(duration) — wróg stoi nieruchomo przez czas stunDuration</span></li>
       <li><span class="label">DEAD:</span><span class="desc">HP ≤ 0 → publikuje OnEnemyDied (z xpReward) → XPSystem odbiera i przyznaje XP</span></li>
     </ul>
+
+    <h3>Typy wrogów</h3>
+    <table class="status-table">
+      <thead><tr><th>Typ</th><th>Zachowanie AI</th><th>Specjalność</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Szczur zwykły</strong></td><td>Patrol → Chase → Atak bliski</td><td>Grupowy</td></tr>
+        <tr><td><strong>Opój (tank)</strong></td><td>Wolny, dużo HP, atak AoE</td><td>Odporny</td></tr>
+        <tr><td><strong>Spluwacz</strong></td><td>Ucieka gdy blisko, pluwa jadem</td><td>Trucizna</td></tr>
+        <tr><td><strong>Skoczek</strong></td><td>Teleportuje się za gracza</td><td>Flankowanie</td></tr>
+        <tr><td><strong>Alfa (mini-boss)</strong></td><td>Budzenie innych, fazy walki</td><td>Fazy + Wzmacniacz</td></tr>
+        <tr><td><strong>Król Szczurów (boss)</strong></td><td>3 fazy, summon, AoE, ucieczka</td><td>Boss + Summon</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <!-- 6. INVENTORY -->
@@ -546,6 +560,22 @@
       </div>
     </div>
 
+    <h3>Umiejętności (lista)</h3>
+    <div class="card-grid" style="margin-bottom:16px">
+      <div class="card">
+        <h4>⚔️ Wojownik</h4>
+        <p>Silny cios (ogłuszenie) · Atak obrotowy (AoE) · Furia (chwilowy +dmg) · Ściana tarcz (pasywna) · Berserker (HP→DMG)</p>
+      </div>
+      <div class="card">
+        <h4>🏹 Łowca</h4>
+        <p>Strzał precyzyjny (krit) · Pułapka (unieruchomienie) · Seria (3 strzały szybko) · Oznaczenie celu (pasywna) · Eksplodujący pocisk</p>
+      </div>
+      <div class="card">
+        <h4>🛡️ Ocalały</h4>
+        <p>Adrenalina (regen HP) · Drugi oddech (revive) · Zatrucie odwrócone · Pancerz z odpadów · Ostatnia szansa (pasywna)</p>
+      </div>
+    </div>
+
     <p style="margin-top:16px">
       Bonusy z skilli (<code>skillBonus*</code>) są oddzielone od bonusów z ekwipunku (<code>bonus*</code>).
       <code>ResetBonuses()</code> (wywoływane przy re-equip) nie dotyka skillBonus*.
@@ -577,7 +607,40 @@
     <p>Jeden aktywny quest na raz. NPCInteraction reaguje inaczej zależnie od stanu (oferta / "wróć" / odbiór / "dziękuję").</p>
   </section>
 
-  <!-- 10. MINIMAP -->
+  <!-- 10. STORY -->
+  <section id="story">
+    <h2><span class="icon">📖</span> Fabuła i setting</h2>
+
+    <h3>Setting</h3>
+    <ul class="mech-list">
+      <li><span class="label">Rok 2087</span><span class="desc">Po katastrofie biologicznej, która skażiła środowisko</span></li>
+      <li><span class="label">Mutacja</span><span class="desc">Szczury zmutowały przez skażenie i zorganizowały się w hierarchiczne klany</span></li>
+      <li><span class="label">Ludzkość</span><span class="desc">Walczy o ostatnie schronienia — ruiny miast, podziemia, bunkry</span></li>
+      <li><span class="label">3 akty</span><span class="desc">Ruiny miasta → Kanały → Gniazdo Króla Szczurów</span></li>
+    </ul>
+
+    <h3>Typy misji</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Główne</h4>
+        <p>Fabularne, boss na końcu każdego aktu.</p>
+      </div>
+      <div class="card">
+        <h4>Poboczne</h4>
+        <p>Ocalali do uratowania, przedmioty do zdobycia.</p>
+      </div>
+      <div class="card">
+        <h4>Polowanie</h4>
+        <p>Zabij N wrogów danego typu.</p>
+      </div>
+      <div class="card">
+        <h4>Obrona</h4>
+        <p>Chroń punkt przez N fal wrogów.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. MINIMAP -->
   <section id="minimap">
     <h2><span class="icon">🗺️</span> Minimapa</h2>
 
