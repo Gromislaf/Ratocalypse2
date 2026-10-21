@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d89dff2302996d1438edaf71da3bf881, type: 3}
+  m_Name: New Quest Data
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questId: 1
+  questName: "znajd\u017A mi"
+  description: "gdzie m\xF3j miecz"
+  targetItem: {fileID: 11400000, guid: 3abda04d8b90fe84d898ea0c03c372f6, type: 2}
+  xpReward: 300
+  searchAreaRadius: 15

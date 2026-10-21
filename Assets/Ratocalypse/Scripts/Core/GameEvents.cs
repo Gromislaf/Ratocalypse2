@@ -135,6 +135,20 @@ public struct OnQuestProgressUpdated
     public int required;
 }
 
+/// <summary>Gracz zaakceptowal misje od NPC.</summary>
+public struct OnQuestAccepted
+{
+    public QuestData Quest;
+    public UnityEngine.Vector3 SearchAreaCenter;
+    public float SearchAreaRadius;
+}
+
+/// <summary>Gracz znalazl przedmiot questa w ekwipunku.</summary>
+public struct OnQuestItemFound
+{
+    public QuestData Quest;
+}
+
 /// <summary>Misja uko�czona.</summary>
 public struct OnQuestCompleted
 {

@@ -45,7 +45,7 @@ public static class SkillDatabase
     {
         // ── WARRIOR ─────────────────────────────────────────────
         new SkillDefinition(
-            "warrior_t1", "Siła Bruta", "+5 obrażeń",
+            "warrior_t1", "Mega Siła", "+5 obrażeń",
             SkillBranch.Warrior, 1, SkillEffectType.Damage, 5f),
 
         new SkillDefinition(
@@ -65,7 +65,7 @@ public static class SkillDatabase
 
         // ── HUNTER ──────────────────────────────────────────────
         new SkillDefinition(
-            "hunter_t1", "Zwinna Noga", "+0.8 prędkości ruchu",
+            "hunter_t1", "Szybkość", "+0.8 prędkości ruchu",
             SkillBranch.Hunter, 1, SkillEffectType.MoveSpeed, 0.8f),
 
         new SkillDefinition(
@@ -79,7 +79,7 @@ public static class SkillDatabase
             "hunter_t2"),
 
         new SkillDefinition(
-            "hunter_t4", "Błyskawica", "+0.4 szybkości ataku",
+            "hunter_t4", "Szybki atak", "+0.4 szybkości ataku",
             SkillBranch.Hunter, 4, SkillEffectType.AttackSpeed, 0.4f,
             "hunter_t3"),
 
@@ -99,7 +99,7 @@ public static class SkillDatabase
             "survivor_t2"),
 
         new SkillDefinition(
-            "survivor_t4", "Ostatnia Wola", "+60 max HP",
+            "survivor_t4", "Witalność", "+60 max HP",
             SkillBranch.Survivor, 4, SkillEffectType.MaxHp, 60f,
             "survivor_t3"),
     };

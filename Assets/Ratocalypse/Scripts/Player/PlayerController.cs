@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour
     [Header("Warstwy raycastu")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private LayerMask interactableLayer;
+
+    [Header("Interakcja")]
+    [SerializeField] private float interactRange = 2f;
 
     [Header("Walka")]
     [Tooltip("Dystans, w którym zatrzymujemy się przy wrogu i oddajemy mu atak PlayerCombat")]
@@ -26,6 +30,9 @@ public class PlayerController : MonoBehaviour
     private Transform currentTargetTransform;
     private bool isAttackingTarget;
     private bool isDodging;
+
+    private IInteractable currentInteractable;
+    private Transform currentInteractableTransform;
 
     // Animator parameter hashes — obliczane raz, bez GC przy każdej klatce
     private static readonly int HashSpeed = Animator.StringToHash("Speed");
@@ -64,6 +71,7 @@ public class PlayerController : MonoBehaviour
         HandleMovementInput();
         HandleDodgeInput();
         PursueTarget();
+        PursueInteractable();
         FaceMovementDirection();
         UpdateAnimator();
     }
@@ -77,7 +85,18 @@ public class PlayerController : MonoBehaviour
 
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        // Priorytet: wróg > ziemia
+        // Priorytet: interaktywny > wróg > ziemia
+        if (interactableLayer != 0 && Physics.Raycast(ray, out RaycastHit interactHit, 100f, interactableLayer))
+        {
+            var interactable = interactHit.collider.GetComponent<IInteractable>();
+            if (interactable != null && interactable.CanInteract)
+            {
+                ClearTarget();
+                SetInteractTarget(interactable, interactHit.transform);
+                return;
+            }
+        }
+
         if (Physics.Raycast(ray, out RaycastHit enemyHit, 100f, enemyLayer))
         {
             SetTarget(enemyHit.collider.GetComponent<IDamageable>(), enemyHit.transform);
@@ -113,6 +132,7 @@ public class PlayerController : MonoBehaviour
     private void MoveToPoint(Vector3 destination)
     {
         isAttackingTarget = false;
+        ClearInteractTarget();
         agent.isStopped = false;
         agent.SetDestination(destination);
     }
@@ -130,6 +150,34 @@ public class PlayerController : MonoBehaviour
         currentTarget = null;
         currentTargetTransform = null;
         isAttackingTarget = false;
+    }
+
+    private void SetInteractTarget(IInteractable interactable, Transform t)
+    {
+        currentInteractable = interactable;
+        currentInteractableTransform = t;
+        agent.isStopped = false;
+        agent.SetDestination(t.position);
+    }
+
+    private void ClearInteractTarget()
+    {
+        currentInteractable = null;
+        currentInteractableTransform = null;
+    }
+
+    private void PursueInteractable()
+    {
+        if (currentInteractable == null) return;
+
+        float dist = Vector3.Distance(transform.position, currentInteractableTransform.position);
+        if (dist <= interactRange)
+        {
+            agent.isStopped = true;
+            FacePosition(currentInteractableTransform.position);
+            currentInteractable.Interact();
+            ClearInteractTarget();
+        }
     }
 
     private void PursueTarget()

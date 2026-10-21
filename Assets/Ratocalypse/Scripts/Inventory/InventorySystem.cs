@@ -45,6 +45,8 @@ public class InventorySystem : MonoBehaviour
         return true;
     }
 
+    public bool HasItemInBag(ItemData item) => item != null && bag.Contains(item);
+
     // --- Ekwipunek ---
 
     public ItemData GetEquipped(EquipmentSlot slot) =>
