@@ -289,4 +289,13 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>Czy gracz jest w trakcie uniku (iframes aktywne).</summary>
     public bool IsDodging => isDodging;
+
+    // ---- API dla BenchmarkRunner / testów ---------------------
+
+    /// <summary>Deterministyczny ruch do punktu w świecie — omija raycast z myszy.</summary>
+    public void MoveToWorldPos(Vector3 worldPos)
+    {
+        ClearTarget();
+        MoveToPoint(worldPos);
+    }
 }
