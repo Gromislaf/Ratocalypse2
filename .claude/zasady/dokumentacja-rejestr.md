@@ -1,7 +1,7 @@
 # Rejestr struktury dokumentacji
 
 > Aktualna struktura `Documentation/`, prefiksy ID i zatwierdzone wyjątki.
-> Zasady: `dokumentacja-promotor.md` §7.
+> Zasady: `.claude/rules/dokumentacja-promotor.md` §7.
 > Agent edytuje ten plik **wyłącznie** po to, by wprowadzić wyjątek zatwierdzony przez autora.
 
 ---
