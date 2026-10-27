@@ -20,6 +20,13 @@ Pliki, których stan zostanie zmieniony: …
 Operacje USUŃ: … (albo „brak”)
 ```
 
+## Jak czytać zasady (oszczędnie)
+- Skrót Z1–Z14 masz w `CLAUDE.md`. Pełną treść czytasz **tylko** dla zasad wskazanych w zleceniu lub dotyczących zmiany:
+  `Grep -n "^## Z" .claude/zasady/zasady-techniczne.md` → `Read` tylko tych sekcji (offset/limit).
+- `.claude/zasady/decyzje.md` — `Grep` po słowach kluczowych zadania; nie czytaj całości.
+- `.claude/zasady/zasady-rejestr.md`, `struktura-projektu.md` — tylko potrzebna sekcja.
+- Kod: najpierw `LSP`/`Grep` (definicje, odwołania), potem `Read` potrzebnych metod — nie całych plików, jeśli nie trzeba.
+
 ## Faza 2 — wykonanie (tylko z zatwierdzonym manifestem przekazanym dosłownie)
 1. Wykonuj **dokładnie** operacje z manifestu, w podanej kolejności, nic więcej.
 2. Po **każdej** operacji: `read_console`. Pierwszy nowy błąd → **zatrzymaj się i raportuj**. Nie naprawiaj, nie próbuj inaczej, nie kontynuuj.
@@ -28,6 +35,10 @@ Operacje USUŃ: … (albo „brak”)
 5. Nowe ScriptableObject → `Assets/Ratocalypse/Data/<podkategoria>/` (wg `.claude/zasady/struktura-projektu.md`).
 6. Zapis sceny raz, na końcu.
 
+## Oszczędne czytanie
+Czytaj tylko to, czego potrzebujesz do zadania. Z dużych plików (zasady, rejestry, specyfikacje, kod) — potrzebne fragmenty (`Grep`, `Read` z zakresem linii, `LSP`), nie całość.
+Plików, które zlecenie już streszcza, nie czytaj ponownie bez powodu. Raport zwięzły: uwagi i wyniki, bez streszczania przeczytanych plików.
+
 ## Nigdy
 - `ProjectSettings/`, `Packages/`, paczki zewnętrzne (Z12), obiekty spoza manifestu,
 - narzędzia spoza Twojej listy; `Bash` tylko do `git status` / `git diff --stat`.
@@ -35,8 +46,12 @@ Operacje USUŃ: … (albo „brak”)
 ## Raport po fazie 2
 ```
 # Integracja: <ID>
+
 ## Wykonane operacje        ← numery z manifestu; przerwane: nr + powód
+
 ## Konsola                  ← bez nowych błędów / fragment błędu
+
 ## Różnica w hierarchii     ← przed → po
+
 ## Scena zapisana           ← tak / nie
 ```

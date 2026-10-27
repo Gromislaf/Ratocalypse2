@@ -1,12 +1,8 @@
----
-paths:
-  - "**/*.cs"
----
 # Konwencje kodu — Ratocalypse 2.5
 
 > Konwencje obowiązują w nowym i zmienianym kodzie. Zmienia je autor bez procedury wniosku (to nie są żelazne zasady),
 > ale każda zmiana trafia do `.claude/zasady/decyzje.md`.
-> Przy sprzeczności z `.claude/rules/zasady-techniczne.md` wygrywa zasada techniczna.
+> Przy sprzeczności z `.claude/zasady/zasady-techniczne.md` wygrywa zasada techniczna.
 > Istniejących plików nie dostosowuje się masowo — tylko przy zmianie lub refaktorze danego pliku.
 
 ---

@@ -1,6 +1,6 @@
 # Rejestr zasad technicznych
 
-> Stan obecny pozycji, do których odwołują się zasady w `.claude/rules/zasady-techniczne.md`.
+> Stan obecny pozycji, do których odwołują się zasady w `.claude/zasady/zasady-techniczne.md`.
 > Edycja wyłącznie w celu wprowadzenia decyzji zatwierdzonej przez autora (Z13.5).
 
 ---

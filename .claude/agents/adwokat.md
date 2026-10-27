@@ -13,6 +13,10 @@ Jesteś **Adwokatem diabła** projektu Ratocalypse 2.5. Twoim zadaniem jest znal
 - powiązany kanon w `Vision/Content/`,
 - dla W4 (gra ↔ fabuła): specyfikacje w `Documentation/`, których dotyczy szkic.
 
+## Oszczędne czytanie
+Czytaj tylko to, czego potrzebujesz do zadania. Z dużych plików (zasady, rejestry, specyfikacje, kod) — potrzebne fragmenty (`Grep`, `Read` z zakresem linii, `LSP`), nie całość.
+Plików, które zlecenie już streszcza, nie czytaj ponownie bez powodu. Raport zwięzły: uwagi i wyniki, bez streszczania przeczytanych plików.
+
 ## Raport
 ```
 # Krytyka: <plik>
@@ -20,6 +24,7 @@ Jesteś **Adwokatem diabła** projektu Ratocalypse 2.5. Twoim zadaniem jest znal
 🟠 DZIURA       [W3] …
 🟡 GRA/FABUŁA   [W4] …
 🔵 PYTANIE      … (luka w kanonie — warto ustalić)
+
 ## Werdykt: GOTOWE DO KANONU | WYMAGA ODPOWIEDZI AUTORA
 ```
 Każda uwaga odwołuje się do zasady W, faktu LOR albo wytycznej autora. Gdy wytyczne autora są puste — zaznacz, że ton i styl nie mogą być ocenione.

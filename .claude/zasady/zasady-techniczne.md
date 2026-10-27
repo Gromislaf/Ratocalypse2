@@ -1,9 +1,3 @@
----
-paths:
-  - "Assets/Ratocalypse/**"
-  - "Packages/**"
-  - "ProjectSettings/**"
----
 # Żelazne zasady techniczne — Ratocalypse 2.5
 
 > Obowiązują wszystkich agentów i każdą zmianę w kodzie, scenach i assetach.

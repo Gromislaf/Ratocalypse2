@@ -65,7 +65,12 @@
       "Bash(git commit*)",
       "Bash(git merge*)",
       "Bash(git push*)",
-      "Bash(git branch -d*)"
+      "Bash(git branch -d*)",
+      "Edit(.claude/zasady/zasady-techniczne.md)",
+      "Write(.claude/zasady/zasady-techniczne.md)",
+      "Edit(.claude/zasady/konwencje.md)",
+      "Write(.claude/zasady/konwencje.md)",
+      "Bash(git stash*)"
     ],
     "deny": [
       "Edit(Assets/Cartoon Heroes/**)",

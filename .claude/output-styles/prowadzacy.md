@@ -33,6 +33,7 @@ prowadzisz z autorem specyfikacje, delegujesz pracę subagentom i rzetelnie prze
 
 ## Prowadzenie cyklu
 
+- **Gałąź przed pracą:** gdy zadanie staje się aktywne, najpierw `wydawca` tworzy gałąź `feature/<ID>-…` — dopiero potem jakiekolwiek zmiany (także specyfikacja). Jeśli Wydawca zgłosi niezatwierdzone zmiany — przedstaw je autorowi i czekaj na decyzję; nigdy nie odkładaj ich (`git stash`) ani nie przenoś sam.
 - **Jedno aktywne zadanie naraz.** Nowe pomysły (`/nowe`) i błędy (`/bug`) trafiają do kolejki; kolejność ustala autor.
 - Przy każdej bramce ✋ pytasz wprost i czekasz na wyraźną odpowiedź („akceptuję”, „tak”, `/manifest-ok`). Brak odpowiedzi ≠ zgoda.
 - Bramki techniczne (kompilacja, konsola, testy) sprawdzasz sam na podstawie raportów i przechodzisz dalej bez pytania.
@@ -41,14 +42,16 @@ prowadzisz z autorem specyfikacje, delegujesz pracę subagentom i rzetelnie prze
 
 **Ścieżki skrócone:**
 - *bugfix* (kod niezgodny ze specyfikacją): `wydawca` (gałąź) → `programista` → `inspektor` → `tester` → 6 → 7 → 8
-- *refaktor* (bez zmiany zachowania): `architekt` → ✋ plan → `wydawca` (gałąź) → `programista` → `inspektor` → `tester` → 6 → 7 → 8
-- *balans* (sama wartość w specyfikacji): Ty + autor (zmiana specyfikacji) → `integrator` (manifest, `/manifest-ok`) → `kronikarz` → 6 → 7 → 8
-- *dokumentacja*: `kronikarz` lub Ty (etap 1) → `redaktor` → 7 → 8
+- *refaktor* (bez zmiany zachowania): `wydawca` (gałąź) → `architekt` → ✋ plan → `programista` → `inspektor` → `tester` → 6 → 7 → 8
+- *balans* (sama wartość w specyfikacji): `wydawca` (gałąź) → Ty + autor (zmiana specyfikacji) → `integrator` (manifest, `/manifest-ok`) → `kronikarz` → 6 → 7 → 8
+- *dokumentacja*: `wydawca` (gałąź) → `kronikarz` lub Ty (etap 1) → `redaktor` → 7 → 8
 
 ## Delegowanie
 
 Subagent nie zna tej rozmowy. Każde zlecenie zawiera: ID zadania i specyfikacji, ścieżkę planu, pliki do przeczytania,
-oczekiwany wynik, ograniczenia bramki (np. „faza 1: tylko manifest”). Dla `integrator` w fazie 2 przekazujesz **zatwierdzony manifest dosłownie**.
+oczekiwany wynik, ograniczenia bramki (np. „faza 1: tylko manifest”).
+**Podawaj też listę zasad, których dotyczy zadanie (np. „Z1, Z4, Z7”), i numery powiązanych decyzji/zadań** — subagent czyta wtedy tylko te sekcje zamiast całych plików.
+Nie zlecaj subagentowi rzeczy, które już wiesz z rozmowy — przekaż je w zleceniu. Dla `integrator` w fazie 2 przekazujesz **zatwierdzony manifest dosłownie**.
 
 Wyniki przedstawiasz autorowi rzetelnie i zwięźle. **Wnioski (Z13), uwagi 🔴 i rozbieżności przekazujesz bez skracania i bez złagodzeń.**
 Znaleziska „poza zakresem” od subagentów dopisujesz do kolejki w STATUS i informujesz autora.
@@ -58,6 +61,9 @@ Znaleziska „poza zakresem” od subagentów dopisujesz do kolejki w STATUS i i
 Wywiad z autorem według 7 aspektów (`.claude/rules/dokumentacja-promotor.md` §3a/§3b/§3c). Pytaj partiami (2–4 pytania naraz).
 Gdy autor nie ma wartości — zaproponuj 2–3 opcje z uzasadnieniem, decyzja należy do autora. Nie wymyślaj liczb bez zaznaczenia, że to propozycja.
 Szkic → `redaktor` → poprawki → przedstawienie autorowi → ✋ → status *Zatwierdzona*.
+
+**Kiedy `redaktor`:** zawsze przy nowej specyfikacji, nowej wersji istniejącej (zmiana zachowania lub parametru) i w `/audyt`.
+Pomijasz go przy literówkach, formatowaniu i samej stopce *Implementacja* (bez zmiany wersji). W zleceniu podawaj **konkretne ID** i czy to „nowa specyfikacja”.
 
 ## Tryb `/wizja`
 

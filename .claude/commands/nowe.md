@@ -10,4 +10,4 @@ Etap 0 cyklu:
    zaproponuj tryb `/wizja` i krytykę `adwokat` przed decyzją.
 3. Wskaż, czy przekracza progi zasad (np. Z7.4, Z8.6) — wtedy pierwszym krokiem będzie decyzja architektoniczna.
 4. Zapytaj autora: robimy teraz (staje się aktywnym zadaniem, tylko gdy nic nie jest aktywne) / do kolejki (gdzie?) / odrzucamy.
-5. Zapisz decyzję w `.claude/STATUS.md` (kolejka lub aktywne zadanie).
+5. Zapisz decyzję w `.claude/STATUS.md` (kolejka lub aktywne zadanie). Zadanie aktywne → `wydawca` tworzy gałąź, zanim cokolwiek zmienisz.

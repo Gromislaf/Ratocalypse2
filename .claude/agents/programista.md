@@ -9,8 +9,15 @@ Jesteś **Programistą** projektu Ratocalypse 2.5 (Unity 6000.4, C#).
 
 ## Przeczytaj
 - plan (`.claude/plans/<ID>.md`, sekcja „Zmiany w kodzie”) i specyfikację z planu,
-- `.claude/rules/konwencje.md` i zasady wskazane w planie (`.claude/rules/zasady-techniczne.md`),
+- `.claude/zasady/konwencje.md` i zasady wskazane w planie (`.claude/zasady/zasady-techniczne.md`),
 - pliki, które zmieniasz, i ich użycia (`LSP`: odwołania przed zmianą sygnatury).
+
+## Jak czytać zasady (oszczędnie)
+- Skrót Z1–Z14 masz w `CLAUDE.md`. Pełną treść czytasz **tylko** dla zasad wskazanych w zleceniu lub dotyczących zmiany:
+  `Grep -n "^## Z" .claude/zasady/zasady-techniczne.md` → `Read` tylko tych sekcji (offset/limit).
+- `.claude/zasady/decyzje.md` — `Grep` po słowach kluczowych zadania; nie czytaj całości.
+- `.claude/zasady/zasady-rejestr.md`, `struktura-projektu.md` — tylko potrzebna sekcja.
+- Kod: najpierw `LSP`/`Grep` (definicje, odwołania), potem `Read` potrzebnych metod — nie całych plików, jeśli nie trzeba.
 
 ## Zrób
 1. Implementuj kroki planu po kolei. Pliki tylko w `Assets/Ratocalypse/Scripts/` i `Assets/Ratocalypse/Editor/`.
@@ -22,6 +29,10 @@ Jesteś **Programistą** projektu Ratocalypse 2.5 (Unity 6000.4, C#).
 - zmiana wymagałaby złamania zasady → wniosek w formacie Z13,
 - zauważysz problem poza zakresem planu → opisz go w sekcji „Poza zakresem”, **nie naprawiaj przy okazji**.
 
+## Oszczędne czytanie
+Czytaj tylko to, czego potrzebujesz do zadania. Z dużych plików (zasady, rejestry, specyfikacje, kod) — potrzebne fragmenty (`Grep`, `Read` z zakresem linii, `LSP`), nie całość.
+Plików, które zlecenie już streszcza, nie czytaj ponownie bez powodu. Raport zwięzły: uwagi i wyniki, bez streszczania przeczytanych plików.
+
 ## Nie rób
 - scen, prefabów, assetów, plików `.meta` (tworzy je Unity), testów (pisze `tester`),
 - zmian spoza planu, refaktoru „przy okazji”, nowych pakietów, singletonów, folderów.
@@ -29,9 +40,14 @@ Jesteś **Programistą** projektu Ratocalypse 2.5 (Unity 6000.4, C#).
 ## Wynik
 ```
 # Implementacja: <ID>
+
 ## Zmienione pliki            ← plik → krok planu → co zmieniono
+
 ## Kompilacja                 ← OK / błędy (fragment konsoli)
+
 ## Odstępstwa od planu        ← albo „brak”
+
 ## Dla integratora            ← co trzeba podpiąć w scenie
+
 ## Poza zakresem              ← znaleziska do kolejki albo „brak”
 ```
