@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "outputStyle": "prowadzacy",
+  "permissions": {
+    "allow": [
+      "mcp__UnityMCP__find_gameobjects",
+      "mcp__UnityMCP__find_in_file",
+      "mcp__UnityMCP__read_console",
+      "mcp__UnityMCP__validate_script",
+      "mcp__UnityMCP__manage_script_capabilities",
+      "mcp__UnityMCP__get_sha",
+      "mcp__UnityMCP__get_test_job",
+      "mcp__UnityMCP__unity_docs",
+      "mcp__UnityMCP__unity_reflect",
+      "mcp__UnityMCP__debug_request_context",
+      "mcp__UnityMCP__refresh_unity",
+      "mcp__UnityMCP__run_tests",
+      "mcp__UnityMCP__manage_editor",
+      "mcp__UnityMCP__manage_camera",
+      "mcp__UnityMCP__manage_profiler",
+      "mcp__UnityMCP__manage_scene",
+      "mcp__UnityMCP__manage_gameobject",
+      "mcp__UnityMCP__manage_components",
+      "mcp__UnityMCP__manage_asset",
+      "mcp__UnityMCP__manage_prefabs",
+      "mcp__UnityMCP__manage_scriptable_object",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git ls-files*)",
+      "Bash(git switch*)",
+      "Bash(git checkout -b*)",
+      "Bash(git pull --ff-only*)",
+      "Bash(git show*)",
+      "Bash(git branch)",
+      "Bash(git branch --list*)"
+    ],
+    "ask": [
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)",
+      "Edit(.claude/rules/**)",
+      "Write(.claude/rules/**)",
+      "Edit(.claude/zasady/zasady-rejestr.md)",
+      "Write(.claude/zasady/zasady-rejestr.md)",
+      "Edit(.claude/zasady/struktura-projektu.md)",
+      "Write(.claude/zasady/struktura-projektu.md)",
+      "Edit(.claude/zasady/dokumentacja-rejestr.md)",
+      "Write(.claude/zasady/dokumentacja-rejestr.md)",
+      "Edit(.claude/agents/**)",
+      "Write(.claude/agents/**)",
+      "Edit(.claude/commands/**)",
+      "Write(.claude/commands/**)",
+      "Edit(.claude/output-styles/**)",
+      "Write(.claude/output-styles/**)",
+      "Edit(.claude/hooks/**)",
+      "Write(.claude/hooks/**)",
+      "Edit(.claude/settings.json)",
+      "Write(.claude/settings.json)",
+      "Edit(Vision/Zasady.md)",
+      "Write(Vision/Zasady.md)",
+      "Edit(Assets/Ratocalypse/Scripts/Player/OcclusionFader.cs)",
+      "Write(Assets/Ratocalypse/Scripts/Player/OcclusionFader.cs)",
+      "Edit(Assets/Ratocalypse/Animations/PlayerAnimator.controller)",
+      "Write(Assets/Ratocalypse/Animations/PlayerAnimator.controller)",
+      "Bash(git commit*)",
+      "Bash(git merge*)",
+      "Bash(git push*)",
+      "Bash(git branch -d*)"
+    ],
+    "deny": [
+      "Edit(Assets/Cartoon Heroes/**)",
+      "Write(Assets/Cartoon Heroes/**)",
+      "Edit(Assets/Modular Industrial Set/**)",
+      "Write(Assets/Modular Industrial Set/**)",
+      "Edit(Assets/Plugins/FMOD/**)",
+      "Write(Assets/Plugins/FMOD/**)",
+      "Edit(Assets/TextMesh Pro/**)",
+      "Write(Assets/TextMesh Pro/**)",
+      "Edit(ProjectSettings/ProjectVersion.txt)",
+      "Write(ProjectSettings/ProjectVersion.txt)",
+      "Edit(Packages/manifest.json)",
+      "Write(Packages/manifest.json)",
+      "Edit(Packages/packages-lock.json)",
+      "Write(Packages/packages-lock.json)",
+      "Edit(Library/**)",
+      "Write(Library/**)",
+      "Edit(Temp/**)",
+      "Write(Temp/**)",
+      "Edit(Logs/**)",
+      "Write(Logs/**)",
+      "Edit(UserSettings/**)",
+      "Write(UserSettings/**)",
+      "Edit(obj/**)",
+      "Write(obj/**)",
+      "Edit(.claude/stan/**)",
+      "Write(.claude/stan/**)",
+      "mcp__UnityMCP__execute_code",
+      "mcp__UnityMCP__execute_custom_tool",
+      "mcp__UnityMCP__execute_menu_item",
+      "mcp__UnityMCP__batch_execute",
+      "mcp__UnityMCP__create_script",
+      "mcp__UnityMCP__delete_script",
+      "mcp__UnityMCP__apply_text_edits",
+      "mcp__UnityMCP__script_apply_edits",
+      "mcp__UnityMCP__manage_script",
+      "mcp__UnityMCP__manage_packages",
+      "mcp__UnityMCP__manage_build",
+      "mcp__UnityMCP__manage_physics",
+      "mcp__UnityMCP__manage_graphics",
+      "mcp__UnityMCP__manage_tools",
+      "mcp__UnityMCP__set_active_instance",
+      "mcp__UnityMCP__blender_bridge",
+      "mcp__UnityMCP__generate_audio",
+      "mcp__UnityMCP__generate_image",
+      "mcp__UnityMCP__generate_model",
+      "mcp__UnityMCP__import_model",
+      "mcp__UnityMCP__import_model_file",
+      "mcp__UnityMCP__manage_material",
+      "mcp__UnityMCP__manage_shader",
+      "mcp__UnityMCP__manage_texture",
+      "mcp__UnityMCP__manage_animation",
+      "mcp__UnityMCP__manage_ui",
+      "mcp__UnityMCP__manage_vfx",
+      "mcp__UnityMCP__manage_probuilder",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(git commit --amend*)",
+      "Bash(git rebase*)",
+      "Bash(git branch -D*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/session-start.ps1\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/user-prompt.ps1\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/pre-tool.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}

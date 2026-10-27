@@ -1,3 +1,7 @@
+---
+paths:
+  - "Documentation/**"
+---
 # Zasady dokumentacji projektowej
 
 > Źródło: wytyczne promotora (`Dokumentacja.pdf`), zaadaptowane do projektu Ratocalypse 2.5.
@@ -30,7 +34,7 @@ Przy pancerzu, krytykach lub odpornościach — jawna kolejność obliczeń.
 **D8. Specyfikacja przed implementacją.** Nowa mechanika lub element architektury jest specyfikowany i zatwierdzony przez autora przed implementacją.
 Jeżeli w trakcie testów zmienią się założenia — specyfikacja jest aktualizowana, a zmiana trafia do historii.
 
-**D9. Struktura odpowiada projektowi.** Pliki tworzy się tylko dla tego, co faktycznie istnieje lub jest zatwierdzone. Struktura i prefiksy: `dokumentacja-rejestr.md` (§7).
+**D9. Struktura odpowiada projektowi.** Pliki tworzy się tylko dla tego, co faktycznie istnieje lub jest zatwierdzone. Struktura i prefiksy: `.claude/zasady/dokumentacja-rejestr.md` (§7).
 
 **D10. Brak zmyślonych danych.** [projekt] Każda liczba w `Optimization/` pochodzi z pomiaru i wskazuje plik źródłowy (CSV).
 Brak danych = `TODO: pomiar`, nigdy wartość szacowana.
@@ -202,7 +206,7 @@ zachowanie w sytuacji nietypowej, efekt wizualny, efekt dźwiękowy (ID zdarzeni
 
 **Format ID:** `GDD-<PREFIKS>-<NNN>`. Numeracja w obrębie prefiksu, numery nie są ponownie używane.
 
-Prefiksy i przypisane im pliki: `dokumentacja-rejestr.md`.
+Prefiksy i przypisane im pliki: `.claude/zasady/dokumentacja-rejestr.md`.
 
 **Wersje:** każdy element ma własny numer (0.1, 0.2…). Nowa wersja = zmiana zachowania, parametru lub kontraktu.
 Literówka czy formatowanie nie zmienia wersji.
@@ -227,7 +231,7 @@ Nie opisuje pracy („przepisano skrypt”, „naprawiono bug”).
 - [ ] (AI) każdy stan ma wejście/wyjście + 6 pytań z §4.
 - [ ] (UI) każdy element ma tabelę cech.
 - [ ] (OPT) każda liczba ma plik źródłowy; scenariusz odwołuje się do GDD-OPT-001.
-- [ ] Plik leży we właściwym folderze, prefiks zgodny z rejestrem (`dokumentacja-rejestr.md`).
+- [ ] Plik leży we właściwym folderze, prefiks zgodny z rejestrem (`.claude/zasady/dokumentacja-rejestr.md`).
 
 Format raportu:
 ```
@@ -241,7 +245,7 @@ GDD-XXX-NNN — ✅ zgodne | ⚠️ braki | ❌ niezgodne
 ## 7. Organizacja dokumentacji w projekcie
 
 **Lokalizacja:** `Documentation/` w katalogu głównym repozytorium, wyłącznie Markdown.
-**Aktualna struktura folderów, prefiksy i zatwierdzone wyjątki:** `dokumentacja-rejestr.md`.
+**Aktualna struktura folderów, prefiksy i zatwierdzone wyjątki:** `.claude/zasady/dokumentacja-rejestr.md`.
 
 **Zasady:**
 1. Jeden plik = jeden obszar. Plik zawiera wiele elementów, każdy z własnym ID. Powyżej ok. 10 elementów — podział na podfolder.
@@ -265,4 +269,4 @@ GDD-XXX-NNN — ✅ zgodne | ⚠️ braki | ❌ niezgodne
      proponowana lokalizacja, prefiks i szablon; wpływ na istniejące pliki;
    - czeka na decyzję autora (zatwierdzenie, zmiana lub odrzucenie).
 
-   Zatwierdzony wyjątek wprowadza się do `dokumentacja-rejestr.md` — to jedyna dozwolona edycja rejestru przez agenta.
+   Zatwierdzony wyjątek wprowadza się do `.claude/zasady/dokumentacja-rejestr.md` — to jedyna dozwolona edycja rejestru przez agenta.
