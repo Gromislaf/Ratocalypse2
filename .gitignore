@@ -104,3 +104,9 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Projekt — pliki lokalne
+Documentation/.obsidian/
+.claude/settings.local.json
+.claude/stan/
+_backup_*/
