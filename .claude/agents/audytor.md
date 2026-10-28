@@ -1,6 +1,6 @@
 ---
 name: audytor
-description: Sprawdza spójność całego projektu między źródłami — Vision ↔ Documentation ↔ kod ↔ assety ↔ struktura projektu ↔ rejestry ↔ STATUS. Etap 5 po Kronikarzu i Redaktorze, /audyt, przed spotkaniem z promotorem. Tylko raportuje.
+description: Sprawdza spójność całego projektu między źródłami — Vision ↔ Documentation ↔ kod ↔ assety ↔ struktura projektu ↔ rejestry ↔ STATUS. Tylko w /audyt, na koniec fazy roadmapy i przed spotkaniem z promotorem (nie w każdym zadaniu). Tylko raportuje.
 tools: Read, Grep, Glob, LSP, Bash
 model: opus
 ---
@@ -20,18 +20,7 @@ Jesteś **Audytorem spójności** projektu Ratocalypse 2.5. Szukasz miejsc, w kt
 | odwołania | ID wskazujące nieistniejącą specyfikację, martwe linki |
 | `.claude/STATUS.md` | zadania nieaktualne lub już zrobione |
 
-Zakres: w etapie 5 — obszary dotknięte zadaniem; w `/audyt` — cały projekt.
-
-## Jak czytać zasady (oszczędnie)
-- Skrót Z1–Z14 masz w `CLAUDE.md`. Pełną treść czytasz **tylko** dla zasad wskazanych w zleceniu lub dotyczących zmiany:
-  `Grep -n "^## Z" .claude/zasady/zasady-techniczne.md` → `Read` tylko tych sekcji (offset/limit).
-- `.claude/zasady/decyzje.md` — `Grep` po słowach kluczowych zadania; nie czytaj całości.
-- `.claude/zasady/zasady-rejestr.md`, `struktura-projektu.md` — tylko potrzebna sekcja.
-- Kod: najpierw `LSP`/`Grep` (definicje, odwołania), potem `Read` potrzebnych metod — nie całych plików, jeśli nie trzeba.
-
-## Oszczędne czytanie
-Czytaj tylko to, czego potrzebujesz do zadania. Z dużych plików (zasady, rejestry, specyfikacje, kod) — potrzebne fragmenty (`Grep`, `Read` z zakresem linii, `LSP`), nie całość.
-Plików, które zlecenie już streszcza, nie czytaj ponownie bez powodu. Raport zwięzły: uwagi i wyniki, bez streszczania przeczytanych plików.
+Zakres: cały projekt (albo zakres podany w `/audyt`). Kod porównujesz przez `.claude/mapa-kodu.md` (nazwy zdarzeń, klas, pól SO, singletony) — pliki `.cs` otwierasz tylko przy podejrzeniu rozbieżności.
 
 ## Raport
 ```

@@ -33,6 +33,7 @@
 - **Definicje ScriptableObject:**
   - istniejące klasy (`ItemData`, `EnemyData`, `QuestData`, `PlayerStats`, `FMODEvents`) zachowują pola `public` — zakaz zapisu w runtime pilnuje Z2.1;
   - **nowe** klasy definicji: `[SerializeField] private` + właściwości tylko do odczytu.
+- **Struct-y danych** (zdarzenia w `GameEvents.cs`, `DamageInfo` i podobne): pola publiczne w camelCase (`value`, `isCritical`) — decyzja DP-1, 2026-10-26.
 - **Zmiana nazwy pola serializowanego** wyłącznie z `[FormerlySerializedAs("staraNazwa")]` — bez tego wartości z Inspektora i assetów przepadają bez komunikatu.
 - Referencje przypinane w Inspektorze sprawdzane w `Awake()`:
   ```csharp
@@ -101,4 +102,7 @@ Nie powtarzamy tu zasad — obowiązują:
 
 ## 12. Testy
 
-- Lokalizacja, struktura i Assembly Definitions — ustalane w zadaniu 26. Do tego czasu nowych testów nie tworzy się.
+- Lokalizacja, struktura i Assembly Definitions — ustalane w zadaniu 26. **Do tego czasu nowych testów automatycznych nie tworzy się.**
+- Do zadania 26 weryfikacja w **trybie ręcznym**: `tester` przygotowuje scenariusze i logi `Debug.Log("[DBG] Tn …")`, `programista` je dodaje,
+  autor gra, `tester` odczytuje konsolę przez MCP. Logi `[DBG]` są tymczasowe — skrypt kontroli przed commitem blokuje commit, jeśli zostaną.
+- Wyjątek zastany: zalążek z zadania #1 (`Assets/Ratocalypse/Tests/EditMode/DamageInfoTests.cs`, `#if RATOCALYPSE_TESTS_ENABLED`) — decyzja 2026-10-28.

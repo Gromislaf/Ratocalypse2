@@ -7,16 +7,18 @@
 
 ## Aktywne zadanie
 
+brak — czeka na wybór autora
+
+---
+
+## Zamknięte zadanie #1
+
 | Pole | Wartość |
 |---|---|
 | Zadanie | #1 — `DamageInfo` + specyfikacja reguł otrzymywania obrażeń (`GDD-CMB`) |
 | Ścieżka | pełny |
-| Etap | 7 — Commit |
-| Czeka na | autor — decyzja o scaleniu do `main` i pushu (`/push`) |
-| Następny krok | scalenie `--no-ff` do `main` po zgodzie; potem `/push` |
-| Specyfikacje | `Documentation/Player/Combat.md` (rozbudowa) |
-| Plan | `.claude/plans/task-01-damageinfo.md` |
-| Gałąź | `feature/01-damageinfo` |
+| Etap | ✅ Zamknięte |
+| Gałąź | `feature/01-damageinfo` (scalona i wypchnięta) |
 
 ### Dziennik bramek
 
@@ -33,6 +35,8 @@
 | 2026-10-28 | 6→7 | Checklista T1–T10 zaliczona (T4 odroczone do #26); commit `e8dbd2d`; scalenie do main wstrzymane na życzenie autora |
 | 2026-10-28 | 7→5 | Powrót do etapu 5 — etap był pominięty; testy z `e8dbd2d` do weryfikacji; decyzja A/B ws. testów oczekuje autora |
 | 2026-10-28 | 5→7 | Etap 5 zakończony (kronikarz, redaktor ✅, audytor ✅ — 4 🟡 naprawione); drugi commit `b677ad6` |
+| 2026-10-28 | 7→8 | STATUS `7970972`; scalenie `--no-ff` do main `2649542` |
+| 2026-10-28 | 8 | Push: `feature/01-damageinfo` i `main` → origin |
 
 ---
 
@@ -81,8 +85,10 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Co | Na polecenie |
 |---|---|---|
+| 2026-10-29 | Commit Poprawki 3: agenci, komendy, hooki, CLAUDE.md, narzedzia/ → gałąź `setup/poprawka-3` | autora |
 
 ## Zamknięte (ostatnie 10)
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-10-28 | #1 DamageInfo + GDD-CMB | `e8dbd2d` + `b677ad6` → merge `2649542` → push |

@@ -17,6 +17,8 @@ Ratocalypse 2.5/
 ├── ProjectSettings/     ustawienia projektu — tylko autor (Z11)
 ├── Tools/               narzędzia autora (poza zakresem agentów, chyba że zlecenie mówi inaczej)
 └── .claude/             konfiguracja agentów
+    ├── narzedzia/       skrypty bez agentów: mapa-kodu.ps1, kontrola-commita.ps1
+    └── mapa-kodu.md     generowana — nie edytuje się ręcznie
 ```
 
 Pliki archiwalne w katalogu głównym (`GameDesignDoc.html`, `docs_mechanics.html`, `Dokumentacja.pdf`, `zrzut1.png`) — do decyzji autora

@@ -33,7 +33,12 @@
       "Bash(git pull --ff-only*)",
       "Bash(git show*)",
       "Bash(git branch)",
-      "Bash(git branch --list*)"
+      "Bash(git branch --list*)",
+      "Bash(pwsh -NoProfile -File .claude/narzedzia/mapa-kodu.ps1*)",
+      "Bash(pwsh -NoProfile -File .claude/narzedzia/kontrola-commita.ps1*)",
+      "Bash(git add --*)",
+      "Bash(git rev-parse*)",
+      "Bash(git merge-base*)"
     ],
     "ask": [
       "Edit(CLAUDE.md)",
@@ -70,9 +75,13 @@
       "Write(.claude/zasady/zasady-techniczne.md)",
       "Edit(.claude/zasady/konwencje.md)",
       "Write(.claude/zasady/konwencje.md)",
-      "Bash(git stash*)"
+      "Bash(git stash*)",
+      "Edit(.claude/narzedzia/**)",
+      "Write(.claude/narzedzia/**)"
     ],
     "deny": [
+      "Write(.claude/mapa-kodu.md)",
+      "Edit(.claude/mapa-kodu.md)",
       "Edit(Assets/Cartoon Heroes/**)",
       "Write(Assets/Cartoon Heroes/**)",
       "Edit(Assets/Modular Industrial Set/**)",
@@ -143,7 +152,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/session-start.ps1\""
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/session-start.ps1\""
           }
         ]
       }
@@ -153,7 +162,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/user-prompt.ps1\""
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/user-prompt.ps1\""
           }
         ]
       }
@@ -164,7 +173,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/pre-tool.ps1\""
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/pre-tool.ps1\""
           }
         ]
       }
