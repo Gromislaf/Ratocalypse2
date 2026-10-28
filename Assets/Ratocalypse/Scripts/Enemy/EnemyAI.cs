@@ -314,6 +314,8 @@ public class EnemyAI : MonoBehaviour, IDamageable
             ? (playerTransform.position - transform.position).normalized
             : Vector3.zero;
 
+        if (!playerDamageable.IsAlive) return;
+
         var damageInfo = new DamageInfo(
             value:      data.attackDamage,
             type:       DamageType.Physical,
@@ -321,7 +323,6 @@ public class EnemyAI : MonoBehaviour, IDamageable
             knockback:  knockback,
             source:     gameObject
         );
-        if (playerDamageable == null || !playerDamageable.IsAlive) return;
         playerDamageable.TakeDamage(damageInfo);
     }
 

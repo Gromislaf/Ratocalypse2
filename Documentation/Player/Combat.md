@@ -185,7 +185,7 @@ Implementacje: `PlayerHealthComponent.cs` (`IDamageable`, `IHealable`); `EnemyAI
 
 ## GDD-CMB-005 Struktura DamageInfo
 
-**Status:** Zatwierdzona
+**Status:** Zaimplementowana
 **Wersja:** 0.1
 
 **Opis funkcjonalny:** Niezmienna struktura (`readonly struct`) przekazywana przez `IDamageable.TakeDamage()`. Niesie wszystkie dane jednego uderzenia — wartość, typ, flagę krytu, kierunek odrzutu i źródło.
@@ -229,13 +229,13 @@ Implementacje: `PlayerHealthComponent.cs` (`IDamageable`, `IHealable`); `EnemyAI
 
 | Wersja | Zmiana |
 |---|---|
-| 0.1 | Pierwsza specyfikacja. Zastępuje trzy luźne parametry `TakeDamage(float, bool, Vector3)`. |
+| 0.1 | Pierwsza specyfikacja. Zastępuje trzy luźne parametry `TakeDamage(float, bool, Vector3)`. Zaimplementowana: `DamageInfo.cs`, `DamageType.cs`; commit `e8dbd2d` (2026-10-28). |
 
 ---
 
 ## GDD-CMB-006 Reguły odbioru obrażeń przez gracza
 
-**Status:** Zatwierdzona
+**Status:** Zaimplementowana
 **Wersja:** 0.1
 
 **Opis funkcjonalny:** Definiuje kolejność i wzory przetwarzania `DamageInfo` po stronie gracza — od otrzymania uderzenia do zmiany HP i publikacji zdarzeń.
@@ -280,12 +280,12 @@ Zaokrąglenie: `Mathf.Round(x * 10f) / 10f` (1 miejsce po przecinku).
 **Informacja zwrotna:** `OnPlayerDamaged` → HUD odświeża pasek HP ([Player/Stats.md]). Brak dźwięku i efektów wizualnych — realizacja w zadaniu #17.
 
 **Implementacja:**
-- `Assets/Ratocalypse/Scripts/Player/PlayerHealthComponent.cs` — `IDamageable.TakeDamage(DamageInfo)`
-- `Assets/Ratocalypse/Scripts/Player/PlayerStats.cs` — `TakeDamage(float)` (obliczenia pancerza)
+- `Assets/Ratocalypse/Scripts/Player/PlayerHealthComponent.cs` — `IDamageable.TakeDamage(DamageInfo)` (obliczenia pancerza, publikacja zdarzeń)
+- `Assets/Ratocalypse/Scripts/Player/PlayerStats.cs` — dostawca `TotalArmor`, `currentHp`, `MaxHp`
 - `Assets/Ratocalypse/Scripts/Core/GameEvents.cs` — `OnPlayerDamaged`, `OnPlayerDied`
 
 **Historia zmian:**
 
 | Wersja | Zmiana |
 |---|---|
-| 0.1 | Pierwsza specyfikacja. Dokumentuje istniejące zachowanie kodu; ujednolica z [GDD-CMB-005]. |
+| 0.1 | Pierwsza specyfikacja. Dokumentuje istniejące zachowanie kodu; ujednolica z [GDD-CMB-005]. Zaimplementowana w `PlayerHealthComponent.TakeDamage(DamageInfo)`; usunięta metoda `PlayerHealthComponent.TakeDamage(float)` (DP-3); commit `e8dbd2d` (2026-10-28). |

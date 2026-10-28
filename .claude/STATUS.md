@@ -11,9 +11,9 @@
 |---|---|
 | Zadanie | #1 — `DamageInfo` + specyfikacja reguł otrzymywania obrażeń (`GDD-CMB`) |
 | Ścieżka | pełny |
-| Etap | 3a — Kod |
-| Czeka na | autor — checklista ręczna (etap 6) |
-| Następny krok | Autor przechodzi checklistę T1–T10; po „ok" → etap 7 (Wydawca, commit) |
+| Etap | 5 — Zamknięcie |
+| Czeka na | decyzja autora ws. testów (A/B); kronikarz → redaktor → audytor |
+| Następny krok | wynik inspektora testów → decyzja A/B → kronikarz → redaktor → audytor → commit dokumentacji (etap 7) |
 | Specyfikacje | `Documentation/Player/Combat.md` (rozbudowa) |
 | Plan | `.claude/plans/task-01-damageinfo.md` |
 | Gałąź | `feature/01-damageinfo` |
@@ -30,6 +30,8 @@
 | 2026-10-27 | 4 Inspektor | Zero 🔴 — wszystkie Z4/Z1/Z3/Z7/DP-1/2/3/Z13A zgodne |
 | 2026-10-27 | 4 Tester | Testy automatyczne zablokowane (#26); checklista ręczna gotowa; T7 naprawiony (IsAlive check w EnemyAI.OnAttackHit) |
 | 2026-10-27 | 4→6 | Etap 4 zamknięty; autor przystępuje do checklisty ręcznej T1–T10 |
+| 2026-10-28 | 6→7 | Checklista T1–T10 zaliczona (T4 odroczone do #26); commit `e8dbd2d`; scalenie do main wstrzymane na życzenie autora |
+| 2026-10-28 | 7→5 | Powrót do etapu 5 — etap był pominięty; testy z `e8dbd2d` do weryfikacji; decyzja A/B ws. testów oczekuje autora |
 
 ---
 
@@ -39,7 +41,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | # | Zadanie | Ścieżka | Zasada | Uwagi |
 |---|---|---|---|---|
-| 1 | `DamageInfo` + specyfikacja reguł otrzymywania obrażeń (`GDD-CMB`) | pełny | Z4.5 | obejmuje #5 (podwójny wzór obrażeń) |
 | 2 | Limit pancerza: specyfikacja 75%, kod `Clamp01` | bugfix | Z7.1 | |
 | 9 | `PlayerCombat` bez sprawdzenia `GameManager.Instance` | bugfix | Z5.5 | |
 | 3 | Zdarzenie zapisu `OnGameSaved` vs `OnCheckpointReached` | bugfix + dokumentacja | — | |
@@ -57,6 +58,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | 6 | Kodowanie: `IDamageable.cs`, `ButtonHoverEffect.cs` → UTF-8 | refaktor | konwencje §9 | |
 | 7 | `?.` na obiektach Unity (`PlayerCombat`, `EnemyAI`, `MinimapMarker`) | refaktor | konwencje §4 | |
 | 8 | Literówka „Ratpocalypse” w `CreateAssetMenu` | refaktor | — | |
+| 30 | `NavMeshModifier` (GUID `1e3fdca…`) brakuje na `Player` i `Female B (1)` — usuń komponenty lub przeinstaluj AI Navigation | bugfix | — | niekrytyczne |
 | 22 | AI Navigation 2.0.12 → 2.0.13 w dokumentacji | dokumentacja | Z11 | |
 | 13 | Drzewko: aktywne umiejętności w planie? | GDD | Z7.4 | decyzja projektowa |
 | 17 | Dźwięk w grze | GDD → pełny | Z9 | obszar roadmapy |
