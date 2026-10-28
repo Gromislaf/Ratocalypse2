@@ -11,9 +11,9 @@
 |---|---|
 | Zadanie | #1 — `DamageInfo` + specyfikacja reguł otrzymywania obrażeń (`GDD-CMB`) |
 | Ścieżka | pełny |
-| Etap | 5 — Zamknięcie |
-| Czeka na | decyzja autora ws. testów (A/B); kronikarz → redaktor → audytor |
-| Następny krok | wynik inspektora testów → decyzja A/B → kronikarz → redaktor → audytor → commit dokumentacji (etap 7) |
+| Etap | 7 — Commit |
+| Czeka na | autor — decyzja o scaleniu do `main` i pushu (`/push`) |
+| Następny krok | scalenie `--no-ff` do `main` po zgodzie; potem `/push` |
 | Specyfikacje | `Documentation/Player/Combat.md` (rozbudowa) |
 | Plan | `.claude/plans/task-01-damageinfo.md` |
 | Gałąź | `feature/01-damageinfo` |
@@ -32,6 +32,7 @@
 | 2026-10-27 | 4→6 | Etap 4 zamknięty; autor przystępuje do checklisty ręcznej T1–T10 |
 | 2026-10-28 | 6→7 | Checklista T1–T10 zaliczona (T4 odroczone do #26); commit `e8dbd2d`; scalenie do main wstrzymane na życzenie autora |
 | 2026-10-28 | 7→5 | Powrót do etapu 5 — etap był pominięty; testy z `e8dbd2d` do weryfikacji; decyzja A/B ws. testów oczekuje autora |
+| 2026-10-28 | 5→7 | Etap 5 zakończony (kronikarz, redaktor ✅, audytor ✅ — 4 🟡 naprawione); drugi commit `b677ad6` |
 
 ---
 
