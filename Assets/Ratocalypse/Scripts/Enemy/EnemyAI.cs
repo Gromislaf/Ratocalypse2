@@ -1,3 +1,4 @@
+using Ratocalypse;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -37,18 +38,18 @@ public class EnemyAI : MonoBehaviour, IDamageable
 
     public bool IsAlive => state != State.Dead;
 
-    void IDamageable.TakeDamage(float damage, bool isCritical, Vector3 knockbackDirection)
+    void IDamageable.TakeDamage(DamageInfo info)
     {
         if (state == State.Dead) return;
 
-        currentHp -= damage;
+        currentHp -= info.value;
         currentHp = Mathf.Max(currentHp, 0f);
 
         EventBus.Publish(new OnEnemyDamaged
         {
             enemy = gameObject,
-            amount = damage,
-            isCritical = isCritical,
+            amount = info.value,
+            isCritical = info.isCritical,
             worldPosition = transform.position
         });
 
@@ -313,7 +314,15 @@ public class EnemyAI : MonoBehaviour, IDamageable
             ? (playerTransform.position - transform.position).normalized
             : Vector3.zero;
 
-        playerDamageable.TakeDamage(data.attackDamage, false, knockback);
+        var damageInfo = new DamageInfo(
+            value:      data.attackDamage,
+            type:       DamageType.Physical,
+            isCritical: false,
+            knockback:  knockback,
+            source:     gameObject
+        );
+        if (playerDamageable == null || !playerDamageable.IsAlive) return;
+        playerDamageable.TakeDamage(damageInfo);
     }
 
     /// <summary>Wywołaj w Animation Event gdy animacja stuna się kończy.</summary>

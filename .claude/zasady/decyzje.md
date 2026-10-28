@@ -6,6 +6,14 @@
 
 | Data | Typ | Dotyczy | Decyzja | Uzasadnienie |
 |---|---|---|---|---|
+| 2026-10-27 | struktura | `.gitignore` | Dopisać: `.obsidian/`, `settings.local.json`, `.claude/stan/` | Pliki lokalne i tymczasowe nie należą do repozytorium |
+| 2026-10-27 | proces | Wydawca — gałąź | Gałąź `feature/<ID>-…` tworzona gdy zadanie staje się aktywne; tylko przy czystym drzewie roboczym; zakaz `git stash` — niezatwierdzone zmiany przedstawić autorowi i czekać na decyzję | Stash ukrywa zmiany przed autorem i może prowadzić do utraty pracy |
+| 2026-10-27 | struktura | Pliki zasad — ładowanie | `zasady-techniczne.md`, `konwencje.md` i pokrewne w `.claude/zasady/` — czytane fragmentami na żądanie, nie ładowane automatycznie; oszczędne czytanie we wszystkich agentach (tylko sekcje wskazane w zleceniu) | Automatyczne ładowanie dużych plików zasad przy każdym zleceniu marnotrawi kontekst |
+| 2026-10-27 | narzędzia | `redaktor` — model i wyzwalacze | `redaktor` działa na Haiku z wbudowaną checklistą wytycznych promotora; wywoływany tylko przy: nowej specyfikacji, nowej wersji istniejącej (zmiana zachowania/parametru), `/audyt`; pomijany przy literówkach, formatowaniu i samej stopce *Implementacja* | Haiku wystarczy do sprawdzenia listy kontrolnej; oszczędność przy częstych drobnych zmianach |
+| 2026-10-26 | wniosek Z13 | GDD-CMB-006 krok 3, `PlayerStats.TakeDamage` | Opcja A — dodać `Mathf.Round(reduced * 10f) / 10f` przed `Mathf.Max`; zaokrąglenie do 1 m.p.p. zgodne ze spec | `currentHp` z ułamkami nieakceptowalne w HUD; naprawa w zakresie zadania #1 |
+| 2026-10-26 | konwencja | Pola `DamageInfo` (DP-1) | Opcja B — publiczne pola `readonly` camelCase (`value`, `type`, `isCritical`, `knockback`, `source`), spójnie z polami struct-ów zdarzeń w `GameEvents.cs` | Spójność wewnątrz projektu ważniejsza niż idiom ogólny C# |
+| 2026-10-26 | konwencja | `namespace` w zadaniu #1 (DP-2) | Opcja A — namespace tylko w nowych plikach; istniejące 4 pliki bez zmian namespace | Minimalna powierzchnia zmiany; istniejące pliki dostaną namespace przy kolejnej edycji |
+| 2026-10-26 | projekt | Usunięcie `TakeDamage(float)` z `PlayerHealthComponent` (DP-3) | Opcja A — usunąć; logika trafia do `IDamageable.TakeDamage(DamageInfo)` | Jedno wejście, pełna zgodność z Z4.5; brak wywołujących poza klasą |
 | 2026-10-26 | proces | Bramka manifestu | `/manifest-ok` wpisane przez autora odblokowuje zapis sceny na 60 min (hook UserPromptSubmit); zapis tylko dla `integrator` | Techniczne wymuszenie zgody autora |
 | 2026-10-26 | narzędzia | MCP Unity | Klasyfikacja: zakaz / odczyt / kompilacja / testy / zapis (6 narzędzi) / wyłączone do wniosku — rejestr | Narzędzia omijające kontrolę (execute_*, edycja skryptów) wyłączone |
 | 2026-10-26 | narzędzia | Wtyczki | `csharp-lsp`, Unity (bez CLI/Pipeline, z blokadą skilli), `claude-md-management`, `document-skills`; `hookify` na etapie automatów; Serena wyłączona | Tylko narzędzia, bez wtyczek wnoszących własny proces pracy |

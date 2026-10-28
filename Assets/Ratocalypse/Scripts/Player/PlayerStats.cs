@@ -142,16 +142,6 @@ public class PlayerStats : ScriptableObject
         skillBonusMaxStamina = 0f;
     }
 
-    // Poniższe metody modyfikują tylko dane — zdarzenia EventBus publikuje PlayerHealthComponent.
-
-    public float TakeDamage(float rawDamage)
-    {
-        float reduced = rawDamage * (1f - TotalArmor);
-        reduced = Mathf.Max(reduced, 1f);
-        currentHp = Mathf.Max(currentHp - reduced, 0f);
-        return reduced;
-    }
-
     public float Heal(float amount)
     {
         float actual = Mathf.Min(amount, MaxHp - currentHp);

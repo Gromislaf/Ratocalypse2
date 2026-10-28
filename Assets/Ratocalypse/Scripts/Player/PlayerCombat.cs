@@ -1,3 +1,4 @@
+using Ratocalypse;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
@@ -94,7 +95,14 @@ public class PlayerCombat : MonoBehaviour
         if (target is Component targetComp)
             knockback = (targetComp.transform.position - transform.position).normalized;
 
-        target.TakeDamage(damage, isCritical, knockback);
+        var damageInfo = new DamageInfo(
+            value:      damage,
+            type:       DamageType.Physical,
+            isCritical: isCritical,
+            knockback:  knockback,
+            source:     gameObject
+        );
+        target.TakeDamage(damageInfo);
 
         if (isCritical && target is Component comp)
             EventBus.Publish(new OnCriticalHit

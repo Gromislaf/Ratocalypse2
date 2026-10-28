@@ -1,33 +1,31 @@
 // ============================================================
 //  IDamageable.cs
-//  Ratpocalypse — Core/IDamageable.cs
+//  Ratpocalypse ï¿½ Core/IDamageable.cs
 //
-//  Interfejs dla wszystkiego co mo¿e otrzymaæ obra¿enia:
-//  wrogów, gracza, obiektów zniszczalnych.
+//  Interfejs dla wszystkiego co moï¿½e otrzymaï¿½ obraï¿½enia:
+//  wrogï¿½w, gracza, obiektï¿½w zniszczalnych.
 //
-//  Dziêki interfejsowi system walki nie musi wiedzieæ
-//  czy trafi³ szczura, gracza czy beczkê — po prostu wo³a
-//  TakeDamage() i obiekt sam wie co z tym zrobiæ.
+//  Dziï¿½ki interfejsowi system walki nie musi wiedzieï¿½
+//  czy trafiï¿½ szczura, gracza czy beczkï¿½ ï¿½ po prostu woï¿½a
+//  TakeDamage() i obiekt sam wie co z tym zrobiï¿½.
 // ============================================================
 
-using UnityEngine;
+using Ratocalypse;
 
 public interface IDamageable
 {
-    /// <summary>Czy cel jeszcze ¿yje?</summary>
+    /// <summary>Czy cel jeszcze ï¿½yje?</summary>
     bool IsAlive { get; }
 
     /// <summary>
-    /// Zadaj obra¿enia celowi.
+    /// Zadaj obraï¿½enia celowi.
     /// </summary>
-    /// <param name="damage">Iloœæ obra¿eñ (przed redukcj¹ przez cel)</param>
-    /// <param name="isCritical">Czy to trafienie krytyczne (do efektów wizualnych)</param>
-    /// <param name="knockbackDirection">Kierunek odrzutu (Vector3.zero = brak)</param>
-    void TakeDamage(float damage, bool isCritical = false, Vector3 knockbackDirection = default);
+    /// <param name="info">Dane obraï¿½eï¿½ (wartoï¿½ï¿½, typ, krytyk, odrzut, ï¿½rï¿½dï¿½o)</param>
+    void TakeDamage(DamageInfo info);
 }
 
 // ============================================================
-//  IHealable — opcjonalny interfejs dla celów które mo¿na leczyæ
+//  IHealable ï¿½ opcjonalny interfejs dla celï¿½w ktï¿½re moï¿½na leczyï¿½
 // ============================================================
 
 public interface IHealable
@@ -36,7 +34,7 @@ public interface IHealable
 }
 
 // ============================================================
-//  IStatusEffectable — cel który mo¿e dostaæ efekt statusu
+//  IStatusEffectable ï¿½ cel ktï¿½ry moï¿½e dostaï¿½ efekt statusu
 // ============================================================
 
 public interface IStatusEffectable
