@@ -1,3 +1,4 @@
+using Ratocalypse;
 using UnityEngine;
 
 // Warstwa logiki i zdarzeń dla HP/Staminy/XP gracza.
@@ -32,19 +33,21 @@ public class PlayerHealthComponent : MonoBehaviour, IDamageable, IHealable
     }
 
     // IDamageable — wywoływane przez wrogów przez interfejs; knockback obsłuży PlayerController
-    void IDamageable.TakeDamage(float damage, bool isCritical, Vector3 knockbackDirection)
+    void IDamageable.TakeDamage(DamageInfo info)
     {
-        TakeDamage(damage);
-    }
+        if (IsInvincible) return;
 
-    public float TakeDamage(float rawDamage)
-    {
-        if (IsInvincible) return 0f;
-        float actual = stats.TakeDamage(rawDamage);
-        EventBus.Publish(new OnPlayerDamaged { amount = actual, currentHp = stats.currentHp, maxHp = stats.MaxHp });
-        if (stats.currentHp <= 0f)
+        if (info.source == null)
+            Debug.LogWarning("[PlayerHealthComponent] DamageInfo.source == null");
+
+        float reduced = Mathf.Round(info.value * (1f - stats.TotalArmor) * 10f) / 10f;
+        reduced = Mathf.Max(reduced, 1f);
+        stats.currentHp = Mathf.Max(stats.currentHp - reduced, 0f);
+
+        EventBus.Publish(new OnPlayerDamaged { amount = reduced, currentHp = stats.currentHp, maxHp = stats.MaxHp });
+
+        if (stats.currentHp == 0f)
             EventBus.Publish(new OnPlayerDied());
-        return actual;
     }
 
     // IHealable
