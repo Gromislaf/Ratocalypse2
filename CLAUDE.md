@@ -1,99 +1,115 @@
-# CLAUDE.md
+# CLAUDE.md — Ratocalypse 2.5
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Izometryczne RPG akcji (click-to-move, Diablo-like) · Unity `6000.4.3f1` · URP 17.4.0 · C# · FMOD · single player, PC (mobile dopuszczony w przyszłości).
+Projekt jest przedmiotem pracy inżynierskiej autora (architektura zdarzeniowa, mechaniki, zapis stanu, deterministyczny pomiar wydajności).
 
-# Ratocalypse 2.5 — Project Context
+**Wszyscy agenci piszą do autora i w raportach po polsku.** Identyfikatory w kodzie po angielsku.
 
-## Project Overview
-- **Genre:** RPG
-- **Engine:** Unity 6000.4.3f1 (Unity 6)
-- **Migration:** Ported from Unity 2022.3.4f1
-- **Language:** C#
-- **Render Pipeline:** URP (Universal Render Pipeline 17.4.0) — separate PC and Mobile renderer assets in `Assets/Settings/`
+**Kim jesteś:** jeśli działasz jako subagent — Twoją rolę, narzędzia i granice określa Twoja definicja w `.claude/agents/`.
+Główna sesja działa w stylu **Prowadzący** (`.claude/output-styles/prowadzacy.md`) i jako jedyna rozmawia z autorem.
 
-## Current Migration Status
-- ✅ Scenes — przeniesione
-- ✅ Assets (grafika / audio) — przeniesione
-- ⏳ Scripts C# — do przeniesienia / przepisania
-- ⏳ Prefabs — do przeniesienia
+---
 
-## Build Order (wg GDD — aktualizuj ✅ gdy gotowe)
-1. ✅ `EventBus` — komunikacja między systemami
-2. ✅ `PlayerStats` (ScriptableObject) + `PlayerHealthComponent`
-3. ✅ `PlayerController` + `CameraController` — ruch click-to-move NavMesh + kamera izometryczna
-4. ✅ `PlayerCombat` — atak + hitbox przez Animation Events (EnemyAI gotowe, można budować)
-5. ✅ `EnemyAI` — FSM (Patrol/Alert/Chase/Attack/Stunned/Dead) + `EnemyData` (ScriptableObject)
-6. ✅ `InventorySystem` backend — `ItemData` (ScriptableObject) + `InventorySystem` (MonoBehaviour)
-   ✅ `InventoryUI` — plecak (20 slotów) + ekwipunek (6 slotów na sylwetce). Klawisz I toggle.
-7. ✅ `PlayerHUD` — pasek HP (HealthFull/Empty, fill pionowy) + Stamina (fill poziomy). Subskrybuje EventBus.
-8. ✅ `XP/LevelSystem` — `XPSystem` (słucha OnEnemyDied/OnQuestCompleted → GainXP) + `XPBarUI` (pasek XP, poziom, notyfikacja "LEVEL UP!")
-9. ✅ `SkillTree` — kod + UI gotowe. Testowanie odłożone do momentu gdy w grze pojawią się wrogowie/XP
-10. ⏳ `QuestSystem`
-11. ⏳ `SaveSystem` — format do potwierdzenia z użytkownikiem przed implementacją
+## Cykl pracy
 
-## Core Systems
-- **Combat** — walka gracza i wrogów
-- **Inventory** — ekwipunek, przedmioty
-- **Save/Load** — zapis i wczytywanie stanu gry (format JSON/BinaryFormatter/własny — potwierdź z użytkownikiem przed implementacją)
+| Etap | Kto | Bramka (✋ = wyraźna zgoda autora) |
+|---|---|---|
+| 0 Pomysł | Prowadzący + autor (treść: `/wizja`) → `adwokat` | ✋ zadanie i jego **rozmiar S/M/L**; zadanie aktywne → `wydawca` tworzy gałąź (czyste drzewo) |
+| 1 Specyfikacja | Prowadzący + autor (`/spec`) → `redaktor` | zgodność z wytycznymi promotora; ✋ (przy M razem z planem) |
+| 2 Plan techniczny | `architekt` (`/planuj`) | ✋ plan (przy S — plan skrócony) |
+| 3a Kod | `programista` | kompilacja bez błędów |
+| 3b Integracja | `integrator` | ✋ `/manifest-ok`; konsola bez nowych błędów |
+| 4 Weryfikacja | `inspektor` (diff) → `tester` | brak 🔴; scenariusze testów przechodzą |
+| 5 Zamknięcie | `kronikarz` (+ `redaktor`, jeśli zmieniła się wersja specyfikacji) | **twarda bramka** — bez niej nie ma commita |
+| 6+7 Akceptacja i commit | autor → Prowadzący (`/commit`: skrypt kontroli) → `wydawca` | ✋ „akceptuję, commit” → commit i scalenie do `main` |
+| 8 Push | `wydawca` (`/push`) | ✋ push gałęzi i `main` |
 
-## Dependencies / Packages
-- **Cinemachine 3.1.6** (Unity Package Manager) — Unity 6 version, changed API vs 2.x
-- **Input System 1.19.0** (Unity Package Manager) — New Input System
-- **TextMeshPro** — bundled via `com.unity.ugui 2.0.0`
-- **FMOD** (`Assets/Plugins/FMOD/`) — audio middleware; use `FMODUnity.RuntimeManager` and `StudioEventEmitter`, NOT Unity's `AudioSource`/`AudioClip`
-- **AI Navigation 2.0.12** — `NavMeshAgent` for enemy pathfinding
-- **Timeline 1.8.12** — cutscenes/sequences
-- **Visual Scripting 1.9.11** — may be used in some scenes
+**Rozmiar zadania** (proponuje Prowadzący, zatwierdza autor w etapie 0):
 
-## Unity 6 Migration Notes
-Przy przenoszeniu skryptów z 2022.3 zwróć uwagę na:
-- `FindObjectOfType<T>()` → `FindFirstObjectByType<T>()` lub `FindAnyObjectByType<T>()`
-- `Physics2D.OverlapCircleAll` i podobne — sprawdź deprecation warnings
-- Cinemachine 3.x: `CinemachineVirtualCamera` → `CinemachineCamera`; `CinemachineBrain` na Main Camera pozostaje
-- Input System — używaj `InputActionAsset` / `PlayerInput` (nowy system), nie `Input.GetKey()`
-- URP: shadery i materiały muszą być zgodne z URP — nie używaj Built-in shaderów
-- FMOD: nie zastępuj FMOD zwykłym `AudioSource` — cały audio idzie przez FMOD
+| | Kiedy | Etapy |
+|---|---|---|
+| **S** | ≤ 3 pliki, bez nowego zachowania (bugfix, refaktor, balans, literówka) | bez etapu 1 (lub tylko poprawka wartości); plan skrócony; Inspektor tylko 🔴 |
+| **M** | nowa reguła lub mechanika w istniejącym systemie | specyfikacja i plan zatwierdzane **w jednej bramce** |
+| **L** | nowy system, zmiana architektury, system pomiarowy | pełny cykl |
 
-## Conventions
-- `PascalCase` dla klas i publicznych metod, `camelCase` dla prywatnych pól
-- Prywatne pola serializowane: `[SerializeField] private`
-- Unikaj `public` fields — używaj properties lub `[SerializeField]`
-- Jeden skrypt = jedna klasa, nazwa pliku = nazwa klasy
-- Namespace: `Ratocalypse` (opcjonalnie, utrzymuj spójność)
+Bramki, których **nigdy** się nie łączy ani nie pomija: manifest Integratora, push, status *Kanon*, wnioski Z13.
+Zmiana założeń specyfikacji w etapach 3–6 → powrót do etapu 1 (nowa wersja + historia zmian).
+`audytor` — tylko `/audyt` i koniec fazy roadmapy, nie w każdym zadaniu.
+**Jedno aktywne zadanie naraz, jedno zadanie = jedna sesja** (po pushu `/clear`). Stan wyłącznie w `.claude/STATUS.md` — bez plików pamięci. Plany: `.claude/plans/<ID>.md`.
 
-## Architecture Decisions (nie zmieniaj bez dyskusji)
-- **PlayerStats** to czysty DTO (ScriptableObject) — zero `EventBus.Publish` w środku. Zdarzenia wydaje `PlayerHealthComponent`.
-- **PlayerHealthComponent** implementuje `IDamageable` i `IHealable` — wrogowie trafiają gracza przez interfejs, nie twardą referencję.
-- **FMODEvents** dostępny przez `GameManager.FMODEvents` (przypisany w Inspektorze) — nie używaj `Resources.Load`.
-- **EventBus.Clear()** nigdy nie wywoływać przy zmianie sceny — `DontDestroyOnLoad` obiekty same zarządzają subskrypcjami przez `OnEnable`/`OnDisable`.
-- **NavMesh** dla ruchu gracza i wrogów — gra to izometryczne click-to-move (Diablo-like), nie physics-based movement.
-- **Animation Events** do okien obrażeń w walce — nie `Trigger`/`Collider` na czas trwania ataku.
-- **InventorySystem** (MonoBehaviour na graczu) trzyma `List<ItemData> bag` (20 slotów) i `Dictionary<EquipmentSlot, ItemData> equipped`. `RecalculateBonuses()` woła `PlayerStats.ResetBonuses()` i sumuje bonusy ze wszystkich slotów — jedyne miejsce gdzie bonusy są aplikowane.
-- **ItemData** to ScriptableObject (jeden asset = jeden typ itemu). Bonusy (`bonusDamage`, `bonusArmor` itd.) mapują się 1:1 na pola `bonus*` w `PlayerStats` — nie dodawaj bonusów których nie ma w PlayerStats bez aktualizacji obu.
-- **EquipmentSlot** enum: `MainHand, OffHand, Helmet, Chest, Legs, Boots`. Broń z `isTwoHanded=true` w MainHand automatycznie zwalnia OffHand (item wraca do plecaka).
-- **OcclusionFader** (na Main Camera) — `OverlapSphere` + filtr Y + filtr kierunku (dot product XZ). Wyłącza renderer I collider razem. Nie modyfikuj logiki bez dyskusji — wymagało 7+ iteracji żeby działało poprawnie. Main Camera Culling Mask **musi** zawierać warstwę "Buildings".
-- **EnemyAI** (`Assets/Ratocalypse/Scripts/Enemy/`) — `EnemyData` (ScriptableObject, jeden asset = jeden typ wroga) + `EnemyAI` (MonoBehaviour + IDamageable). FSM: Patrol (losowy punkt w promieniu `patrolRadius` lub waypoints) → Alert (stoi `alertDelay` sek.) → Chase → Attack → Stunned → Dead. Ataki przez Animation Event `OnAttackHit()`. Gracz nakłada stun przez `ApplyStun(duration)`. Publikuje `OnEnemyDamaged` i `OnEnemyDied`. XP z `xpReward` zostanie odebrane przez XP system (krok 7).
-- **InventoryUI** (`Assets/Ratocalypse/Scripts/UI/`) — `InventorySlotUI` (slot z Image+Button+callback) + `InventoryUI` (panel, toggle I, 20 bag slotów + 6 equip slotów). Klik bag → auto-equip do właściwego slotu lub UseConsumable. Klik equip → Unequip. Subskrybuje OnInventoryChanged/OnItemEquipped/OnItemUnequipped przez EventBus. `background` i `panel` są osobnymi GO (rodzeństwo), oba toggle razem w `Toggle()` i `Start()`.
-- **PlayerHUD** (`Assets/Ratocalypse/Scripts/UI/`) — HP fill (Image.fillAmount pionowy, HealthFull nad HealthEmpty) + Stamina fill (poziomy). Subskrybuje OnPlayerDamaged, OnPlayerHealed, OnPlayerStaminaChanged. Init z PlayerStats w Start().
-- **PlayerCombat** (`Assets/Ratocalypse/Scripts/Player/`) — MonoBehaviour na tym samym GO co PlayerController (RequireComponent). Czyta `CurrentTarget` i `IsInAttackRange` z PlayerController. Animation Events: `OnAttackHit()` (klatka uderzenia) + `OnAttackEnd()` (reset cooldown). Animator: trigger `"Attack"`, float `"AttackSpeed"` = `stats.TotalAttackSpeed`. EnemyAI sam publikuje `OnEnemyDamaged` — PlayerCombat publikuje tylko `OnCriticalHit`. Fallback timer (`1f / TotalAttackSpeed`) działa bez animatora/eventów. `animator.ResetTrigger(HashAttack)` wywoływane w OnAttackEnd i TickFallback — zapobiega stale trigger przy Any State.
-- **PlayerAnimator** (`Assets/Cartoon Heroes/Male/3D/Animation Skeleton/PlayerAnimator.controller`) — DZIAŁA ✅. Parametry: `Speed` (float), `AttackSpeed` (float), `Attack` (trigger), `Dodge` (trigger), `Hit` (trigger), `Die` (trigger). Stany: `Idle/Run` (BlendTree Speed 0→1: Idle/Walk), `Attack`. Przejścia: `Any State → Attack` (trigger Attack, Has Exit Time OFF, Can Transition To Self OFF), `Attack → Idle/Run` (Has Exit Time ON, Exit Time 0.95, Duration 0.1, brak Conditions). Enemy Animator Controller — na razie None (brak animacji wroga, EnemyAI null-safe przez `?.`).
-- **SkillTree** (`Assets/Ratocalypse/Scripts/`) — brak assetów, dane zdefiniowane w kodzie.
-  - `Core/SkillDefinition.cs` — `SkillEffectType` enum + `SkillDefinition` (readonly struct) + `SkillDatabase` (static, 12 skilli, 3 gałęzie × 4 tiery). Prerequisite: tier N wymaga tier N-1 tej samej gałęzi.
-  - `Player/SkillTreeManager.cs` — MonoBehaviour na graczu (obok PlayerController). `HashSet<string> _unlocked`. `TryUnlock(id)` sprawdza punkty + prerequisite, aplikuje bonus do `stats.skillBonus*`, publikuje `OnSkillUnlocked`. `RestoreFromSave(IEnumerable<string>)` do użycia przez SaveSystem.
-  - `UI/SkillNodeUI.cs` — prefab node'a: Image tło (złoty/jasny/ciemny wg stanu) + Button + 2× TMP. `Initialize()` + `Refresh()`.
-  - `UI/SkillTreeUI.cs` — panel, toggle `C`. Buduje 12 node'ów z prefaba w `Start()`, po 4 na kolumnę (warriorColumn / hunterColumn / survivorColumn, VerticalLayoutGroup). Wyświetla licznik punktów.
-  - **PlayerStats** — dodano `skillBonus*` (8 pól NonSerialized), `ResetSkillBonuses()`, `TotalHpRegen`. Bonusy z ekwipunku (`bonus*`) i skilli (`skillBonus*`) są rozdzielone — `ResetBonuses()` nie dotyka skillBonus*.
-  - **PlayerHealthComponent** — dodano HP regen loop w Update() (`stats.TotalHpRegen * deltaTime`), publikuje `OnPlayerHealed`.
-  - Skille jednorazowe (unlock raz), 1 punkt/level, max 20 punktów na poziomie 20, 12 skilli do odblokowania.
-  - ✅ Setup UI w Edytorze zrobiony. SkillTreeUI musi siedzieć na rodzicu panelu (nie na samym panelu) — inaczej SetActive(false) wyłącza Update().
-  - Panel I i C wzajemnie się zamykają przez EventBus: OnInventoryToggled / OnSkillTreeToggled.
+## Decyzje — czyje?
 
-## Znane TODO / Planowane ulepszenia
-- **OcclusionFader fade** — aktualnie instant hide (`renderer.enabled`). Planowany upgrade do płynnego fade'u: otworzyć `Shader Graphs/MIS_Base 1` w Shader Graph Editor → Surface Type: Transparent → dodać właściwość `_Alpha` → podłączyć do Alpha output → w OcclusionFader użyć `MaterialPropertyBlock` zamiast `renderer.enabled`.
+| Autor (zawsze pytanie ✋) | Agent (decyduje sam w ramach zasad, wypisuje w wyniku „Decyzje techniczne”) |
+|---|---|
+| co gra robi: zachowanie, liczby, kolejność reguł widoczna dla gracza | nazwy prywatnych pól i metod, podział na metody, kolejność kroków implementacji |
+| fabuła, kanon, styl | w którym pliku (w granicach `struktura-projektu.md`) |
+| zatwierdzenie spec/planu/manifestu, commit, push | jak zapisać test, jakie logi `[DBG]` |
+| wnioski Z13, wyjątki, nowe pakiety, singletony | wybór między równoważnymi rozwiązaniami zgodnymi z zasadami |
 
-## Key Rules for Claude
-- Przy pisaniu nowych skryptów używaj Unity 6 API (nie przestarzałych metod z 2022)
-- Jeśli naprawiasz skrypt z 2022 — zaznacz co zmieniłeś i dlaczego
-- Nie modyfikuj plików w `Assets/Art/`, `Assets/Audio/`, `Assets/Plugins/FMOD/` — to już przeniesione assety i zewnętrzny plugin
-- Przy zmianach w systemie walki lub inventory — najpierw opisz plan, potem implementuj
-- Przed implementacją Save/Load — potwierdź format zapisu z użytkownikiem
+Autor może zawetować każdą decyzję techniczną. Pytania do autora zbiera się w **jedną wiadomość z rekomendacjami**; „ok” = przyjęte wszystkie rekomendacje.
+
+---
+
+## Żelazne zasady — poziom 0
+
+Pełna treść: `.claude/zasady/zasady-techniczne.md`. Rejestry: `.claude/zasady/zasady-rejestr.md`. Decyzje: `.claude/zasady/decyzje.md`.
+
+- **Z1.** Powiadomienia między systemami tylko przez EventBus (struct); komendy i zapytania przez metody lub interfejs; zależności bez cykli.
+- **Z2.** Definicje w ScriptableObject, w runtime tylko do odczytu, z trwałym unikalnym ID; stan runtime zmienia tylko jego właściciel.
+- **Z3.** Komponent ma jedną spójną odpowiedzialność; reguły gry da się wywołać i przetestować bez sceny.
+- **Z4.** Obiekty oddziałują na siebie przez interfejsy, nigdy przez konkretną klasę celu; obrażenia jako `DamageInfo`.
+- **Z5.** Singletony tylko z rejestru; nowy singleton albo zmiana czasu życia wymaga wniosku.
+- **Z6.** UI wyświetla stan i przekazuje intencje gracza; reguły gry decyduje logika, nigdy UI.
+- **Z7.** Statystyka = baza + bonusy z nazwanych źródeł; jedno miejsce obliczania z limitami ze specyfikacji; każde źródło zarządza tylko swoimi bonusami.
+- **Z8.** AI to jawne stany z jedną drogą przejścia; parametry w EnemyData; różnice między typami przez dane i dodatkowe stany.
+- **Z9.** Audio wyłącznie przez FMOD, `AudioManager`/`StudioEventEmitter` i `FMODEvents`; dźwięki reakcji przez zdarzenia EventBus.
+- **Z10.** Losowość tylko ze źródeł z seedem (osobne strumienie); pomiary porównywalne tylko przy zgodnych metrykach obciążenia; pomiar nie wpływa na wynik.
+- **Z11.** Wersja silnika, pakietów, wtyczek i narzędzi agentów zamrożona; zmiana tylko przez wniosek; nigdy w trakcie serii pomiarów.
+- **Z12.** Paczek zewnętrznych nie modyfikujemy nigdy; strefy chronione tylko przez plan wymieniający ochronę, zatwierdzony przez autora.
+- **Z13.** Zasad się nie łamie ani nie obchodzi; konflikt = zatrzymanie i wniosek; każda decyzja do rejestru decyzji.
+- **Z14.** Rozgrywka reaguje na akcje z pliku akcji Input Systemu, nigdy bezpośrednio na urządzenia.
+
+**Dokumentacja** (`Documentation/`): `.claude/rules/dokumentacja-promotor.md` — specyfikacja, nie wypracowanie; 7 aspektów;
+liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja przed implementacją. Struktura: `.claude/zasady/dokumentacja-rejestr.md`.
+
+**Konwencje kodu:** `.claude/zasady/konwencje.md`. **Struktura plików projektu:** `.claude/zasady/struktura-projektu.md`.
+
+---
+
+## Czytanie — zasady wspólne (wszyscy agenci)
+
+1. **Kod: najpierw `.claude/mapa-kodu.md`** — klasy, publiczne API z numerami linii, graf zdarzeń, singletony, SO, pola z Inspektora.
+   Potem `LSP` (definicje, odwołania) i `Read` z `offset`/`limit` tylko tych metod, które zmieniasz lub sprawdzasz. Cały plik — tylko gdy zmieniasz jego większość.
+   Mapa jest generowana (nagłówek: commit, data); przy rozbieżności z plikiem wierz plikowi. Mapy nie edytuje się ręcznie.
+2. **Przegląd zmian = diff:** `git diff main...HEAD` i niezatwierdzone `git diff`. Okolice zmian — fragmentami.
+3. **Zasady fragmentami:** skrót Z1–Z14 jest wyżej; pełną sekcję czytasz tylko dla zasad ze zlecenia
+   (`Grep -n "^## Z" .claude/zasady/zasady-techniczne.md` → `Read` sekcji). `decyzje.md`, rejestry, struktura, konwencje — `Grep` po słowach kluczowych, nie całość.
+4. **Unity:** stan sceny, komponenty, konsola — najpierw przez MCP (jeśli masz narzędzie); pliki `.unity`/YAML dopiero, gdy MCP nie wystarcza.
+5. Plików streszczonych w zleceniu nie czytasz ponownie. Raport zwięzły: wyniki, uwagi, decyzje — bez streszczania przeczytanych plików.
+
+## Narzędzia — zasady wspólne
+
+- Używasz **tylko** narzędzi ze swojej definicji. Zablokowane narzędzie = nie szukaj obejścia; zgłoś to w wyniku.
+- Kod edytuje się wyłącznie zwykłą edycją plików — nigdy przez MCP (`create_script`, `apply_text_edits` itp. są zablokowane).
+- Zapis w scenie i assetach przez MCP: tylko `integrator`, tylko po `/manifest-ok` wpisanym przez autora.
+- Wtyczki, skille i narzędzia MCP: rejestr w `.claude/zasady/zasady-rejestr.md` (Z11.6).
+- Wniosek o zmianę zasady (Z13) zwracasz w ustalonym formacie jako część wyniku — nie łamiesz zasady „na chwilę”.
+
+---
+
+## Mapa plików
+
+| Co | Gdzie |
+|---|---|
+| Stan prac, kolejka | `.claude/STATUS.md` |
+| Mapa kodu (generowana) | `.claude/mapa-kodu.md` ← `.claude/narzedzia/mapa-kodu.ps1` |
+| Skrypty bez agentów (mapa, kontrola przed commitem) | `.claude/narzedzia/` |
+| Plany techniczne | `.claude/plans/<ID>.md` |
+| Wytyczne dokumentacji (ładowane automatycznie przy pracy w `Documentation/`) | `.claude/rules/` |
+| Zasady techniczne, konwencje, rejestry, decyzje, struktura — czytane na żądanie, fragmentami | `.claude/zasady/` |
+| Definicje subagentów / komendy / styl Prowadzącego | `.claude/agents/` / `.claude/commands/` / `.claude/output-styles/` |
+| Hooki | `.claude/hooks/` (PowerShell 7) |
+| Specyfikacja gry i projektu (dla promotora) | `Documentation/` |
+| Wizja, filary, roadmapa / styl, świat, zasady wizji | `Vision/GDD.md` / `Vision/ArtDirection.md`, `Vision/Lore.md`, `Vision/Zasady.md` |
+| Warsztat treści (Szkic → Kanon → Wdrożony) | `Vision/Content/` |
+| Kod i assety gry | `Assets/Ratocalypse/` |

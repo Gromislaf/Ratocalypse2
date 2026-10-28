@@ -254,7 +254,7 @@ GDD-XXX-NNN — ✅ zgodne | ⚠️ braki | ❌ niezgodne
 4. Odwołania: ID + link względny, np. `[GDD-INV-002](../Systems/Inventory.md)`.
 5. Grafiki w `_img/<obszar>/`. Diagramy stanów i przepływów jako Mermaid w treści pliku.
 6. W `Documentation/` NIE ma: planów technicznych (`.claude/plans/`), stanu prac (`.claude/STATUS.md`),
-   zasad dla agentów (`.claude/rules/`), wizji i roadmapy (`GDD.md` w katalogu głównym).
+   zasad dla agentów (`.claude/rules/`), wizji i roadmapy (`Vision/GDD.md`).
 7. `.obsidian/` to ustawienia edytora, nie dokumentacja — agenci go ignorują.
 8. **Wyjątki od struktury.** Rejestr opisuje stan obecny, nie zamkniętą listę.
 
