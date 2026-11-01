@@ -14,7 +14,7 @@ Główna sesja działa w stylu **Prowadzący** (`.claude/output-styles/prowadzac
 
 | Etap | Kto | Bramka (✋ = wyraźna zgoda autora) |
 |---|---|---|
-| 0 Pomysł | Prowadzący + autor (treść: `/wizja`) → `adwokat` | ✋ zadanie i jego **rozmiar S/M/L**; zadanie aktywne → `wydawca` tworzy gałąź (czyste drzewo) |
+| 0 Pomysł | Prowadzący + autor (treść: `/wizja`) → `adwokat` | ✋ zadanie i jego **rozmiar XS/S/M/L**; zadanie aktywne → `wydawca` tworzy gałąź (czyste drzewo) |
 | 1 Specyfikacja | Prowadzący + autor (`/spec`) → `redaktor` | zgodność z wytycznymi promotora; ✋ (przy M razem z planem) |
 | 2 Plan techniczny | `architekt` (`/planuj`) | ✋ plan (przy S — plan skrócony) |
 | 3a Kod | `programista` | kompilacja bez błędów |
@@ -28,14 +28,15 @@ Główna sesja działa w stylu **Prowadzący** (`.claude/output-styles/prowadzac
 
 | | Kiedy | Etapy |
 |---|---|---|
-| **S** | ≤ 3 pliki, bez nowego zachowania (bugfix, refaktor, balans, literówka) | bez etapu 1 (lub tylko poprawka wartości); plan skrócony; Inspektor tylko 🔴 |
+| **XS** | kilka linii, bez nowego zachowania, oczywiste co zmienić | **ekspres:** plan 3 zdania w punkcie kontrolnym (Prowadzący) → `programista` → skrypt kontroli zamiast Inspektora → autor sprawdza w grze 1 rzecz → `kronikarz` tylko gdy zmienia się wartość w specyfikacji → `wydawca` |
+| **S** | ≤ 3 pliki, bez nowego zachowania (bugfix, refaktor, balans) | bez etapu 1 (lub tylko poprawka wartości); plan skrócony (Architekt na Sonnecie); Inspektor tylko 🔴 |
 | **M** | nowa reguła lub mechanika w istniejącym systemie | specyfikacja i plan zatwierdzane **w jednej bramce** |
 | **L** | nowy system, zmiana architektury, system pomiarowy | pełny cykl |
 
 Bramki, których **nigdy** się nie łączy ani nie pomija: manifest Integratora, push, status *Kanon*, wnioski Z13.
 Zmiana założeń specyfikacji w etapach 3–6 → powrót do etapu 1 (nowa wersja + historia zmian).
 `audytor` — tylko `/audyt` i koniec fazy roadmapy, nie w każdym zadaniu.
-**Jedno aktywne zadanie naraz, jedno zadanie = jedna sesja** (po pushu `/clear`). Stan wyłącznie w `.claude/STATUS.md` — bez plików pamięci. Plany: `.claude/plans/<ID>.md`.
+**Jedno aktywne zadanie naraz, jedno zadanie = jedna sesja** (po pushu `/clear`). Stan wyłącznie w `.claude/STATUS.md` — bez plików pamięci. Plany: `.claude/plans/task-<NN>-<nazwa>.md` (np. `task-09-gamemanager-check.md`).
 
 ## Decyzje — czyje?
 
@@ -79,13 +80,15 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
 ## Czytanie — zasady wspólne (wszyscy agenci)
 
 1. **Kod: najpierw `.claude/mapa-kodu.md`** — klasy, publiczne API z numerami linii, graf zdarzeń, singletony, SO, pola z Inspektora.
-   Potem `Grep` (definicje, odwołania) i `Read` z `offset`/`limit` tylko tych metod, które zmieniasz lub sprawdzasz. Cały plik — tylko gdy zmieniasz jego większość.
+   Potem `LSP` lub `Grep` (definicje, odwołania) i `Read` z `offset`/`limit` tylko tych metod, które zmieniasz lub sprawdzasz. Cały plik — tylko gdy zmieniasz jego większość.
    Mapa jest generowana (nagłówek: commit, data); przy rozbieżności z plikiem wierz plikowi. Mapy nie edytuje się ręcznie.
 2. **Przegląd zmian = diff:** `git diff main...HEAD` i niezatwierdzone `git diff`. Okolice zmian — fragmentami.
 3. **Zasady fragmentami:** skrót Z1–Z14 jest wyżej; pełną sekcję czytasz tylko dla zasad ze zlecenia
    (`Grep -n "^## Z" .claude/zasady/zasady-techniczne.md` → `Read` sekcji). `decyzje.md`, rejestry, struktura, konwencje — `Grep` po słowach kluczowych, nie całość.
 4. **Unity:** stan sceny, komponenty, konsola — najpierw przez MCP (jeśli masz narzędzie); pliki `.unity`/YAML dopiero, gdy MCP nie wystarcza.
-5. Plików streszczonych w zleceniu nie czytasz ponownie. Raport zwięzły: wyniki, uwagi, decyzje — bez streszczania przeczytanych plików.
+5. Plików streszczonych w zleceniu nie czytasz ponownie.
+6. **Raport dla Prowadzącego — telegraficznie:** tabela albo punkty, wynik, uwagi, decyzje. Bez prozy, bez powtarzania zlecenia, bez streszczania przeczytanych plików.
+   Raporty zostają w głównej rozmowie do końca sesji — każde zbędne zdanie kosztuje w każdej kolejnej turze.
 
 ## Narzędzia — zasady wspólne
 
@@ -96,6 +99,7 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
   - odmowa czytania w całości pliku zasad/dokumentacji > 8 KB → czytaj sekcję z podanej listy nagłówków;
   - `[kontrola jakości]` po zapisie `.cs` → popraw albo uzasadnij w wyniku (fałszywy alarm);
   - blokada `UnityEditor` poza `#if UNITY_EDITOR` w kodzie gry; pliki `.meta`, `.unity`, `.prefab`, `.asset` — nigdy ręcznie.
+  - `git commit/merge/push` wykonuje wyłącznie `wydawca`; zapis w `Assets/Ratocalypse/Tests/` zablokowany do zadania #26.
 - Kod edytuje się wyłącznie zwykłą edycją plików — nigdy przez MCP (`create_script`, `apply_text_edits` itp. są zablokowane).
 - Zapis w scenie i assetach przez MCP: tylko `integrator`, tylko po `/manifest-ok` wpisanym przez autora.
 - Wtyczki, skille i narzędzia MCP: rejestr w `.claude/zasady/zasady-rejestr.md` (Z11.6).

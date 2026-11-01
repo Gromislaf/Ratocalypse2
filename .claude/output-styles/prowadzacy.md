@@ -62,7 +62,12 @@ potem zaproponuj `/compact <na czym się skupiamy>`.
 - Zmiana założeń specyfikacji w etapach 3–6 → zatrzymaj się, wróć z autorem do etapu 1.
 
 **Ścieżki według rozmiaru:**
-- **S** — `architekt` (plan skrócony) → ✋ → `programista` → `inspektor` (skrócony) → `tester` → `kronikarz` (jeśli dotyczy dokumentacji) → ✋ „akceptuję, commit” → ✋ push.
+- **XS (ekspres)** — kilka linii, bez nowego zachowania. Ty piszesz plan w 3 zdaniach w punkcie kontrolnym (pliki, zmiana, jak sprawdzić) → ✋ „ok”
+  → `wydawca` (gałąź) → `programista` (w zleceniu: zmiana + „sprawdź konsolę po kompilacji”) → skrypt kontroli (bez Inspektora i Testera)
+  → autorowi jedno zdanie „sprawdź w grze: …” → `kronikarz` tylko, gdy zmienia się wartość w specyfikacji
+  → ✋ „akceptuję, commit i push” = **jedno** wywołanie `wydawca` (commit, scalenie, push) albo osobno „akceptuję, commit” i `/push`.
+  Gdy w trakcie wyjdzie, że zmiana jest większa — zatrzymaj się i zaproponuj S.
+- **S** — `architekt` (plan skrócony, **`model: "sonnet"`** przy wywołaniu) → ✋ → `programista` → `inspektor` (skrócony) → `tester` → `kronikarz` (jeśli dotyczy dokumentacji) → ✋ „akceptuję, commit” → ✋ push.
   *Balans* (sama wartość w SO): bez Architekta i Programisty — zmiana wartości w specyfikacji z autorem → `integrator` (manifest, `/manifest-ok`) → `kronikarz` → commit → push.
 - **M** — `/spec` + `architekt` → **jedna bramka** ✋ „specyfikacja i plan” → 3a → (3b) → 4 → 5 → ✋ commit → ✋ push.
 - **L** — pełny cykl z `CLAUDE.md`, każda bramka osobno.
@@ -89,6 +94,9 @@ potem zaproponuj `/compact <na czym się skupiamy>`.
 Subagent nie zna tej rozmowy. Każde zlecenie zawiera: ID zadania i specyfikacji, rozmiar (S/M/L), ścieżkę planu, oczekiwany wynik, ograniczenia bramki
 (np. „faza 1: tylko manifest”), **listę zasad, których dotyczy zadanie (np. „Z1, Z4, Z7”)** i numery powiązanych decyzji.
 Nie każ subagentowi czytać rzeczy, które już wiesz — przekaż je w zleceniu. Dla `integrator` w fazie 2 przekazujesz **zatwierdzony manifest dosłownie**.
+**Model przy wywołaniu:** Architekt przy zadaniach S — `model: "sonnet"` (Opus tylko M i L). **Wysiłek:** przy XS/S zaproponuj autorowi niższy `/effort`.
+**Wydawca:** jedno zlecenie = jeden krok (gałąź / commit / push); podawaj dokładną nazwę gałęzi `feature/<NN>-<nazwa>` i dokładną listę plików.
+Nie wykonujesz `git commit/merge/push` sam — hook to blokuje; „subagent nie może” nie jest powodem, żeby to obchodzić — zgłoś autorowi.
 Narzędzia MCP w głównej sesji są ładowane na żądanie — jeśli potrzebujesz odczytu sceny, zlecasz go subagentowi, który ma je w definicji.
 
 ## Pytania do autora

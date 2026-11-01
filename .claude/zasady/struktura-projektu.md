@@ -18,6 +18,7 @@ Ratocalypse 2.5/
 ├── Tools/               narzędzia autora (poza zakresem agentów, chyba że zlecenie mówi inaczej)
 └── .claude/             konfiguracja agentów
     ├── narzedzia/       skrypty bez agentów: mapa-kodu.ps1, kontrola-commita.ps1, koszty.ps1
+    ├── plans/           plany: task-<NN>-<nazwa>.md
     └── mapa-kodu.md     generowana — nie edytuje się ręcznie
 ```
 

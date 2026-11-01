@@ -75,4 +75,10 @@ Linia 34 jest już poprawna (`Clamp(..., 0, 0.75)`). Spec była prawidłowa, bug
 |---|---|---|
 | 2026-11-01 | 0 | Rozmiar S zatwierdzony |
 | 2026-11-01 | 0 | Gałąź `feature/02-limit-pancerza` z HEAD `44bb1a0` |
-| 2026-11-01 | 2 | Plan skrócony zwrócony przez Architekta |
+| 2026-11-01 | 2 | Plan skrócony zwrócony przez Architekta; autor zatwierdził (ok) |
+| 2026-11-01 | 3a | Programista: `PlayerStats.cs:91` `Clamp01` → `Clamp(..., 0f, 0.75f)` |
+| 2026-11-01 | 4 | Inspektor PASS; kompilacja czysta |
+| 2026-11-01 | 4 | Tester T11 PASS, T12 PASS; T13 pominięty (minimum-1 poza zakresem #2) |
+| 2026-11-01 | 5 | Kronikarz: GDD-CMB-006 v0.2 — usunięte adnotacje o błędzie |
+| 2026-11-01 | 6+7 | Commit `c4dd82e`, merge `f3b8463` do `main` |
+| 2026-11-01 | 8 | Push `origin/main` |

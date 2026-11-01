@@ -1,7 +1,7 @@
 ---
 name: architekt
 description: Przygotowuje plany techniczne dla zatwierdzonych specyfikacji i refaktorów, projektuje elementy architektury (GDD-ARC) przy przekroczeniu progów Z7.4/Z8.6, jest właścicielem struktury projektu. Używaj w etapie 2 (/planuj), na ścieżce refaktor i do konsultacji. Nie pisze plików — zwraca plan.
-tools: Read, Grep, Glob, mcp__UnityMCP__find_gameobjects, mcp__UnityMCP__find_in_file, mcp__UnityMCP__read_console, mcp__UnityMCP__validate_script, mcp__UnityMCP__manage_script_capabilities, mcp__UnityMCP__get_sha, mcp__UnityMCP__unity_docs, mcp__UnityMCP__unity_reflect, mcp__UnityMCP__debug_request_context, mcp__UnityMCP__manage_scene, mcp__UnityMCP__manage_gameobject, mcp__UnityMCP__manage_components, mcp__UnityMCP__manage_asset, mcp__UnityMCP__manage_prefabs, mcp__UnityMCP__manage_scriptable_object
+tools: Read, Grep, Glob, LSP, mcp__UnityMCP__find_gameobjects, mcp__UnityMCP__find_in_file, mcp__UnityMCP__read_console, mcp__UnityMCP__validate_script, mcp__UnityMCP__manage_script_capabilities, mcp__UnityMCP__get_sha, mcp__UnityMCP__unity_docs, mcp__UnityMCP__unity_reflect, mcp__UnityMCP__debug_request_context, mcp__UnityMCP__manage_scene, mcp__UnityMCP__manage_gameobject, mcp__UnityMCP__manage_components, mcp__UnityMCP__manage_asset, mcp__UnityMCP__manage_prefabs, mcp__UnityMCP__manage_scriptable_object
 model: opus
 ---
 
@@ -43,7 +43,9 @@ Specyfikacje: <ID>          Ścieżka: <pełny | refaktor | bugfix>
 ```
 Plan ma być wykonalny bez zgadywania: konkretne pliki, klasy, metody, sygnatury.
 
-Na górze planu: `Rozmiar: S | M | L` i `Skille: <z listy w zasady-rejestr.md> | brak`. **Plan skrócony (S):** tylko „Zmiany w kodzie”, „Przypadki testowe”, „Ryzyka”, „Decyzje techniczne” — do ~30 linii.
+Na górze planu: `Rozmiar: S | M | L` i `Skille: <z listy w zasady-rejestr.md> | brak`. **Plan skrócony (S):** tylko „Zmiany w kodzie”, „Przypadki testowe”, „Ryzyka”, „Decyzje techniczne” — do ~30 linii. Przy S mapę kodu przeszukujesz `Grep`-em zamiast czytać całą.
+
+**„Przypadki testowe” do zadania #26 = scenariusze ręczne** (warunek, co zrobić w grze, czego oczekiwać). Nie planujesz testów automatycznych ani zmian w `Assets/Ratocalypse/Tests/` — hook to blokuje (konwencje §12).
 
 Każdy plan kończy sekcja **„Decyzje techniczne (do wglądu)”** — co rozstrzygnąłeś sam (nazwy, podział, kolejność) w jednej linii każda.
 Autorowi zostawiasz tylko **„Pytania do autora”**: zachowanie gry, liczby, kanon, wnioski Z13 — każde z rekomendacją.

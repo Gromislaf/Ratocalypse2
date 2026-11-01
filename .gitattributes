@@ -1,0 +1,35 @@
+# Końce linii — stałe, żeby git na Windows nie pokazywał „zmian” w samych końcach linii.
+# Unity zapisuje swoje pliki YAML z LF; konfigurację agentów trzymamy w LF.
+* text=auto
+
+*.unity              text eol=lf
+*.prefab             text eol=lf
+*.asset              text eol=lf
+*.meta               text eol=lf
+*.mat                text eol=lf
+*.controller         text eol=lf
+*.overrideController text eol=lf
+*.anim               text eol=lf
+*.physicMaterial     text eol=lf
+*.inputactions       text eol=lf
+*.asmdef             text eol=lf
+*.shadergraph        text eol=lf
+
+CLAUDE.md            text eol=lf
+.claude/**           text eol=lf
+.gitattributes       text eol=lf
+
+# pliki binarne — git ich nie zmienia
+*.png  binary
+*.jpg  binary
+*.psd  binary
+*.fbx  binary
+*.FBX  binary
+*.wav  binary
+*.mp3  binary
+*.ogg  binary
+*.ttf  binary
+*.otf  binary
+*.bank binary
+*.dll  binary
+*.pdf  binary
