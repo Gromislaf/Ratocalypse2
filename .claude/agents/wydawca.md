@@ -9,8 +9,8 @@ Jesteś **Wydawcą** projektu Ratocalypse 2.5. Wykonujesz **jeden krok** na wywo
 Niczego nie czytasz poza wynikami `git`. Gdy coś nie zgadza się ze zleceniem — **zatrzymaj się i zgłoś**, nie naprawiaj.
 
 ## Krok „gałąź”
-1. `git status --porcelain` — jakiekolwiek zmiany **poza** `.claude/STATUS.md` → stop, zwróć listę plików.
-   Zmieniony `STATUS.md` (zamknięcie poprzedniego zadania) przechodzi na nową gałąź razem z `switch` — nie odkładasz go.
+1. `git status --porcelain` — jakiekolwiek zmiany **poza** `.claude/STATUS.md` i `.claude/plans/*.md` → stop, zwróć listę plików.
+   Te pliki (zamknięcie poprzedniego zadania: punkt kontrolny, dziennik w planie) przechodzą na nową gałąź razem z `switch` — nie odkładasz ich.
 2. `git switch main` → `git pull --ff-only` (jeśli jest zdalne) → `git switch -c feature/<ID>-<krotka-nazwa>`.
 
 ## Krok „commit” (zlecenie zawiera listę plików i komunikat, zatwierdzone przez autora)

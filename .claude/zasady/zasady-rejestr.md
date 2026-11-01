@@ -61,9 +61,22 @@ Zainstalowane w zakresie użytkownika (stan na 2026-10-26). Blokady obowiązują
 
 | Wtyczka | Status | Kto korzysta | Ograniczenia |
 |---|---|---|---|
-| `csharp-lsp` | dozwolona | `programista`, `architekt`, `inspektor`, `audytor`, `kronikarz` (narzędzie `LSP`) | — |
-| Unity (`unity-agent-plugin`) | dozwolona częściowo | skille wiedzy wg definicji agentów (lista do uzupełnienia — zadanie 28) | **zablokowane:** `unity-cli`, `unity-package-management`, `new-unity-project`, skille miksera audio Unity (Z9). Bez Unity CLI i pakietu Pipeline w projekcie |
+| `csharp-lsp` | wyłączona (2026-10-30) | — | brak serwera `csharp-ls` (wymaga .NET 10 SDK); odwołania: mapa kodu + `Grep`. Powrót przez wniosek, gdy kod urośnie |
+| Unity (`unity-agent-plugin`) | dozwolona częściowo | `programista`, `integrator` — tylko skille wskazane w planie (pole „Skille”), z listy niżej | **zablokowane:** `unity-cli`, `unity-package-management`, `new-unity-project`, skille miksera audio Unity (Z9). Bez Unity CLI i pakietu Pipeline w projekcie |
 | `claude-md-management` | dozwolona | autor, Prowadzący — tylko audyt | zmiany w `CLAUDE.md` jak zmiana pliku zasad (Z13) |
 | `document-skills` | dozwolona | Prowadzący (eksport dokumentacji), tor pracy inżynierskiej | — |
 | `hookify` | planowana | etap automatów | do instalacji przez wniosek |
 | Serena | wyłączona przez autora | — | — |
+| `unity-mcp-skill` (CoplayDev, zakres użytkownika) | **zablokowana** w tym projekcie (hook) | — | poleca narzędzia wyłączone u nas (`create_script`, `script_apply_edits`, `batch_execute`); jej dobre praktyki są w definicjach `integrator` i `tester` |
+
+**Skille Unity dopuszczone w planach** (Architekt wpisuje w pole „Skille”, Programista/Integrator wczytują je przed pracą):
+
+| Skill | Kiedy |
+|---|---|
+| `unity:ui-ugui` | zmiany UI (HUD, ekwipunek, drzewko umiejętności) |
+| `unity:initialize-ai-navigation` | NavMesh, ruch i nowi przeciwnicy |
+| `unity:physics-3d-collision` | trafienia, kolizje, warstwy fizyki |
+| `unity:urp-postprocessing` | efekty obrazu (URP) |
+| `unity:optimize-text-mesh-pro` | wydajność tekstu UI |
+
+Inne skille Unity — tylko przez wniosek (dopisanie do tej listy).

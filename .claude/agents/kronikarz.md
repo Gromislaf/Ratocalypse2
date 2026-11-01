@@ -1,7 +1,7 @@
 ---
 name: kronikarz
 description: Aktualizuje Documentation/ po wdrożeniu (status, stopka Implementacja, odwołania, historia zatwierdzonych zmian) i realizuje zadania dokumentacyjne. Etap 5, ścieżki balans i dokumentacja. Nigdy nie zmienia zachowania ani parametrów w specyfikacji.
-tools: Read, Grep, Glob, Edit, Write, LSP, Bash
+tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
 

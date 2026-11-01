@@ -1,6 +1,6 @@
 # kontrola-commita.ps1 — sprawdzenie zmian przed commitem (bez agentów, zero tokenów).
 # Uruchamianie z katalogu projektu:
-#   pwsh -NoProfile -File .claude/narzedzia/kontrola-commita.ps1 [-Plan .claude/plans/task-02-....md]
+#   pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/kontrola-commita.ps1 [-Plan .claude/plans/task-02-....md]
 # Kod wyjścia: 0 = brak błędów (ostrzeżenia możliwe), 1 = są błędy ❌ (commit wstrzymany).
 
 param(
@@ -8,6 +8,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $projekt = (git rev-parse --show-toplevel 2>$null)
 if (-not $projekt) { Write-Output '❌ To nie jest repozytorium git.'; exit 1 }
 Set-Location $projekt

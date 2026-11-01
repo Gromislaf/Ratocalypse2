@@ -34,11 +34,15 @@
       "Bash(git show*)",
       "Bash(git branch)",
       "Bash(git branch --list*)",
-      "Bash(pwsh -NoProfile -File .claude/narzedzia/mapa-kodu.ps1*)",
-      "Bash(pwsh -NoProfile -File .claude/narzedzia/kontrola-commita.ps1*)",
       "Bash(git add --*)",
       "Bash(git rev-parse*)",
-      "Bash(git merge-base*)"
+      "Bash(git merge-base*)",
+      "Bash(pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/*)",
+      "PowerShell(pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/*)",
+      "PowerShell(git status*)",
+      "PowerShell(git diff*)",
+      "PowerShell(git log*)",
+      "PowerShell(git show*)"
     ],
     "ask": [
       "Edit(CLAUDE.md)",
@@ -77,7 +81,31 @@
       "Write(.claude/zasady/konwencje.md)",
       "Bash(git stash*)",
       "Edit(.claude/narzedzia/**)",
-      "Write(.claude/narzedzia/**)"
+      "Write(.claude/narzedzia/**)",
+      "Bash(winget *)",
+      "Bash(dotnet tool *)",
+      "Bash(dotnet workload *)",
+      "Bash(choco *)",
+      "Bash(npm install -g*)",
+      "Bash(npm i -g*)",
+      "Bash(pip install*)",
+      "Bash(pip3 install*)",
+      "PowerShell(winget *)",
+      "PowerShell(dotnet tool *)",
+      "PowerShell(choco *)",
+      "PowerShell(npm install -g*)",
+      "PowerShell(Install-Module*)",
+      "PowerShell(Install-Package*)",
+      "PowerShell(git commit*)",
+      "PowerShell(git merge*)",
+      "PowerShell(git push*)",
+      "PowerShell(git stash*)",
+      "PowerShell(git branch -d*)",
+      "PowerShell(Remove-Item*)",
+      "Bash(rm *)",
+      "Bash(git restore*)",
+      "Bash(git checkout -- *)",
+      "PowerShell(git restore*)"
     ],
     "deny": [
       "Write(.claude/mapa-kodu.md)",
@@ -143,7 +171,42 @@
       "Bash(git clean*)",
       "Bash(git commit --amend*)",
       "Bash(git rebase*)",
-      "Bash(git branch -D*)"
+      "Bash(git branch -D*)",
+      "Bash(git *push*--force*)",
+      "Bash(git *push* -f*)",
+      "Bash(git *push* +*)",
+      "Bash(git *reset*--hard*)",
+      "Bash(git *clean*)",
+      "Bash(git *rebase*)",
+      "Bash(git *commit*--amend*)",
+      "Bash(git *branch* -D*)",
+      "PowerShell(git *push*--force*)",
+      "PowerShell(git *push* -f*)",
+      "PowerShell(git *push* +*)",
+      "PowerShell(git *reset*--hard*)",
+      "PowerShell(git *clean*)",
+      "PowerShell(git *rebase*)",
+      "PowerShell(git *commit*--amend*)",
+      "PowerShell(git *branch* -D*)",
+      "Bash(rm -rf*)",
+      "Bash(rm -fr*)",
+      "Bash(rm -r *)",
+      "PowerShell(Remove-Item *-Recurse*)",
+      "PowerShell(Remove-Item * -r *)",
+      "Edit(**/*.meta)",
+      "Write(**/*.meta)",
+      "Edit(**/*.unity)",
+      "Write(**/*.unity)",
+      "Edit(**/*.prefab)",
+      "Write(**/*.prefab)",
+      "Edit(**/*.asset)",
+      "Write(**/*.asset)",
+      "Edit(**/*.controller)",
+      "Write(**/*.controller)",
+      "Edit(**/*.anim)",
+      "Write(**/*.anim)",
+      "Edit(**/*.mat)",
+      "Write(**/*.mat)"
     ]
   },
   "hooks": {
@@ -169,11 +232,47 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
+        "matcher": "Read|Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
         "hooks": [
           {
             "type": "command",
             "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/pre-tool.ps1\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/post-cs.ps1\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/koszty.ps1\"",
+            "timeout": 20,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/koszty.ps1\"",
+            "timeout": 20,
+            "async": true
           }
         ]
       }

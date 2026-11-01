@@ -28,7 +28,9 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
 
 ## Co wolno Ci pisać
 
-- `.claude/STATUS.md` — **raz na bramkę** (etap, następny krok, jedna linia w dzienniku); nie po każdym drobnym kroku,
+- `.claude/STATUS.md` — **raz na bramkę**: **nadpisujesz** punkt kontrolny (między `<!-- CHECKPOINT -->` a `<!-- /CHECKPOINT -->`, do ~25 linii)
+  i dopisujesz jedną linię do „Dziennik bramek — aktywne zadanie”; nie po każdym drobnym kroku. Edytujesz punkt kontrolny bez czytania całego pliku
+  (`Read` z zakresem do znacznika `/CHECKPOINT`). Kolejkę zmieniasz tylko przy dodaniu/zamknięciu zadania,
 - `.claude/plans/<ID>.md` — zapis planu zwróconego przez `architekt`,
 - `.claude/zasady/decyzje.md` — zapis decyzji autora (Z13.4),
 - `Documentation/` w etapie 1 — szkic specyfikacji (status *Projekt*),
@@ -38,13 +40,15 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
 
 ## Start sesji
 
-1. STATUS dostajesz automatycznie (hook) razem z linią o mapie kodu. **Jeśli w kontekście nie ma wstrzykniętego STATUS** — powiedz autorowi wprost:
+1. Punkt kontrolny STATUS dostajesz automatycznie (hook) razem z linią o mapie kodu. **Jeśli w kontekście go nie ma** — powiedz autorowi wprost:
    „Hooki nie zadziałały — strażnik Integratora jest wyłączony” i do czasu naprawy nie zlecaj Integratorowi fazy 2. Dopiero potem przeczytaj STATUS sam.
 2. Powiedz autorowi w 2–4 liniach: aktywne zadanie, etap, na co czeka; następne w kolejce; aktywne strefy (np. seria pomiarów).
 3. Zapytaj, czym się zajmujemy. Nie zaczynaj pracy bez odpowiedzi.
 
 **Jedno zadanie = jedna sesja.** Po pushu zaproponuj `/clear` przed następnym zadaniem. Gdy sesja robi się długa w środku zadania
-(np. po dużym śledztwie) — zapisz stan w STATUS i zaproponuj `/clear`; następna sesja zacznie od STATUS.
+(np. po dużym śledztwie) — zapisz stan w punkcie kontrolnym i zaproponuj `/clear`; następna sesja zacznie od niego.
+Gdy kontekst przekroczy ~60–70% (długi wywiad, wiele wyników subagentów) — najpierw zapisz, co ustalone (plik, punkt kontrolny),
+potem zaproponuj `/compact <na czym się skupiamy>`.
 
 ## Prowadzenie cyklu
 
@@ -53,7 +57,7 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
 - **Jedno aktywne zadanie naraz.** Nowe pomysły (`/nowe`) i błędy (`/bug`) trafiają do kolejki; kolejność ustala autor.
 - Przy każdej bramce ✋ pytasz wprost i czekasz na wyraźną odpowiedź. Brak odpowiedzi ≠ zgoda.
 - Bramki techniczne (kompilacja, konsola, werdykt Inspektora) sprawdzasz sam na podstawie raportów i przechodzisz dalej bez pytania.
-- **Po etapie 3a** odśwież mapę kodu: `pwsh -NoProfile -File .claude/narzedzia/mapa-kodu.ps1` (zanim zlecisz Inspektora).
+- **Po etapie 3a** odśwież mapę kodu: `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1` (zanim zlecisz Inspektora).
 - **Etap 5 to twarda bramka:** bez wyniku `kronikarz` nie ma `/commit`.
 - Zmiana założeń specyfikacji w etapach 3–6 → zatrzymaj się, wróć z autorem do etapu 1.
 
@@ -73,11 +77,12 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
 
 ## Commit (`/commit`) i push (`/push`)
 
-1. Sam uruchamiasz `pwsh -NoProfile -File .claude/narzedzia/kontrola-commita.ps1` — przed tym STATUS ma już wpis etapu 7, żeby trafił do tego samego commita.
+1. Sam uruchamiasz `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/kontrola-commita.ps1` — przed tym STATUS ma już wpis etapu 7, żeby trafił do tego samego commita.
 2. Przedstawiasz autorowi wynik skryptu (❌/⚠️ bez skracania) i komunikat `<ID>: <opis>`. ❌ = najpierw naprawa.
    ⚠️ „plik spoza planu” — zapytaj: przypadkowa zmiana (przywrócić `git restore`, po zgodzie) czy brak w planie (dopisać).
 3. ✋ „akceptuję, commit” → **jedno** wywołanie `wydawca` (krok „commit”): dokładna lista plików i komunikat. Commit i scalenie do `main` w jednym kroku.
-4. ✋ push → **jedno** wywołanie `wydawca` (krok „push”). Po pushu: STATUS — zadanie do „Zamknięte” z hashem (ta zmiana trafi do następnego commita), propozycja `/clear`.
+4. ✋ push → **jedno** wywołanie `wydawca` (krok „push”). Po pushu: dziennik zadania przenosisz na koniec jego planu (`.claude/plans/<ID>.md`, sekcja „Dziennik bramek”), czyścisz dziennik w STATUS,
+   zadanie do „Zamknięte” z hashem, punkt kontrolny „brak aktywnego zadania” + 3 następne z kolejki (te zmiany trafią do następnego commita), propozycja `/clear`.
 
 ## Delegowanie
 
@@ -97,6 +102,8 @@ Znaleziska „poza zakresem” dopisujesz do kolejki w STATUS (przy najbliższej
 
 Wywiad z autorem według 7 aspektów (`.claude/rules/dokumentacja-promotor.md` §3a/§3b/§3c). Pytaj partiami (2–4 pytania naraz, z rekomendacjami).
 Gdy autor nie ma wartości — zaproponuj 2–3 opcje z uzasadnieniem, decyzja należy do autora. Nie wymyślaj liczb bez zaznaczenia, że to propozycja.
+**Sekcja po sekcji:** najpierw szkielet pliku (wszystkie nagłówki szablonu, status *Projekt*), potem każdą sekcję omawiasz i **od razu zapisujesz** w pliku
+po zgodzie autora; w punkcie kontrolnym notujesz, które sekcje są zapisane. Zapisanej sekcji nie trzymasz w rozmowie — przy długim wywiadzie można kompaktować.
 Szkic → `redaktor` → poprawki → przedstawienie autorowi → ✋ (przy M razem z planem) → status *Zatwierdzona*.
 
 **Kiedy `redaktor`:** zawsze przy nowej specyfikacji, nowej wersji istniejącej (zmiana zachowania lub parametru) i w `/audyt`.

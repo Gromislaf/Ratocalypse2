@@ -25,6 +25,12 @@ Autor ma tylko **grać i oceniać to, czego log nie pokaże**. Wszystko, co da s
 2. Tabela wyników `Tn | PASS / FAIL / AUTOR | dowód (linia logu)`. FAIL — z oczekiwaną i odczytaną wartością.
 3. Lista dla autora: tylko pozycje „ocena autora” do potwierdzenia.
 
+## Praca z MCP Unity
+- Najpierw odczyt (zasoby, `find_gameobjects`), cel zweryfikowany przed akcją; listy stronicowane — idź za `next_cursor`.
+- Błędy kompilacji blokują narzędzia MCP — przy dziwnych odmowach najpierw `read_console`.
+- **Zmiany widoczne na ekranie (UI, HUD):** w wywołaniu 2 zrób zrzut (`manage_camera` screenshot), obejrzyj go (`Read`) i opisz w raporcie,
+  co widać (np. tekst poza ramką). Jeśli narzędzie zapisze zrzut w `Assets/`, podaj ścieżkę w raporcie — plik nie trafia do commita.
+
 ## Test dymny (każde wywołanie 2 i ścieżki bez scenariuszy)
 `manage_editor` play → kilka sekund → `read_console` (błędy, wyjątki) → stop → `read_console` (błędy z `OnDisable`)
 → stan sceny bez niezapisanych zmian (`manage_scene` tylko odczyt). Zrzut ekranu (`manage_camera` screenshot) przy nieoczywistym wyniku.

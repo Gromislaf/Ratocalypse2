@@ -67,3 +67,23 @@ Dodać `reduced = Mathf.Round(reduced * 10f) / 10f;` w `PlayerStats.TakeDamage(f
 
 - `Combat.md`: GDD-CMB-005/006 → `Zaimplementowana`; wpisy w historiach zmian
 - `decyzje.md`: wpis o zamknięciu #1
+
+---
+
+## Dziennik bramek (przeniesiony ze STATUS po zamknięciu)
+
+| Data | Etap | Zdarzenie / decyzja |
+|---|---|---|
+| 2026-10-26 | 0→1 | Zadanie #1 aktywne; start wywiadu specyfikacyjnego |
+| 2026-10-26 | 1→2 | Specyfikacja GDD-CMB-005 i GDD-CMB-006 zatwierdzona przez autora |
+| 2026-10-26 | 2→3a | Plan zatwierdzony; DP-1 B (camelCase), DP-2 A (namespace tylko nowe), DP-3 A (usunąć TakeDamage(float)), Z13 A (zaokrąglenie w PlayerStats) |
+| 2026-10-27 | 3a start | Gałąź feature/01-damageinfo potwierdzona; Programista aktywny |
+| 2026-10-27 | 3a→4 | Kompilacja OK (0 błędów); przekazano do Inspektora |
+| 2026-10-27 | 4 Inspektor | Zero 🔴 — wszystkie Z4/Z1/Z3/Z7/DP-1/2/3/Z13A zgodne |
+| 2026-10-27 | 4 Tester | Testy automatyczne zablokowane (#26); checklista ręczna gotowa; T7 naprawiony (IsAlive check w EnemyAI.OnAttackHit) |
+| 2026-10-27 | 4→6 | Etap 4 zamknięty; autor przystępuje do checklisty ręcznej T1–T10 |
+| 2026-10-28 | 6→7 | Checklista T1–T10 zaliczona (T4 odroczone do #26); commit `e8dbd2d`; scalenie do main wstrzymane na życzenie autora |
+| 2026-10-28 | 7→5 | Powrót do etapu 5 — etap był pominięty; testy z `e8dbd2d` do weryfikacji; decyzja A/B ws. testów oczekuje autora |
+| 2026-10-28 | 5→7 | Etap 5 zakończony (kronikarz, redaktor ✅, audytor ✅ — 4 🟡 naprawione); drugi commit `b677ad6` |
+| 2026-10-28 | 7→8 | STATUS `7970972`; scalenie `--no-ff` do main `2649542` |
+| 2026-10-28 | 8 | Push: `feature/01-damageinfo` i `main` → origin |
