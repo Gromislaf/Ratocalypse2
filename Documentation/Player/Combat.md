@@ -236,7 +236,7 @@ Implementacje: `PlayerHealthComponent.cs` (`IDamageable`, `IHealable`); `EnemyAI
 ## GDD-CMB-006 Reguły odbioru obrażeń przez gracza
 
 **Status:** Zaimplementowana
-**Wersja:** 0.1
+**Wersja:** 0.2
 
 **Opis funkcjonalny:** Definiuje kolejność i wzory przetwarzania `DamageInfo` po stronie gracza — od otrzymania uderzenia do zmiany HP i publikacji zdarzeń.
 **Warunki uruchomienia:** Wywołanie `IDamageable.TakeDamage(DamageInfo)` na `PlayerHealthComponent`.
@@ -244,7 +244,7 @@ Implementacje: `PlayerHealthComponent.cs` (`IDamageable`, `IHealable`); `EnemyAI
 **Zasady działania:**
 1. Jeśli `IsInvincible == true` (iframes aktywne) → przerwij; 0 obrażeń; brak zdarzeń.
 2. Jeśli `info.source == null` → `Debug.LogWarning("[PlayerHealthComponent] DamageInfo.source == null")`.
-3. Oblicz redukcję pancerzem: `reduced = Round(info.value × (1 − TotalArmor), 1 m.p.p.)`. *(Uwaga: `TotalArmor` nie ma limitu górnego — błąd śledzony jako zadanie #2.)*
+3. Oblicz redukcję pancerzem: `reduced = Round(info.value × (1 − TotalArmor), 1 m.p.p.)`.
 4. Zastosuj limit dolny obrażeń: `reduced = max(reduced, 1)` — minimalna strata to 1 HP.
 5. Odejmij od HP: `currentHp = max(currentHp − reduced, 0)`.
 6. Opublikuj `OnPlayerDamaged { amount = reduced, currentHp, maxHp }` przez EventBus (`GameEvents.cs`).
@@ -253,14 +253,13 @@ Implementacje: `PlayerHealthComponent.cs` (`IDamageable`, `IHealable`); `EnemyAI
 **Ograniczenia:**
 - `isCritical` z `DamageInfo` nie zmienia toku obliczeń po stronie odbiorcy w tej wersji.
 - Reakcja na `knockback` nie jest zaimplementowana ([GDD-CMB-005] punkt 4).
-- Limit górny `TotalArmor ≤ 0,75` nie jest wymuszany — błąd śledzony jako zadanie #2.
 
 **Parametry:**
 
 | Parametr | Wartość | Jednostka | Zakres |
 |---|---|---|---|
 | Minimalny odbiór obrażeń | 1 | HP | — |
-| `TotalArmor` (bazowa, bez ekwipunku) | 0 | — | 0–1 (brak `Clamp`, błąd zadania #2) |
+| `TotalArmor` (bazowa, bez ekwipunku) | 0 | — | 0–0,75 |
 
 **Wzory:**
 ```
@@ -275,12 +274,12 @@ Zaokrąglenie: `Mathf.Round(x * 10f) / 10f` (1 miejsce po przecinku).
 **Sytuacje wyjątkowe:**
 - `IsInvincible == true` → 0 obrażeń, brak zdarzeń (krok 1).
 - Gracz ginie od tego uderzenia → `OnPlayerDamaged` publikowane przed `OnPlayerDied`.
-- `TotalArmor > 1` (błąd z zadania #2) → `reduced` ujemne; dolny limit `max(reduced, 1)` chroni przed wyleczeniem przez obrażenia.
+- Suma pancerzy > 0,75 → `TotalArmor = 0,75` (`Mathf.Clamp`), krok 3 używa wartości po przycięciu.
 
 **Informacja zwrotna:** `OnPlayerDamaged` → HUD odświeża pasek HP ([Player/Stats.md]). Brak dźwięku i efektów wizualnych — realizacja w zadaniu #17.
 
 **Implementacja:**
-- `Assets/Ratocalypse/Scripts/Player/PlayerHealthComponent.cs` — `IDamageable.TakeDamage(DamageInfo)` (obliczenia pancerza, publikacja zdarzeń)
+- `Assets/Ratocalypse/Scripts/Player/PlayerHealthComponent.cs` — `IDamageable.TakeDamage(DamageInfo)` (obliczenia pancerza z `Mathf.Clamp(TotalArmor, 0f, 0.75f)`, publikacja zdarzeń)
 - `Assets/Ratocalypse/Scripts/Player/PlayerStats.cs` — dostawca `TotalArmor`, `currentHp`, `MaxHp`
 - `Assets/Ratocalypse/Scripts/Core/GameEvents.cs` — `OnPlayerDamaged`, `OnPlayerDied`
 
@@ -289,3 +288,4 @@ Zaokrąglenie: `Mathf.Round(x * 10f) / 10f` (1 miejsce po przecinku).
 | Wersja | Zmiana |
 |---|---|
 | 0.1 | Pierwsza specyfikacja. Dokumentuje istniejące zachowanie kodu; ujednolica z [GDD-CMB-005]. Zaimplementowana w `PlayerHealthComponent.TakeDamage(DamageInfo)`; usunięta metoda `PlayerHealthComponent.TakeDamage(float)` (DP-3); commit `e8dbd2d` (2026-10-28). |
+| 0.2 | Wymuszenie limitu `TotalArmor ≤ 0,75` (zadanie #2). Poprzednio `Clamp01` umożliwiał 100% redukcję obrażeń wbrew specyfikacji. Gałąź `feature/02-limit-pancerza`; data 2026-11-01; hash uzupełni wydawca po pushu. |

@@ -9,16 +9,15 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | setup — poprawka 4 konfiguracji |
-| Rozmiar / ścieżka | S / konfiguracja |
+| Aktywne zadanie | #2 — limit pancerza 75% |
+| Rozmiar / ścieżka | S / bugfix |
 | Etap | 6+7 Akceptacja i commit |
-| Gałąź | `setup/poprawka-4` (z `main`) |
+| Gałąź | `feature/02-limit-pancerza` (z `main`) |
 | Czeka na | „akceptuję, commit" |
-| Następny krok | wydawca: gałąź + commit + scalenie; potem push |
+| Następny krok | wydawca: commit + scalenie do main |
 
-Następne w kolejce: **#2** limit pancerza 75% (bugfix, Z7.1) · **#9** `PlayerCombat` bez sprawdzenia `GameManager.Instance` (bugfix, Z5.5) · **#3** zdarzenie zapisu (bugfix + dokumentacja). Pełna kolejka: `/stan`.
+Następne w kolejce: **#9** `PlayerCombat` bez sprawdzenia `GameManager.Instance` (bugfix, Z5.5) · **#3** zdarzenie zapisu (bugfix + dokumentacja). Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
-Uwagi: poprawka-3 zamknięta 2026-10-29 poza obiegiem; poprawka-4 to narosłe zmiany konfiguracji od tamtej pory.
 <!-- /CHECKPOINT -->
 
 ---
@@ -75,6 +74,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | Data | Co | Na polecenie |
 |---|---|---|
 | 2026-10-29 | Commit Poprawki 3: agenci, komendy, hooki, CLAUDE.md, narzedzia/ → `setup/poprawka-3` → push `main` `2a9b37d` | autora |
+| 2026-11-01 | Commit Poprawki 3.1: kontrole automatyczne → `setup/poprawka-3-1` → scalenie do `main`, wykonany ręcznie | autora |
 
 ## Zamknięte (ostatnie 10)
 
