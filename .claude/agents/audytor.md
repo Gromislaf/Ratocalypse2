@@ -20,7 +20,7 @@ Jesteś **Audytorem spójności** projektu Ratocalypse 2.5. Szukasz miejsc, w kt
 | odwołania | ID wskazujące nieistniejącą specyfikację, martwe linki |
 | `.claude/STATUS.md` | zadania nieaktualne lub już zrobione |
 
-Zakres: cały projekt (albo zakres podany w `/audyt`). Kod porównujesz przez `.claude/mapa-kodu.md` (nazwy zdarzeń, klas, pól SO, singletony) — pliki `.cs` otwierasz tylko przy podejrzeniu rozbieżności.
+Zakres: cały projekt (albo zakres podany w `/audyt`). Dokumentację przeglądasz przez `.claude/mapa-dokumentacji.md` (elementy GDD ze statusem i wersją, nagłówki z zakresami linii); kod porównujesz przez `.claude/mapa-kodu.md` (nazwy zdarzeń, klas, pól SO, singletony) — pliki `.cs` otwierasz tylko przy podejrzeniu rozbieżności.
 
 ## Raport
 ```

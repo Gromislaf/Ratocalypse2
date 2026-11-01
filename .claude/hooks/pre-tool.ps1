@@ -1,10 +1,10 @@
 # PreToolUse: kontrole, których nie da się wyrazić samymi uprawnieniami.
 #  G. Bash/PowerShell: git commit/merge/push wykonuje wyłącznie wydawca.
-#  0. Read: pliki zasad i dokumentacji > 8 KB tylko fragmentami (lista nagłówków w odpowiedzi).
+#  0. Read: główna sesja nie czyta .cs; pliki zasad i dokumentacji > 8 KB tylko fragmentami (lista nagłówków w odpowiedzi).
 #  1. Skille Unity kolidujące z zasadami (Z9, Z11, Z12) -> zablokowane.
 #  2. MCP Unity: akcje zapisu w narzędziach wielofunkcyjnych tylko po /manifest-ok (i tylko dla integratora, jeśli znana nazwa agenta);
 #     manage_editor tylko play/pause/stop; manage_camera tylko screenshot.
-#  3. Zapis plików: UnityEditor poza #if UNITY_EDITOR w kodzie gry; blokada systemu pomiarowego w trakcie serii; ścieżki zapisu per agent (jeśli hook zna nazwę agenta).
+#  3. Zapis plików: Documentation/ i Assets/ nie na main; UnityEditor poza #if UNITY_EDITOR w kodzie gry; blokada systemu pomiarowego w trakcie serii; ścieżki zapisu per agent (jeśli hook zna nazwę agenta).
 # Wyjście z kodem 2 = blokada, komunikat na stderr trafia do agenta.
 $ErrorActionPreference = 'SilentlyContinue'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -38,13 +38,17 @@ if ($tool -in @('Bash','PowerShell')) {
     exit 0
 }
 
-# --- 0. Strażnik czytania: duże pliki zasad i dokumentacji tylko fragmentami ---------
+# --- 0. Strażnik czytania: główna sesja nie czyta kodu; duże pliki zasad i dokumentacji tylko fragmentami ---------
 if ($tool -eq 'Read') {
     $path = "$($ti.file_path)"
-    if (-not $path -or $null -ne $ti.offset -or $null -ne $ti.limit) { exit 0 }
+    if (-not $path) { exit 0 }
     $rel = $path.Replace('\','/')
     $r   = $root.Replace('\','/').TrimEnd('/') + '/'
     if ($rel.StartsWith($r, [StringComparison]::OrdinalIgnoreCase)) { $rel = $rel.Substring($r.Length) }
+    if (-not $agent -and $rel -match '^Assets/.*\.cs$') {
+        Deny "Prowadzący nie czyta kodu (poprawka 3.4). Rozmiar zadania: wiersz kolejki + Grep w .claude/mapa-kodu.md. Fakty o kodzie: zleć zwiadowcy konkretne pytanie — wróci streszczenie."
+    }
+    if ($null -ne $ti.offset -or $null -ne $ti.limit) { exit 0 }
     if ($rel -notmatch '^(\.claude/(zasady|rules)/|Documentation/|Vision/)' -or $rel -notmatch '\.md$') { exit 0 }
     if (-not (Test-Path $path -PathType Leaf)) { exit 0 }
     $kb = [math]::Ceiling((Get-Item $path).Length / 1KB)
@@ -57,7 +61,7 @@ if ($tool -eq 'Read') {
     [Console]::Error.WriteLine("[hook] Odmowa czytania w całości: $rel ma $kb KB (próg 8 KB dla zasad i dokumentacji). Przeczytaj potrzebną sekcję: Read z offset = linia nagłówka i limit do następnego nagłówka.")
     [Console]::Error.WriteLine("Nagłówki (linia  tytuł):")
     foreach ($n in $naglowki) { [Console]::Error.WriteLine($n) }
-    [Console]::Error.WriteLine("Całość tylko z uzasadnieniem — czytaj zakresami (offset/limit).")
+    [Console]::Error.WriteLine("Całość tylko z uzasadnieniem — czytaj zakresami (offset/limit). Zakresy wszystkich sekcji dokumentacji: .claude/mapa-dokumentacji.md.")
     exit 2
 }
 
@@ -106,6 +110,17 @@ if ($tool -in @('Edit','Write','MultiEdit','NotebookEdit')) {
     $rel  = $path.Replace('\','/')
     $r    = $root.Replace('\','/').TrimEnd('/') + '/'
     if ($rel.StartsWith($r, [StringComparison]::OrdinalIgnoreCase)) { $rel = $rel.Substring($r.Length) }
+
+    # Zmiany w dokumentacji i kodzie tylko na gałęzi zadania (poprawka 3.4) — gałąź powstaje przed /spec i przed kodem
+    if ($rel -match '^(Documentation|Assets)/') {
+        $plikHead = Join-Path $root '.git/HEAD'
+        if (Test-Path $plikHead) {
+            $h = (Get-Content $plikHead -Raw).Trim()
+            if ($h -match '^ref: refs/heads/(main|master)$') {
+                Deny "zapis w '$rel' na gałęzi $($Matches[1]). Najpierw gałąź zadania: wydawca, krok gałąź (feature/<NN>-<nazwa>) — przy /spec to pierwszy krok."
+            }
+        }
+    }
 
     # UnityEditor w kodzie gry bez #if UNITY_EDITOR — psuje build (sprawdzane tylko w zmienianym tekście)
     if ($rel -match '^Assets/Ratocalypse/.*\.cs$' -and $rel -notmatch '/Editor/') {
@@ -169,7 +184,7 @@ if ($tool -in @('Edit','Write','MultiEdit','NotebookEdit')) {
             foreach ($pre in $allowed[$agent]) { if ($rel.StartsWith($pre, [StringComparison]::OrdinalIgnoreCase)) { $ok = $true } }
             if (-not $ok) { Deny "agent '$agent' nie może zapisywać w '$rel'." }
         }
-        elseif ($agent -in @('architekt','redaktor','inspektor','audytor','adwokat','wydawca','integrator')) {
+        elseif ($agent -in @('architekt','redaktor','inspektor','audytor','adwokat','wydawca','integrator','zwiadowca')) {
             Deny "agent '$agent' nie zapisuje plików."
         }
     }

@@ -8,6 +8,7 @@ model: sonnet
 Jesteś **Kronikarzem** projektu Ratocalypse 2.5.
 
 ## Przeczytaj
+- `.claude/mapa-dokumentacji.md` — gdzie jest element do aktualizacji (plik, zakres linii, status, wersja); `Grep` po ID, potem `Read` tylko tego zakresu,
 - plan (sekcja „Wpływ na dokumentację”), zakres zmian (`git diff main...HEAD`), `.claude/mapa-kodu.md` (nazwy klas, pól, zdarzeń do stopki *Implementacja*), raport testera,
 - `.claude/rules/dokumentacja-promotor.md` (ładuje się sam przy pracy w `Documentation/`), `.claude/zasady/dokumentacja-rejestr.md` — tylko potrzebna sekcja.
 

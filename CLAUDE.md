@@ -14,15 +14,15 @@ Główna sesja działa w stylu **Prowadzący** (`.claude/output-styles/prowadzac
 
 | Etap | Kto | Bramka (✋ = wyraźna zgoda autora) |
 |---|---|---|
-| 0 Pomysł | Prowadzący + autor (treść: `/wizja`) → `adwokat` | ✋ zadanie i jego **rozmiar XS/S/M/L**; zadanie aktywne → `wydawca` tworzy gałąź (czyste drzewo) |
-| 1 Specyfikacja | Prowadzący + autor (`/spec`) → `redaktor` | zgodność z wytycznymi promotora; ✋ (przy M razem z planem) |
+| 0 Pomysł | Prowadzący + autor (treść: `/wizja`) → `adwokat` | ✋ zadanie i jego **rozmiar XS/S/M/L**; zadanie aktywne → `wydawca` tworzy gałąź **od razu, przed /spec** (hook: brak zapisu w `Documentation/` i `Assets/` na `main`) |
+| 1 Specyfikacja | `zwiadowca` (fakty) → Prowadzący + autor (`/spec`) → `redaktor` | zgodność z wytycznymi promotora; ✋ (przy M razem z planem) |
 | 2 Plan techniczny | `architekt` (`/planuj`) | ✋ plan (przy S — plan skrócony) |
 | 3a Kod | `programista` | kompilacja bez błędów |
 | 3b Integracja | `integrator` | ✋ `/manifest-ok`; konsola bez nowych błędów |
 | 4 Weryfikacja | `inspektor` (diff) → `tester` | brak 🔴; scenariusze testów przechodzą |
 | 5 Zamknięcie | `kronikarz` (+ `redaktor`, jeśli zmieniła się wersja specyfikacji) | **twarda bramka** — bez niej nie ma commita |
 | 6+7 Akceptacja i commit | autor → Prowadzący (`/commit`: skrypt kontroli) → `wydawca` | ✋ „akceptuję, commit” → commit i scalenie do `main` |
-| 8 Push | `wydawca` (`/push`) | ✋ push gałęzi i `main` |
+| 8 Push | `wydawca` (`/push`) → skrypt `zamknij-zadanie.ps1` | ✋ wpisanie `/push` = zgoda na push gałęzi i `main` |
 
 **Rozmiar zadania** (proponuje Prowadzący, zatwierdza autor w etapie 0):
 
@@ -30,7 +30,7 @@ Główna sesja działa w stylu **Prowadzący** (`.claude/output-styles/prowadzac
 |---|---|---|
 | **XS** | kilka linii, bez nowego zachowania, oczywiste co zmienić | **ekspres:** plan 3 zdania w punkcie kontrolnym (Prowadzący) → `programista` → skrypt kontroli zamiast Inspektora → autor sprawdza w grze 1 rzecz → `kronikarz` tylko gdy zmienia się wartość w specyfikacji → `wydawca` |
 | **S** | ≤ 3 pliki, bez nowego zachowania (bugfix, refaktor, balans) | bez etapu 1 (lub tylko poprawka wartości); plan skrócony (Architekt na Sonnecie); Inspektor tylko przy uwagach kontroli lub zmianie > ~20 linii; test ręczny na najtańszym wystarczającym poziomie |
-| **M** | nowa reguła lub mechanika w istniejącym systemie | specyfikacja i plan zatwierdzane **w jednej bramce** |
+| **M** | nowa reguła lub mechanika w istniejącym systemie | specyfikacja i plan zatwierdzane **w jednej bramce**; po niej `/clear` — implementacja w nowej sesji od punktu kontrolnego |
 | **L** | nowy system, zmiana architektury, system pomiarowy | pełny cykl |
 
 Bramki, których **nigdy** się nie łączy ani nie pomija: manifest Integratora, push, status *Kanon*, wnioski Z13.
@@ -83,8 +83,9 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
    Potem `LSP` lub `Grep` (definicje, odwołania) i `Read` z `offset`/`limit` tylko tych metod, które zmieniasz lub sprawdzasz. Cały plik — tylko gdy zmieniasz jego większość.
    Mapa jest generowana (nagłówek: commit, data); przy rozbieżności z plikiem wierz plikowi. Mapy nie edytuje się ręcznie.
 2. **Przegląd zmian = diff:** `git diff main...HEAD` i niezatwierdzone `git diff`. Okolice zmian — fragmentami.
-3. **Zasady fragmentami:** skrót Z1–Z14 jest wyżej; pełną sekcję czytasz tylko dla zasad ze zlecenia
-   (`Grep -n "^## Z" .claude/zasady/zasady-techniczne.md` → `Read` sekcji). `decyzje.md`, rejestry, struktura, konwencje — `Grep` po słowach kluczowych, nie całość.
+3. **Dokumentacja i zasady: najpierw `.claude/mapa-dokumentacji.md`** — wszystkie nagłówki z `Documentation/`, `Vision/`, `.claude/zasady/`, `.claude/rules/`
+   z zakresami linii (`33-85 ## GDD-ITM-001 …`) i tabela elementów GDD (ID, status, wersja, plik:linie). `Grep` w mapie → `Read` z `offset`/`limit` z zakresu.
+   Skrót Z1–Z14 jest wyżej; pełną sekcję zasady czytasz tylko dla zasad ze zlecenia. `decyzje.md` (tabela bez sekcji) — `Grep` po słowach kluczowych, nie całość.
 4. **Unity:** stan sceny, komponenty, konsola — najpierw przez MCP (jeśli masz narzędzie); pliki `.unity`/YAML dopiero, gdy MCP nie wystarcza.
 5. Plików streszczonych w zleceniu nie czytasz ponownie.
 6. **Raport dla Prowadzącego — telegraficznie:** tabela albo punkty, wynik, uwagi, decyzje. Bez prozy, bez powtarzania zlecenia, bez streszczania przeczytanych plików.
@@ -96,15 +97,18 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
 |---|---|---|
 | kontrola przed commitem | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/kontrola-commita.ps1` | lista plików, liczba zmienionych linii kodu, ❌ (blokuje commit) / ⚠️ (do decyzji autora). Plan wykrywa sam po numerze z nazwy gałęzi; `-Plan <ścieżka>` tylko gdy nie znajdzie |
 | mapa kodu | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1` | odświeża `.claude/mapa-kodu.md` |
+| mapa dokumentacji | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-dokumentacji.ps1` | odświeża `.claude/mapa-dokumentacji.md` (też sam hook na starcie sesji) — po zapisie w dokumentacji w trakcie sesji, gdy ktoś jeszcze będzie jej szukał |
 | koszty | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/koszty.ps1` | tabele zużycia tokenów |
+| zamknięcie zadania (po pushu) | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/zamknij-zadanie.ps1 -Zadanie <NN> -Commit "<commit> → merge <scalenie> → push"` | dziennik → plan, zadanie z kolejki do „Zamknięte”, nowy punkt kontrolny; STATUS bez ręcznych edycji |
 
-Bez cudzysłowów, bez `2>&1`, nie przez narzędzie PowerShell (zgłasza fałszywy błąd i wymusza pytanie o zgodę). Kodu skryptów nie czytasz.
+Ścieżka skryptu bez cudzysłowów, bez `2>&1`, nie przez narzędzie PowerShell (zgłasza fałszywy błąd i wymusza pytanie o zgodę). Kodu skryptów nie czytasz.
 
 ## Narzędzia — zasady wspólne
 
 - **Instalacje** (programy, SDK, pakiety, narzędzia: `winget`, `dotnet tool`, `choco`, `npm -g`, `pip`, `Install-Module`) — tylko tej konkretnej rzeczy, o którą autor poprosił wprost.
   Brakuje zależności (np. SDK) → zatrzymaj się i zapytaj; nie instaluj „przy okazji”.
 - Używasz **tylko** narzędzi ze swojej definicji. Zablokowane narzędzie = nie szukaj obejścia; zgłoś to w wyniku.
+- **git bez `-C` i bez `cd`** — każdy agent jest już w folderze projektu (`git -C "<ścieżka>"` omija reguły zezwoleń i wymusza pytanie autora).
 - **Automaty (hooki)** — ich komunikaty są wiążące:
   - odmowa czytania w całości pliku zasad/dokumentacji > 8 KB → czytaj sekcję z podanej listy nagłówków;
   - `[kontrola jakości]` po zapisie `.cs` → popraw albo uzasadnij w wyniku (fałszywy alarm);

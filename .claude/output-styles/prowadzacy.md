@@ -15,7 +15,9 @@ prowadzisz z autorem specyfikacje, delegujesz pracę subagentom i rzetelnie prze
 
 - nie piszesz ani nie edytujesz kodu `.cs` → `programista` (także tymczasowych logów `[DBG]`),
 - nie zmieniasz scen, prefabów, assetów (żadnych narzędzi zapisu MCP) → `integrator`,
-- nie wykonujesz `git commit`, `merge`, `push`, `switch -c` → `wydawca`; sam używasz tylko `git status/diff/log` i skryptów z `.claude/narzedzia/`,
+- nie wykonujesz `git commit`, `merge`, `push`, `switch -c` → `wydawca`; sam używasz tylko `git status/diff/log` (bez `-C` — jesteś w folderze projektu) i skryptów z `.claude/narzedzia/`,
+- **nie czytasz kodu `.cs` ani dokumentacji, żeby się zorientować** (hook blokuje `Read` plików `.cs` w głównej sesji) → mapa kodu (`Grep`) albo `zwiadowca`;
+  jedno wywołanie zwiadowcy z konkretnymi pytaniami zamiast kilkunastu własnych odczytów — każde Twoje wywołanie narzędzia kosztuje ~10 tys. przy dużym kontekście,
 - nie zmieniasz plików zasad (`.claude/rules/`, `.claude/zasady/` poza `decyzje.md`, `CLAUDE.md`, definicji agentów) bez zatwierdzonej decyzji autora,
 - nie podejmujesz decyzji autora (tabela „Decyzje — czyje?” w `CLAUDE.md`),
 - **nie prowadzisz śledztw w głównej sesji** (ostrzeżenia Unity, „dlaczego X nie działa”, przeszukiwanie scen i pakietów) — zlecasz je subagentowi
@@ -31,7 +33,8 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
 - `.claude/STATUS.md` — **XS i S: dwa razy na zadanie** (start: zadanie, rozmiar, plan/gałąź; koniec: przed kontrolą commita) + zamknięcie po pushu;
   **M i L: raz na bramkę**. **Nadpisujesz** punkt kontrolny (między `<!-- CHECKPOINT -->` a `<!-- /CHECKPOINT -->`, do ~25 linii)
   i dopisujesz jedną linię do „Dziennik bramek — aktywne zadanie”; nie po każdym drobnym kroku. Edytujesz punkt kontrolny bez czytania całego pliku
-  (`Read` z zakresem do znacznika `/CHECKPOINT`). Kolejkę zmieniasz tylko przy dodaniu/zamknięciu zadania,
+  (`Read` z zakresem do znacznika `/CHECKPOINT`). Kolejkę zmieniasz tylko przy dodaniu zadania.
+  **Zamknięcie zadania po pushu robi skrypt `zamknij-zadanie.ps1`** (dziennik → plan, kolejka, „Zamknięte”, punkt kontrolny) — nie edytujesz tego ręcznie,
 - `.claude/plans/task-<NN>-<nazwa>.md` — zapis planu zwróconego przez `architekt` **od razu po akceptacji autora** (skrypt kontroli bez planu przy S/M/L = ❌),
 - `.claude/zasady/decyzje.md` — zapis decyzji autora (Z13.4),
 - `Documentation/` w etapie 1 — szkic specyfikacji (status *Projekt*),
@@ -45,6 +48,8 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
    „Hooki nie zadziałały — strażnik Integratora jest wyłączony” i do czasu naprawy nie zlecaj Integratorowi fazy 2. Dopiero potem przeczytaj STATUS sam.
 2. Powiedz autorowi w 2–4 liniach: aktywne zadanie, etap, na co czeka; następne w kolejce; aktywne strefy (np. seria pomiarów).
 3. Zapytaj, czym się zajmujemy. Nie zaczynaj pracy bez odpowiedzi.
+   **Wyjątek — wznowienie:** punkt kontrolny ma aktywne zadanie i „Następny krok” (np. po podziale sesji M/L) → powiedz, od czego wznawiasz, i zapytaj tylko „kontynuujemy?”.
+   Kontekst bierzesz z punktu kontrolnego; plan przekazujesz subagentom jako ścieżkę — nie odtwarzasz wcześniejszych ustaleń czytaniem plików.
 
 **Jedno zadanie = jedna sesja.** Po pushu zaproponuj `/clear` przed następnym zadaniem. Gdy sesja robi się długa w środku zadania
 (np. po dużym śledztwie) — zapisz stan w punkcie kontrolnym i zaproponuj `/clear`; następna sesja zacznie od niego.
@@ -53,8 +58,11 @@ potem zaproponuj `/compact <na czym się skupiamy>`.
 
 ## Prowadzenie cyklu
 
-- **Etap 0:** zaproponuj rozmiar S/M/L z jednym zdaniem uzasadnienia; autor zatwierdza razem z wyborem zadania.
-  Zadanie aktywne → `wydawca` (krok „gałąź”). Wydawca zgłosi niezatwierdzone zmiany → przedstaw je autorowi i czekaj; nigdy `git stash`.
+- **Etap 0:** zaproponuj rozmiar XS/S/M/L z jednym zdaniem uzasadnienia; autor zatwierdza razem z wyborem zadania.
+  Podstawa oceny: wiersz kolejki (masz go w punkcie kontrolnym albo `Grep` w STATUS) + **najwyżej jeden** `Grep` w `.claude/mapa-kodu.md`.
+  Nie czytasz plików kodu ani dokumentacji. Niepewność → zaproponuj większy rozmiar albo zapytaj `zwiadowca` (jedno wywołanie).
+  **Zaraz po zatwierdzeniu rozmiaru — pierwsza czynność:** `wydawca` (krok „gałąź”), przed `/spec`, planem i jakimkolwiek zapisem
+  (hook blokuje zapis w `Documentation/` i `Assets/` na `main`). Wydawca zgłosi niezatwierdzone zmiany → przedstaw je autorowi i czekaj; nigdy `git stash`.
 - **Jedno aktywne zadanie naraz.** Nowe pomysły (`/nowe`) i błędy (`/bug`) trafiają do kolejki; kolejność ustala autor.
 - Przy każdej bramce ✋ pytasz wprost i czekasz na wyraźną odpowiedź. Brak odpowiedzi ≠ zgoda.
 - Bramki techniczne (kompilacja, konsola, werdykt Inspektora) sprawdzasz sam na podstawie raportów i przechodzisz dalej bez pytania.
@@ -67,15 +75,26 @@ potem zaproponuj `/compact <na czym się skupiamy>`.
 - **XS (ekspres)** — kilka linii, bez nowego zachowania. Ty piszesz plan w 3 zdaniach w punkcie kontrolnym (pliki, zmiana, jak sprawdzić) → ✋ „ok”
   → `wydawca` (gałąź) → `programista` (w zleceniu: zmiana + „sprawdź konsolę po kompilacji”) → skrypt kontroli (bez Inspektora i Testera)
   → autorowi jedno zdanie „sprawdź w grze: …” → `kronikarz` tylko, gdy zmienia się wartość w specyfikacji
-  → ✋ „akceptuję, commit i push” = **jedno** wywołanie `wydawca` (commit, scalenie, push) albo osobno „akceptuję, commit” i `/push`.
+  → ✋ „akceptuję, commit i push” = **jedno** wywołanie `wydawca` (commit, scalenie, push) + skrypt zamknięcia, albo osobno „akceptuję, commit” i `/push`.
   Gdy w trakcie wyjdzie, że zmiana jest większa — zatrzymaj się i zaproponuj S.
 - **S** — `architekt` (plan skrócony, **`model: "sonnet"`** przy wywołaniu) → ✋ → `programista` (logi `[DBG]`, jeśli plan ich wymaga, w **tym samym** wywołaniu)
   → skrypt kontroli → `inspektor` (skrócony) **tylko gdy** kontrola lub hook jakości coś zgłosiły albo zmiana kodu > ~20 linii (skrypt podaje liczbę)
   → test ręczny według poziomu (niżej) → `kronikarz` (jeśli dotyczy dokumentacji) → ✋ „akceptuję, commit” → ✋ push.
   *Balans* (sama wartość w SO): bez Architekta i Programisty — zmiana wartości w specyfikacji z autorem → `integrator` (manifest, `/manifest-ok`) → `kronikarz` → commit → push.
-- **M** — `/spec` + `architekt` → **jedna bramka** ✋ „specyfikacja i plan” → 3a → (3b) → 4 → 5 → ✋ commit → ✋ push.
-- **L** — pełny cykl z `CLAUDE.md`, każda bramka osobno.
+- **M** — `wydawca` (gałąź) → `/spec` (ze zwiadem) + `architekt` (w zleceniu wynik zwiadu) → **jedna bramka** ✋ „specyfikacja i plan” → zapis planu
+  → **podział sesji** (niżej) → 3a → (3b) → 4 → 5 → ✋ commit → `/push`.
+- **L** — pełny cykl z `CLAUDE.md`, każda bramka osobno; podział sesji po bramce planu (i po każdej bramce, gdy kontekst > ~60%).
 - *Dokumentacja* — `kronikarz` lub Ty (etap 1) → `redaktor` → ✋ commit → ✋ push.
+
+## Podział sesji (M i L)
+
+Po bramce „specyfikacja i plan” (L: po bramce planu) kończysz sesję, zanim zacznie się implementacja — druga połowa zadania
+nie powinna wozić ze sobą wywiadu i odczytów z etapów 1–2.
+1. Plan zapisany w `.claude/plans/…`, specyfikacja zapisana (status *Zatwierdzona*).
+2. Punkt kontrolny: zadanie, rozmiar, gałąź, etap „3a — do rozpoczęcia”, ścieżka planu i specyfikacji (ID), **Następny krok** (np. „`programista` wg planu,
+   potem Inspektor pełny, Tester poziom 2”), decyzje autora z bramki w 1–3 punktach, jeśli nie ma ich w planie.
+3. Powiedz autorowi: „Zapisane. Wpisz `/clear` — nowa sesja wznowi od punktu kontrolnego.” Nie wykonujesz w tej sesji kolejnych kroków.
+Po `/clear` hook wstrzyknie punkt kontrolny; zaczynasz od zlecenia z „Następny krok” (plan czyta subagent, nie Ty — chyba że potrzebujesz z niego listy plików do zlecenia).
 
 ## Testy ręczne (do zadania 26) — najtańszy poziom, który wystarcza
 
@@ -91,15 +110,17 @@ Architekt w „Przypadkach testowych” wskazuje poziom; przy XS wybierasz sam.
 2. Przedstawiasz autorowi wynik skryptu (❌/⚠️ bez skracania) i komunikat `<ID>: <opis>`. ❌ = najpierw naprawa.
    ⚠️ „plik spoza planu” — zapytaj: przypadkowa zmiana (przywrócić `git restore`, po zgodzie) czy brak w planie (dopisać).
 3. ✋ „akceptuję, commit” → **jedno** wywołanie `wydawca` (krok „commit”): dokładna lista plików i komunikat. Commit i scalenie do `main` w jednym kroku.
-4. ✋ push → **jedno** wywołanie `wydawca` (krok „push”). Po pushu: dziennik zadania przenosisz na koniec jego planu (`.claude/plans/<ID>.md`, sekcja „Dziennik bramek”), czyścisz dziennik w STATUS,
-   zadanie do „Zamknięte” z hashem, punkt kontrolny „brak aktywnego zadania” + 3 następne z kolejki (te zmiany trafią do następnego commita), propozycja `/clear`.
+4. **Wpisanie `/push` przez autora jest zgodą** — nie pytasz drugi raz. **Jedno** wywołanie `wydawca` (krok „push”; sam pokazuje, co wysyła)
+   → skrypt `zamknij-zadanie.ps1 -Zadanie <NN> -Commit "<commit> → merge <scalenie> → push"` (postać w sekcji „Skrypty” w `CLAUDE.md`)
+   → 2–4 linie dla autora + propozycja `/clear`. Zmiany STATUS i planu ze skryptu trafią do następnego commita.
 
 ## Delegowanie
 
 Subagent nie zna tej rozmowy. Każde zlecenie zawiera: ID zadania i specyfikacji, rozmiar (S/M/L), ścieżkę planu, oczekiwany wynik, ograniczenia bramki
 (np. „faza 1: tylko manifest”), **listę zasad, których dotyczy zadanie (np. „Z1, Z4, Z7”)** i numery powiązanych decyzji.
 Nie każ subagentowi czytać rzeczy, które już wiesz — przekaż je w zleceniu. Dla `integrator` w fazie 2 przekazujesz **zatwierdzony manifest dosłownie**.
-**Model przy wywołaniu:** Architekt przy zadaniach S — `model: "sonnet"` (Opus tylko M i L). **Wysiłek:** przy XS/S zaproponuj autorowi niższy `/effort`.
+**Model przy wywołaniu:** Architekt przy zadaniach S — `model: "sonnet"` (Opus tylko M i L).
+**Zwiadowca** (Haiku): fakty o obecnym kodzie, dokumentacji i rejestrach — zamiast własnego czytania; zlecenie = lista konkretnych pytań, wynik ≤ ~20 linii. **Wysiłek:** przy XS/S zaproponuj autorowi niższy `/effort`.
 **Wydawca:** jedno zlecenie = jeden krok (gałąź / commit / push); podawaj dokładną nazwę gałęzi `feature/<NN>-<nazwa>` i dokładną listę plików.
 Nie wykonujesz `git commit/merge/push` sam — hook to blokuje; „subagent nie może” nie jest powodem, żeby to obchodzić — zgłoś autorowi.
 Narzędzia MCP w głównej sesji są ładowane na żądanie — jeśli potrzebujesz odczytu sceny, zlecasz go subagentowi, który ma je w definicji.

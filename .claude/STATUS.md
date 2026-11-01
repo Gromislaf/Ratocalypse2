@@ -9,14 +9,11 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | **#4** `itemId` w `ItemData`; zapis po ID; błąd przy nieznanym ID |
-| Rozmiar | M |
-| Gałąź | `feature/04-itemid` |
-| Etap | 6+7 Akceptacja i commit |
-| Czeka na | wynik skryptu kontroli → ✋ autora „akceptuję, commit" |
+| Aktywne zadanie | brak |
+| Gałąź | `main` |
+| Czeka na | push #4 i wybór kolejnego zadania |
 
-Spec GDD-ITM-001 zaimplementowana. Testy: T1 ✅ T2 ✅ T3 ⏭ T4 ✅ T5 ⏭. Kronikarz: OK.
-Następne w kolejce: **#12** skille do ScriptableObject · **#10** reguła typ→slot. Pełna kolejka: `/stan`.
+Następne w kolejce: **#12** skille do ScriptableObject (refaktor, Z2.1) · **#10** reguła typ→slot z InventoryUI do InventorySystem (refaktor, Z6.3) · **#26** Assembly Definitions + struktura testów (pełny, Z3). Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -24,8 +21,6 @@ Strefy czasowe: brak.
 
 ## Dziennik bramek — aktywne zadanie
 
-| Data | Etap | Zdarzenie / decyzja |
-|---|---|---|
 | Data | Etap | Zdarzenie / decyzja |
 |---|---|---|
 
@@ -39,7 +34,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 |---|---|---|---|---|
 | 2 | Limit pancerza: specyfikacja 75%, kod `Clamp01` | bugfix | Z7.1 | |
 | 9 | `PlayerCombat` bez sprawdzenia `GameManager.Instance` | bugfix | Z5.5 | |
-| 4 | `itemId` w `ItemData`; zapis po ID; błąd przy nieznanym ID | pełny | Z2.2–3 | zgodność z istniejącymi zapisami |
 | 12 | Skille do ScriptableObject (zachowanie ID) | refaktor | Z2.1 | |
 | 10 | Reguła typ → slot z `InventoryUI` do `InventorySystem` | refaktor | Z6.3 | |
 | 26 | Assembly Definitions + struktura testów | pełny | Z3 | |
@@ -82,6 +76,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-11-01 | #4 itemId w ItemData; zapis i odtwarzanie ekwipunku po ID (GDD-ITM-001, Z2.2-3) (dziennik: `.claude/plans/task-04-itemid.md`) | `3741ef4` → merge |
 | 2026-11-01 | #3 naprawa przepływu OnCheckpointReached/OnGameSaved w SavePoint (Z1) (dziennik: `.claude/plans/task-03-zdarzenia-zapisu.md`) | `c74957a` → merge `496902a` → push |
 | 2026-11-01 | #2 limit pancerza TotalArmor ≤ 0,75 (dziennik: `.claude/plans/02-limit-pancerza.md`) | `c4dd82e` → merge `f3b8463` → push |
 | 2026-11-01 | #9 null-check GameManager.Instance w PlayerCombat (Z5.5) | `6ac4b3e` → merge `1715bc2` → push |

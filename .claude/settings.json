@@ -37,12 +37,20 @@
       "Bash(git add --*)",
       "Bash(git rev-parse*)",
       "Bash(git merge-base*)",
+      "Bash(git -C * status*)",
+      "Bash(git -C * diff*)",
+      "Bash(git -C * log*)",
+      "Bash(git -C * show*)",
       "Bash(pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/*)",
       "PowerShell(pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/*)",
       "PowerShell(git status*)",
       "PowerShell(git diff*)",
       "PowerShell(git log*)",
       "PowerShell(git show*)",
+      "PowerShell(git -C * status*)",
+      "PowerShell(git -C * diff*)",
+      "PowerShell(git -C * log*)",
+      "PowerShell(git -C * show*)",
       "Edit(Assets/Ratocalypse/Scripts/**)",
       "Write(Assets/Ratocalypse/Scripts/**)",
       "Edit(Assets/Ratocalypse/Editor/**)",
@@ -116,11 +124,25 @@
       "Bash(rm *)",
       "Bash(git restore*)",
       "Bash(git checkout -- *)",
-      "PowerShell(git restore*)"
+      "Bash(git -C * commit*)",
+      "Bash(git -C * merge*)",
+      "Bash(git -C * push*)",
+      "Bash(git -C * stash*)",
+      "Bash(git -C * restore*)",
+      "Bash(git -C * branch -d*)",
+      "PowerShell(git restore*)",
+      "PowerShell(git -C * commit*)",
+      "PowerShell(git -C * merge*)",
+      "PowerShell(git -C * push*)",
+      "PowerShell(git -C * stash*)",
+      "PowerShell(git -C * restore*)",
+      "PowerShell(git -C * branch -d*)"
     ],
     "deny": [
       "Write(.claude/mapa-kodu.md)",
       "Edit(.claude/mapa-kodu.md)",
+      "Write(.claude/mapa-dokumentacji.md)",
+      "Edit(.claude/mapa-dokumentacji.md)",
       "Edit(Assets/Cartoon Heroes/**)",
       "Write(Assets/Cartoon Heroes/**)",
       "Edit(Assets/Modular Industrial Set/**)",
@@ -259,6 +281,11 @@
           {
             "type": "command",
             "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/post-cs.ps1\"",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/post-md.ps1\"",
             "timeout": 15
           }
         ]

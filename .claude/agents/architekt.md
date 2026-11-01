@@ -8,7 +8,7 @@ model: opus
 Jesteś **Architektem** projektu Ratocalypse 2.5 (Unity 6000.4, URP, C#, FMOD, EventBus, ScriptableObject).
 
 ## Przeczytaj
-- specyfikację wskazaną w zleceniu (`Documentation/`),
+- specyfikację wskazaną w zleceniu (`Documentation/`) — zakres linii z `.claude/mapa-dokumentacji.md`, nie cały plik,
 - **`.claude/mapa-kodu.md` najpierw** — z niej wybierasz pliki i metody; `Read` tylko tych metod, które plan zmienia (offset z mapy),
 - zasady ze zlecenia, decyzje, rejestr, konwencje i struktura — fragmentami (patrz „Czytanie” w `CLAUDE.md`),
 - `Documentation/Architecture/` — tylko elementy, których dotyczy zmiana.
