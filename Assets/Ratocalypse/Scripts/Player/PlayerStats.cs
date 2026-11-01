@@ -88,7 +88,7 @@ public class PlayerStats : ScriptableObject
     public float MaxHp           => baseMaxHp + (hpPerLevel * (currentLevel - 1)) + bonusMaxHp + skillBonusMaxHp;
     public float MaxStamina      => baseMaxStamina + skillBonusMaxStamina;
     public float TotalDamage     => baseDamage + (damagePerLevel * (currentLevel - 1)) + bonusDamage + skillBonusDamage;
-    public float TotalArmor      => Mathf.Clamp01(baseArmor + bonusArmor + skillBonusArmor);
+    public float TotalArmor      => Mathf.Clamp(baseArmor + bonusArmor + skillBonusArmor, 0f, 0.75f);
     public float TotalCritChance => Mathf.Clamp01(baseCritChance + bonusCritChance + skillBonusCritChance);
     public float TotalMoveSpeed  => moveSpeed + bonusMoveSpeed + skillBonusMoveSpeed;
     public float TotalAttackSpeed => baseAttackSpeed + (attackSpeedPerLevel * (currentLevel - 1)) + bonusAttackSpeed + skillBonusAttackSpeed;
