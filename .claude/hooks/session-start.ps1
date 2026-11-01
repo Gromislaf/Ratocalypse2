@@ -1,4 +1,4 @@
-# SessionStart: wstrzykuje punkt kontrolny STATUS do kontekstu; czyści przeterminowaną bramkę manifestu; odświeża mapę kodu, gdy kod jest nowszy.
+# SessionStart: wstrzykuje punkt kontrolny STATUS do kontekstu; czyści przeterminowaną bramkę manifestu; odświeża mapę kodu i mapę dokumentacji, gdy źródła są nowsze.
 $ErrorActionPreference = 'SilentlyContinue'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $root  = if ($env:CLAUDE_PROJECT_DIR) { $env:CLAUDE_PROJECT_DIR } else { (Get-Location).Path }
@@ -26,6 +26,16 @@ if (Test-Path $skrypt) {
     $staraMapa = -not (Test-Path $mapa) -or ($najnowszy -and $najnowszy.LastWriteTime -gt (Get-Item $mapa).LastWriteTime)
     if ($staraMapa) { $wynik = & $skrypt -Projekt $root } else { $wynik = 'Mapa kodu aktualna.' }
     $out += "`n`n[mapa kodu] $wynik" + ' — czytaj .claude/mapa-kodu.md przed kodem.'
+}
+# Mapa dokumentacji — tylko gdy brak albo jakikolwiek .md w dokumentacji / zasadach jest nowszy
+$mapaDok = Join-Path $root '.claude/mapa-dokumentacji.md'
+$skryptDok = Join-Path $root '.claude/narzedzia/mapa-dokumentacji.ps1'
+if (Test-Path $skryptDok) {
+    $zrodla = @('Documentation', 'Vision', '.claude/zasady', '.claude/rules') | ForEach-Object { Join-Path $root $_ } | Where-Object { Test-Path $_ }
+    $najnowszyMd = $zrodla | ForEach-Object { Get-ChildItem $_ -Recurse -Filter *.md -File } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $staraDok = -not (Test-Path $mapaDok) -or ($najnowszyMd -and $najnowszyMd.LastWriteTime -gt (Get-Item $mapaDok).LastWriteTime)
+    if ($staraDok) { $wynikDok = & $skryptDok -Projekt $root } else { $wynikDok = 'Mapa dokumentacji aktualna.' }
+    $out += "`n[mapa dokumentacji] $wynikDok" + ' — sekcje dokumentacji i zasad szukaj w .claude/mapa-dokumentacji.md.'
 }
 Write-Output $out
 exit 0

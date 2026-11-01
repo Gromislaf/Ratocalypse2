@@ -47,3 +47,6 @@
 |---|---|---|
 | 2026-11-01 | 0 | Rozmiar M zatwierdzony |
 | 2026-11-01 | 1+2 | Spec GDD-ITM-001 i plan zatwierdzony; etap 3b odpada (brak assetów ItemData) |
+| 2026-11-01 | 4 | Inspektor: 🔴 [SerializeField] public (naprawione) + drobne kropki w komunikatach (naprawione) |
+| 2026-11-01 | 4 | Testy: T1 ✅ T2 ✅ T3 ⏭ T4 ✅ T5 ⏭ (T3/T5 wymagają Load() — zadanie #31) |
+| 2026-11-01 | 6+7 | Commit `3741ef4` → merge do main |

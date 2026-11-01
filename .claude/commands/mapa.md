@@ -1,5 +1,6 @@
 ---
-description: Odświeża mapę kodu (.claude/mapa-kodu.md) skryptem — bez czytania kodu przez agentów
+description: Odświeża mapę kodu i mapę dokumentacji (.claude/mapa-kodu.md, .claude/mapa-dokumentacji.md) skryptami — bez czytania przez agentów
 ---
-Uruchom narzędziem Bash `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1` i przekaż autorowi jedną linię wyniku
-oraz sekcję „Uwagi automatyczne” z mapy, jeśli jest. Nic więcej nie czytaj i nie zmieniaj.
+Uruchom narzędziem Bash `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1`
+i `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-dokumentacji.ps1`, przekaż autorowi po jednej linii wyniku
+oraz sekcję „Uwagi automatyczne” z mapy kodu, jeśli jest. Nic więcej nie czytaj i nie zmieniaj.
