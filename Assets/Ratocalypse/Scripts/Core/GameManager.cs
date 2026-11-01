@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleCheckpointReached(OnCheckpointReached evt)
     {
-        // SaveSystem.Instance.Save(evt.checkpointId); // odkomentuj gdy SaveSystem gotowy
+        // powiadomienie; zapis wykonuje SavePoint.Interact
         Debug.Log($"[GameManager] Checkpoint: {evt.checkpointId} — gra zapisana.");
     }
 

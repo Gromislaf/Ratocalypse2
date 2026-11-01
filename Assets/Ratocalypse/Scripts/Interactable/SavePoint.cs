@@ -1,8 +1,8 @@
 using UnityEngine;
 
 // Punkt zapisu gry — umieść w scenie z Collider (isTrigger = true) na layerze "Interactable".
-// Gracz klika → PlayerController wywołuje Interact() → SaveSystem.Save().
-// EventBus.OnGameSaved trafia do UI (np. tekst "Zapisano!").
+// SavePoint.Interact() → publikuje OnCheckpointReached → wywołuje SaveSystem.Save()
+// → SaveSystem publikuje OnGameSaved (dla UI).
 [RequireComponent(typeof(Collider))]
 public class SavePoint : MonoBehaviour, IInteractable
 {
@@ -18,6 +18,7 @@ public class SavePoint : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        SaveSystem.Instance?.Save(savePointId);
+        EventBus.Publish(new OnCheckpointReached { checkpointId = savePointId });
+        if (SaveSystem.Instance != null) SaveSystem.Instance.Save(savePointId);
     }
 }

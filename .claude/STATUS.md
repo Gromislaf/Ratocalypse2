@@ -9,13 +9,12 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | **#9** `PlayerCombat` null-check `GameManager.Instance` (bugfix XS, Z5.5) |
-| Gałąź | `feature/09-gamemanager-check` |
-| Etap | 6+7 Akceptacja i commit |
-| Czeka na | `wydawca` commit + scalenie |
+| Aktywne zadanie | **#3** zdarzenie zapisu (`OnCheckpointReached` vs `OnGameSaved`) — bugfix + dokumentacja |
+| Gałąź | `feature/03-zdarzenia-zapisu` |
+| Etap | 6+7 — akceptacja i commit |
+| Czeka na | ✋ „akceptuję, commit" |
 
-Plan: `PlayerCombat.cs:40` — dodać `GameManager.Instance != null &&` przed `.IsPaused`. Sprawdzić: atak i pauza działają normalnie.
-Następne w kolejce: **#3** zdarzenie zapisu · **#4** `itemId` w `ItemData`. Pełna kolejka: `/stan`.
+Następne w kolejce: **#4** `itemId` w `ItemData` (pełny, Z2.2–3) · **#12** skille do ScriptableObject (refaktor, Z2.1). Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -25,6 +24,8 @@ Strefy czasowe: brak.
 
 | Data | Etap | Zdarzenie / decyzja |
 |---|---|---|
+| 2026-11-01 | 0 | #3 aktywne, rozmiar S; D: OnCheckpointReached — SavePoint publikuje, GameManager zostaje z logiem |
+| 2026-11-01 | 3a–5 | Kod, inspekcja, testy (T1+T2 PASS), dokumentacja SAV-001 v0.2 — gotowe |
 
 ---
 
@@ -80,5 +81,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | Data | Zadanie | Commit |
 |---|---|---|
 | 2026-11-01 | #2 limit pancerza TotalArmor ≤ 0,75 (dziennik: `.claude/plans/02-limit-pancerza.md`) | `c4dd82e` → merge `f3b8463` → push |
+| 2026-11-01 | #9 null-check GameManager.Instance w PlayerCombat (Z5.5) | `6ac4b3e` → merge `1715bc2` |
 | 2026-10-30 | #28 Skille Unity w agentach — rozwiązane w poprawce 3.1 (pole „Skille” w planie) | poprawka 3.1 |
 | 2026-10-28 | #1 DamageInfo + GDD-CMB (dziennik: `.claude/plans/task-01-damageinfo.md`) | `e8dbd2d` + `b677ad6` → merge `2649542` → push |

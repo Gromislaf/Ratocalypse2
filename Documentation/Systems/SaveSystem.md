@@ -36,16 +36,34 @@ Application.persistentDataPath + "/save.json"
 
 ## SAV-001 Zapis przez SavePoint
 
+**Status:** Zaimplementowana
+**Wersja:** 0.2
+
 **Skrypt:** `SavePoint.cs` — implementuje `IInteractable`, warstwa `Interactable`.
 
-**Warunki aktywacji:** Gracz klika SavePoint → PlayerController podchodzi → `Interact()` → `SaveSystem.Save(savePointId)`.
+**Warunki aktywacji:** Gracz klika SavePoint → PlayerController podchodzi → `SavePoint.Interact()`.
 
 **Przebieg:**
-1. Zbiera dane ze wszystkich systemów (PlayerStats, InventorySystem, SkillTreeManager, QuestManager, PlayerController.transform)
-2. Serializuje do JSON (Newtonsoft)
-3. Zapisuje do pliku
+1. `SavePoint.Interact()` publikuje `OnCheckpointReached { checkpointId }` (powiadomienie przed zapisem — do logowania i UI)
+2. `SavePoint.Interact()` wywołuje `SaveSystem.Instance.Save(savePointId)`
+3. `SaveSystem.Save()` zbiera dane ze wszystkich systemów (PlayerStats, InventorySystem, SkillTreeManager, QuestManager, PlayerController.transform)
+4. Serializuje do JSON (Newtonsoft)
+5. Zapisuje do pliku
+6. `SaveSystem.Save()` publikuje `OnGameSaved { checkpointId }` (powiadomienie po pomyślnym zapisie — dla UI save feedback)
 
-**Informacja zwrotna:** Publikuje `OnCheckpointReached { savePointId }` → ⏳ UI save feedback (planowane).
+**Informacja zwrotna:**
+- `OnCheckpointReached { checkpointId }` — publikowane przez `SavePoint` natychmiast po interakcji, przed zapisem; subskrybuje GameManager (log diagnostyczny)
+- `OnGameSaved { checkpointId }` — publikowane przez `SaveSystem` po pomyślnym zapisie pliku; przeznaczone dla UI (⏳ planowane)
+
+**Implementacja:**
+- `Assets/Ratocalypse/Scripts/Interactable/SavePoint.cs` — `SavePoint : MonoBehaviour, IInteractable`; pole `savePointId` (SerializeField); publikuje `OnCheckpointReached`, wywołuje `SaveSystem.Instance.Save()`
+- `Assets/Ratocalypse/Scripts/Core/SaveSystem.cs` — `SaveSystem`; metoda `Save(string savePointId)`; publikuje `OnGameSaved` po `File.WriteAllText()`
+
+**Historia zmian:**
+| Wersja | Zmiana |
+|---|---|
+| 0.1 | Pierwsza specyfikacja. |
+| 0.2 | Naprawiono opis przepływu: `OnCheckpointReached` publikuje `SavePoint` przed zapisem; `OnGameSaved` publikuje `SaveSystem` po zapisie. Poprzedni opis przypisywał oba zdarzenia do jednego miejsca. |
 
 ---
 
