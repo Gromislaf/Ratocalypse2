@@ -170,37 +170,66 @@ public class InventorySystem : MonoBehaviour
 
     // ---- SaveSystem ----
 
-    public List<string> GetBagNames()
+    public List<string> GetBagIds()
     {
-        var names = new List<string>(bag.Count);
-        foreach (var item in bag) names.Add(item.itemName);
-        return names;
+        var ids = new List<string>(bag.Count);
+        foreach (var item in bag)
+        {
+            if (string.IsNullOrEmpty(item.itemId))
+            {
+                Debug.LogWarning($"ItemData '{item.itemName}' has empty itemId, skipping save");
+                continue;
+            }
+            ids.Add(item.itemId);
+        }
+        return ids;
     }
 
-    public Dictionary<string, string> GetEquippedNames()
+    public Dictionary<string, string> GetEquippedIds()
     {
         var dict = new Dictionary<string, string>();
         foreach (var kvp in equipped)
-            dict[kvp.Key.ToString()] = kvp.Value.itemName;
+        {
+            if (string.IsNullOrEmpty(kvp.Value.itemId))
+            {
+                Debug.LogWarning($"ItemData '{kvp.Value.itemName}' has empty itemId, skipping save");
+                continue;
+            }
+            dict[kvp.Key.ToString()] = kvp.Value.itemId;
+        }
         return dict;
     }
 
-    public void RestoreFromSave(List<string> bagNames, Dictionary<string, string> equippedNames, ItemData[] registry)
+    public void RestoreFromSave(List<string> bagIds, Dictionary<string, string> equippedIds, ItemData[] registry)
     {
         bag.Clear();
         equipped.Clear();
 
-        foreach (var name in bagNames)
+        foreach (var id in bagIds)
         {
-            var item = System.Array.Find(registry, i => i.itemName == name);
-            if (item != null) bag.Add(item);
+            var results = System.Array.FindAll(registry, i => i.itemId == id);
+            if (results.Length > 1)
+                Debug.LogWarning($"Duplicate itemId: {id}");
+            if (results.Length == 0)
+            {
+                Debug.LogWarning($"Unknown itemId: {id}");
+                continue;
+            }
+            bag.Add(results[0]);
         }
 
-        foreach (var kvp in equippedNames)
+        foreach (var kvp in equippedIds)
         {
             if (!System.Enum.TryParse<EquipmentSlot>(kvp.Key, out var slot)) continue;
-            var item = System.Array.Find(registry, i => i.itemName == kvp.Value);
-            if (item != null) equipped[slot] = item;
+            var results = System.Array.FindAll(registry, i => i.itemId == kvp.Value);
+            if (results.Length > 1)
+                Debug.LogWarning($"Duplicate itemId: {kvp.Value}");
+            if (results.Length == 0)
+            {
+                Debug.LogWarning($"Unknown itemId: {kvp.Value}");
+                continue;
+            }
+            equipped[slot] = results[0];
         }
 
         RecalculateBonuses();

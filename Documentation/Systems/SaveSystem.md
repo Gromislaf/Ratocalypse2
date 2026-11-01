@@ -74,7 +74,7 @@ Application.persistentDataPath + "/save.json"
 **Przebieg:**
 1. Deserializuje JSON → `SaveData`
 2. Przywraca PlayerStats (HP, stamina, XP, level, skill points)
-3. Przywraca InventorySystem (bag + equipped z ItemRegistry)
+3. Przywraca InventorySystem (bag + equipped z ItemRegistry — wyszukiwanie po `itemId`, zob. GDD-ITM-001)
 4. Przywraca SkillTreeManager — `RestoreFromSave(unlockedSkills)`
 5. Przywraca QuestManager — stan i historię
 6. Teleportuje gracza do `playerPosition`
