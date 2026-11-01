@@ -9,11 +9,14 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | brak |
-| Gałąź | `main` |
-| Czeka na | wybór kolejnego zadania |
+| Aktywne zadanie | **#4** `itemId` w `ItemData`; zapis po ID; błąd przy nieznanym ID |
+| Rozmiar | M |
+| Gałąź | `feature/04-itemid` |
+| Etap | 6+7 Akceptacja i commit |
+| Czeka na | wynik skryptu kontroli → ✋ autora „akceptuję, commit" |
 
-Następne w kolejce: **#4** `itemId` w `ItemData` (pełny, Z2.2–3) · **#12** skille do ScriptableObject (refaktor, Z2.1) · **#10** reguła typ→slot z InventoryUI do InventorySystem (refaktor, Z6.3). Pełna kolejka: `/stan`.
+Spec GDD-ITM-001 zaimplementowana. Testy: T1 ✅ T2 ✅ T3 ⏭ T4 ✅ T5 ⏭. Kronikarz: OK.
+Następne w kolejce: **#12** skille do ScriptableObject · **#10** reguła typ→slot. Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -51,6 +54,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | 7 | `?.` na obiektach Unity (`PlayerCombat`, `EnemyAI`, `MinimapMarker`) | refaktor | konwencje §4 | |
 | 8 | Literówka „Ratpocalypse” w `CreateAssetMenu` | refaktor | — | |
 | 30 | `NavMeshModifier` (GUID `1e3fdca…`) brakuje na `Player` i `Female B (1)` — usuń komponenty lub przeinstaluj AI Navigation | bugfix | — | niekrytyczne |
+| 31 | Brak wywołania `SaveSystem.Load()` z GameManager/menu — T3/T5 zadania #4 nieweryfikowalne | pełny | SAV-002 | wykryte przy testach #4 |
 | 22 | AI Navigation 2.0.12 → 2.0.13 w dokumentacji | dokumentacja | Z11 | |
 | 13 | Drzewko: aktywne umiejętności w planie? | GDD | Z7.4 | decyzja projektowa |
 | 17 | Dźwięk w grze | GDD → pełny | Z9 | obszar roadmapy |

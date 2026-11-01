@@ -11,7 +11,7 @@ public class SaveData
     public float xp;
     public int   skillPoints;
 
-    // Ekwipunek — nazwy itemów (klucze do itemRegistry w SaveSystem)
+    // Ekwipunek — itemId przedmiotów (klucze do itemRegistry w SaveSystem)
     public List<string>              bag      = new();
     public Dictionary<string,string> equipped = new();
 

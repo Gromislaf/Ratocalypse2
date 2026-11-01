@@ -16,6 +16,7 @@ public class ItemData : ScriptableObject
 {
     [Header("Identyfikacja")]
     public string itemName;
+    public string itemId;
     public Sprite icon;
     [TextArea] public string description;
     public ItemType itemType;
@@ -35,4 +36,10 @@ public class ItemData : ScriptableObject
     [Header("Konsumable (tylko Consumable)")]
     public float healAmount;
     public float staminaRestore;
+
+    private void OnValidate()
+    {
+        if (string.IsNullOrWhiteSpace(itemId))
+            Debug.LogWarning($"ItemData '{itemName}' has empty itemId.");
+    }
 }
