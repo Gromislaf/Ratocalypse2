@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Ratpocalypse/Player Stats", fileName = "PlayerStats")]
+[CreateAssetMenu(menuName = "Ratocalypse/Player Stats", fileName = "PlayerStats")]
 public class PlayerStats : ScriptableObject
 {
     [Header("Życie")]

@@ -11,7 +11,7 @@ public enum ItemType
     Consumable
 }
 
-[CreateAssetMenu(menuName = "Ratpocalypse/Item", fileName = "NewItem")]
+[CreateAssetMenu(menuName = "Ratocalypse/Item", fileName = "NewItem")]
 public class ItemData : ScriptableObject
 {
     [Header("Identyfikacja")]

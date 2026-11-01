@@ -1,6 +1,6 @@
 // ============================================================
 //  GameEvents.cs
-//  Ratpocalypse � Core/GameEvents.cs
+//  Ratocalypse � Core/GameEvents.cs
 //
 //  Wszystkie zdarzenia EventBus w jednym miejscu.
 //  Ka�de zdarzenie to struct � zero alokacji na stercie.
