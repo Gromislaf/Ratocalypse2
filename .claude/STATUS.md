@@ -9,14 +9,11 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | #2 — limit pancerza 75% |
-| Rozmiar / ścieżka | S / bugfix |
-| Etap | 6+7 Akceptacja i commit |
-| Gałąź | `feature/02-limit-pancerza` (z `main`) |
-| Czeka na | „akceptuję, commit" |
-| Następny krok | wydawca: commit + scalenie do main |
+| Aktywne zadanie | brak |
+| Gałąź | `main` |
+| Czeka na | wybór zadania |
 
-Następne w kolejce: **#9** `PlayerCombat` bez sprawdzenia `GameManager.Instance` (bugfix, Z5.5) · **#3** zdarzenie zapisu (bugfix + dokumentacja). Pełna kolejka: `/stan`.
+Następne w kolejce: **#9** `PlayerCombat` bez sprawdzenia `GameManager.Instance` (bugfix, Z5.5) · **#3** zdarzenie zapisu (bugfix + dokumentacja) · **#4** `itemId` w `ItemData` (pełny, Z2.2–3). Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -80,5 +77,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-11-01 | #2 limit pancerza TotalArmor ≤ 0,75 (dziennik: `.claude/plans/02-limit-pancerza.md`) | `c4dd82e` → merge `f3b8463` → push |
 | 2026-10-30 | #28 Skille Unity w agentach — rozwiązane w poprawce 3.1 (pole „Skille” w planie) | poprawka 3.1 |
 | 2026-10-28 | #1 DamageInfo + GDD-CMB (dziennik: `.claude/plans/task-01-damageinfo.md`) | `e8dbd2d` + `b677ad6` → merge `2649542` → push |

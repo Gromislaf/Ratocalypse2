@@ -85,8 +85,10 @@ foreach ($p in $zmiany.Keys) {
 }
 
 # --- 6. Pliki spoza planu ---
-if (-not $Plan -and $galaz -match '^feature/(\d+)') {
-    $kand = Get-ChildItem '.claude/plans' -Filter "task-$($Matches[1])*.md" -ErrorAction SilentlyContinue | Select-Object -First 1
+if (-not $Plan -and $galaz -match '^feature/(?:task-)?0*(\d+)') {
+    $nr = [int]$Matches[1]
+    $kand = Get-ChildItem '.claude/plans' -Filter '*.md' -ErrorAction SilentlyContinue |
+        Where-Object { $_.BaseName -match "(^|[^0-9])0*$nr([^0-9]|$)" } | Select-Object -First 1
     if ($kand) { $Plan = [System.IO.Path]::GetRelativePath($projekt, $kand.FullName) -replace '\\', '/' }
 }
 $spozaPlanu = [System.Collections.Generic.List[string]]::new()

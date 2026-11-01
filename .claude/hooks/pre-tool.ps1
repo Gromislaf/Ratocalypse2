@@ -1,4 +1,5 @@
 # PreToolUse: kontrole, których nie da się wyrazić samymi uprawnieniami.
+#  G. Bash/PowerShell: git commit/merge/push wykonuje wyłącznie wydawca.
 #  0. Read: pliki zasad i dokumentacji > 8 KB tylko fragmentami (lista nagłówków w odpowiedzi).
 #  1. Skille Unity kolidujące z zasadami (Z9, Z11, Z12) -> zablokowane.
 #  2. MCP Unity: akcje zapisu w narzędziach wielofunkcyjnych tylko po /manifest-ok (i tylko dla integratora, jeśli znana nazwa agenta);
@@ -21,6 +22,20 @@ function ManifestOpen {
     if (-not (Test-Path $lock)) { return $false }
     $j = Get-Content $lock -Raw | ConvertFrom-Json
     return ([datetime]$j.expires -gt (Get-Date))
+}
+
+# --- G. Git: commit / merge / push tylko przez wydawcę -------------------------
+if ($tool -in @('Bash','PowerShell')) {
+    $cmd = "$($ti.command)"
+    if ($cmd -notmatch '\bgit\b') { exit 0 }
+    if ($cmd -match '\bgit\b[^|;&\n]*?\s(commit|merge|push|rebase)(\s|$)') {
+        $op = $Matches[1]
+        if ($agent -ne 'wydawca') {
+            $kto = if ($agent) { "agent '$agent'" } else { 'główna sesja (Prowadzący)' }
+            Deny "git $op wykonuje wyłącznie wydawca — $kto tego nie robi. Przekaż zlecenie wydawcy (jeden krok, dokładna lista plików i komunikat)."
+        }
+    }
+    exit 0
 }
 
 # --- 0. Strażnik czytania: duże pliki zasad i dokumentacji tylko fragmentami ---------
@@ -133,10 +148,20 @@ if ($tool -in @('Edit','Write','MultiEdit','NotebookEdit')) {
         }
     }
 
+    # Testy automatyczne zablokowane do zadania #26 (konwencje §12) — dla wszystkich. Usunąć ten blok w zadaniu #26.
+    if ($rel -match '^Assets/Ratocalypse/Tests/') {
+        Deny "do zadania #26 nie piszemy testów automatycznych (konwencje §12) — tester działa w trybie ręcznym (scenariusze + logi [DBG])."
+    }
+
+    # Główna sesja nie edytuje kodu gry — robi to programista
+    if (-not $agent -and $rel -match '^Assets/Ratocalypse/(Scripts|Editor)/.*\.cs$') {
+        Deny "Prowadzący nie edytuje kodu — zleć to programiście."
+    }
+
     if ($agent) {
         $allowed = @{
             'programista' = @('Assets/Ratocalypse/Scripts/','Assets/Ratocalypse/Editor/')
-            'tester'      = @('Assets/Ratocalypse/Tests/')
+            'tester'      = @()   # do #26 bez zapisu; potem: 'Assets/Ratocalypse/Tests/'
             'kronikarz'   = @('Documentation/','Vision/GDD.md','.claude/zasady/dokumentacja-rejestr.md')
         }
         if ($allowed.ContainsKey($agent)) {

@@ -61,7 +61,7 @@ Zainstalowane w zakresie użytkownika (stan na 2026-10-26). Blokady obowiązują
 
 | Wtyczka | Status | Kto korzysta | Ograniczenia |
 |---|---|---|---|
-| `csharp-lsp` | wyłączona (2026-10-30) | — | brak serwera `csharp-ls` (wymaga .NET 10 SDK); odwołania: mapa kodu + `Grep`. Powrót przez wniosek, gdy kod urośnie |
+| `csharp-lsp` | dozwolona (od 2026-11-01, `csharp-ls` 0.28 na .NET 10) | `programista`, `architekt`, `inspektor` (narzędzie `LSP`) | najpierw mapa kodu; LSP do odwołań przed zmianą sygnatury |
 | Unity (`unity-agent-plugin`) | dozwolona częściowo | `programista`, `integrator` — tylko skille wskazane w planie (pole „Skille”), z listy niżej | **zablokowane:** `unity-cli`, `unity-package-management`, `new-unity-project`, skille miksera audio Unity (Z9). Bez Unity CLI i pakietu Pipeline w projekcie |
 | `claude-md-management` | dozwolona | autor, Prowadzący — tylko audyt | zmiany w `CLAUDE.md` jak zmiana pliku zasad (Z13) |
 | `document-skills` | dozwolona | Prowadzący (eksport dokumentacji), tor pracy inżynierskiej | — |

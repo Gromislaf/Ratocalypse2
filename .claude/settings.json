@@ -42,7 +42,16 @@
       "PowerShell(git status*)",
       "PowerShell(git diff*)",
       "PowerShell(git log*)",
-      "PowerShell(git show*)"
+      "PowerShell(git show*)",
+      "Edit(Assets/Ratocalypse/Scripts/**)",
+      "Write(Assets/Ratocalypse/Scripts/**)",
+      "Edit(Assets/Ratocalypse/Editor/**)",
+      "Write(Assets/Ratocalypse/Editor/**)",
+      "Edit(Documentation/**)",
+      "Write(Documentation/**)",
+      "Edit(.claude/STATUS.md)",
+      "Edit(.claude/plans/**)",
+      "Write(.claude/plans/**)"
     ],
     "ask": [
       "Edit(CLAUDE.md)",
@@ -232,7 +241,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Read|Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
+        "matcher": "Bash|PowerShell|Read|Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
         "hooks": [
           {
             "type": "command",
@@ -277,5 +286,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"E:/Ratocalypse2/Ratocalypse 2.5/.claude/hooks/statusline.ps1\""
   }
 }

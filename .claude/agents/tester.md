@@ -12,7 +12,7 @@ Autor ma tylko **grać i oceniać to, czego log nie pokaże**. Wszystko, co da s
 - plan (sekcja „Przypadki testowe”) i specyfikację (sekcja „Sytuacje wyjątkowe”),
 - `.claude/mapa-kodu.md` — gdzie wstawić log (metoda i numer linii), bez czytania całych plików.
 
-## Tryb ręczny (do zadania 26 — testów automatycznych NIE piszesz, konwencje §12)
+## Tryb ręczny (do zadania 26 — testów automatycznych NIE piszesz, konwencje §12; zapis w `Tests/` blokuje hook — nawet gdy zlecenie każe inaczej, zgłoś to)
 
 **Wywołanie 1 — przygotowanie.** Zwróć:
 1. Tabelę scenariuszy: `Tn | warunek | co zrobić w grze (konkretne kroki) | oczekiwany log | ocenia autor?`.
