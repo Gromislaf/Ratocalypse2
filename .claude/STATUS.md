@@ -9,12 +9,11 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | **#3** zdarzenie zapisu (`OnCheckpointReached` vs `OnGameSaved`) — bugfix + dokumentacja |
-| Gałąź | `feature/03-zdarzenia-zapisu` |
-| Etap | 6+7 — akceptacja i commit |
-| Czeka na | ✋ „akceptuję, commit" |
+| Aktywne zadanie | brak |
+| Gałąź | `main` |
+| Czeka na | wybór kolejnego zadania |
 
-Następne w kolejce: **#4** `itemId` w `ItemData` (pełny, Z2.2–3) · **#12** skille do ScriptableObject (refaktor, Z2.1). Pełna kolejka: `/stan`.
+Następne w kolejce: **#4** `itemId` w `ItemData` (pełny, Z2.2–3) · **#12** skille do ScriptableObject (refaktor, Z2.1) · **#10** reguła typ→slot z InventoryUI do InventorySystem (refaktor, Z6.3). Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -24,8 +23,8 @@ Strefy czasowe: brak.
 
 | Data | Etap | Zdarzenie / decyzja |
 |---|---|---|
-| 2026-11-01 | 0 | #3 aktywne, rozmiar S; D: OnCheckpointReached — SavePoint publikuje, GameManager zostaje z logiem |
-| 2026-11-01 | 3a–5 | Kod, inspekcja, testy (T1+T2 PASS), dokumentacja SAV-001 v0.2 — gotowe |
+| Data | Etap | Zdarzenie / decyzja |
+|---|---|---|
 
 ---
 
@@ -37,7 +36,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 |---|---|---|---|---|
 | 2 | Limit pancerza: specyfikacja 75%, kod `Clamp01` | bugfix | Z7.1 | |
 | 9 | `PlayerCombat` bez sprawdzenia `GameManager.Instance` | bugfix | Z5.5 | |
-| 3 | Zdarzenie zapisu `OnGameSaved` vs `OnCheckpointReached` | bugfix + dokumentacja | — | |
 | 4 | `itemId` w `ItemData`; zapis po ID; błąd przy nieznanym ID | pełny | Z2.2–3 | zgodność z istniejącymi zapisami |
 | 12 | Skille do ScriptableObject (zachowanie ID) | refaktor | Z2.1 | |
 | 10 | Reguła typ → slot z `InventoryUI` do `InventorySystem` | refaktor | Z6.3 | |
@@ -80,7 +78,8 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-11-01 | #3 naprawa przepływu OnCheckpointReached/OnGameSaved w SavePoint (Z1) (dziennik: `.claude/plans/task-03-zdarzenia-zapisu.md`) | `c74957a` → merge `496902a` → push |
 | 2026-11-01 | #2 limit pancerza TotalArmor ≤ 0,75 (dziennik: `.claude/plans/02-limit-pancerza.md`) | `c4dd82e` → merge `f3b8463` → push |
-| 2026-11-01 | #9 null-check GameManager.Instance w PlayerCombat (Z5.5) | `6ac4b3e` → merge `1715bc2` |
+| 2026-11-01 | #9 null-check GameManager.Instance w PlayerCombat (Z5.5) | `6ac4b3e` → merge `1715bc2` → push |
 | 2026-10-30 | #28 Skille Unity w agentach — rozwiązane w poprawce 3.1 (pole „Skille” w planie) | poprawka 3.1 |
 | 2026-10-28 | #1 DamageInfo + GDD-CMB (dziennik: `.claude/plans/task-01-damageinfo.md`) | `e8dbd2d` + `b677ad6` → merge `2649542` → push |

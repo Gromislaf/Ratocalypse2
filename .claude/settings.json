@@ -51,7 +51,9 @@
       "Write(Documentation/**)",
       "Edit(.claude/STATUS.md)",
       "Edit(.claude/plans/**)",
-      "Write(.claude/plans/**)"
+      "Write(.claude/plans/**)",
+      "Bash(pwsh -NoProfile -ExecutionPolicy Bypass -File *.claude/narzedzia/*)",
+      "PowerShell(pwsh -NoProfile -ExecutionPolicy Bypass -File *.claude/narzedzia/*)"
     ],
     "ask": [
       "Edit(CLAUDE.md)",

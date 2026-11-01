@@ -29,7 +29,7 @@ Główna sesja działa w stylu **Prowadzący** (`.claude/output-styles/prowadzac
 | | Kiedy | Etapy |
 |---|---|---|
 | **XS** | kilka linii, bez nowego zachowania, oczywiste co zmienić | **ekspres:** plan 3 zdania w punkcie kontrolnym (Prowadzący) → `programista` → skrypt kontroli zamiast Inspektora → autor sprawdza w grze 1 rzecz → `kronikarz` tylko gdy zmienia się wartość w specyfikacji → `wydawca` |
-| **S** | ≤ 3 pliki, bez nowego zachowania (bugfix, refaktor, balans) | bez etapu 1 (lub tylko poprawka wartości); plan skrócony (Architekt na Sonnecie); Inspektor tylko 🔴 |
+| **S** | ≤ 3 pliki, bez nowego zachowania (bugfix, refaktor, balans) | bez etapu 1 (lub tylko poprawka wartości); plan skrócony (Architekt na Sonnecie); Inspektor tylko przy uwagach kontroli lub zmianie > ~20 linii; test ręczny na najtańszym wystarczającym poziomie |
 | **M** | nowa reguła lub mechanika w istniejącym systemie | specyfikacja i plan zatwierdzane **w jednej bramce** |
 | **L** | nowy system, zmiana architektury, system pomiarowy | pełny cykl |
 
@@ -89,6 +89,16 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
 5. Plików streszczonych w zleceniu nie czytasz ponownie.
 6. **Raport dla Prowadzącego — telegraficznie:** tabela albo punkty, wynik, uwagi, decyzje. Bez prozy, bez powtarzania zlecenia, bez streszczania przeczytanych plików.
    Raporty zostają w głównej rozmowie do końca sesji — każde zbędne zdanie kosztuje w każdej kolejnej turze.
+
+## Skrypty (`.claude/narzedzia/`) — zawsze narzędziem **Bash**, dokładnie w tej postaci
+
+| Skrypt | Polecenie | Wynik |
+|---|---|---|
+| kontrola przed commitem | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/kontrola-commita.ps1` | lista plików, liczba zmienionych linii kodu, ❌ (blokuje commit) / ⚠️ (do decyzji autora). Plan wykrywa sam po numerze z nazwy gałęzi; `-Plan <ścieżka>` tylko gdy nie znajdzie |
+| mapa kodu | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1` | odświeża `.claude/mapa-kodu.md` |
+| koszty | `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/koszty.ps1` | tabele zużycia tokenów |
+
+Bez cudzysłowów, bez `2>&1`, nie przez narzędzie PowerShell (zgłasza fałszywy błąd i wymusza pytanie o zgodę). Kodu skryptów nie czytasz.
 
 ## Narzędzia — zasady wspólne
 

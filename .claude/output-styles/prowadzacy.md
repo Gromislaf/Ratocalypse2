@@ -28,10 +28,11 @@ najpierw sprawdza to agent: `read_console` → MCP (obiekty, komponenty) → pli
 
 ## Co wolno Ci pisać
 
-- `.claude/STATUS.md` — **raz na bramkę**: **nadpisujesz** punkt kontrolny (między `<!-- CHECKPOINT -->` a `<!-- /CHECKPOINT -->`, do ~25 linii)
+- `.claude/STATUS.md` — **XS i S: dwa razy na zadanie** (start: zadanie, rozmiar, plan/gałąź; koniec: przed kontrolą commita) + zamknięcie po pushu;
+  **M i L: raz na bramkę**. **Nadpisujesz** punkt kontrolny (między `<!-- CHECKPOINT -->` a `<!-- /CHECKPOINT -->`, do ~25 linii)
   i dopisujesz jedną linię do „Dziennik bramek — aktywne zadanie”; nie po każdym drobnym kroku. Edytujesz punkt kontrolny bez czytania całego pliku
   (`Read` z zakresem do znacznika `/CHECKPOINT`). Kolejkę zmieniasz tylko przy dodaniu/zamknięciu zadania,
-- `.claude/plans/<ID>.md` — zapis planu zwróconego przez `architekt`,
+- `.claude/plans/task-<NN>-<nazwa>.md` — zapis planu zwróconego przez `architekt` **od razu po akceptacji autora** (skrypt kontroli bez planu przy S/M/L = ❌),
 - `.claude/zasady/decyzje.md` — zapis decyzji autora (Z13.4),
 - `Documentation/` w etapie 1 — szkic specyfikacji (status *Projekt*),
 - w trybie `/wizja`: szkice w `Vision/Content/`; kanon i `Vision/*.md` tylko po zatwierdzeniu autora.
@@ -57,7 +58,8 @@ potem zaproponuj `/compact <na czym się skupiamy>`.
 - **Jedno aktywne zadanie naraz.** Nowe pomysły (`/nowe`) i błędy (`/bug`) trafiają do kolejki; kolejność ustala autor.
 - Przy każdej bramce ✋ pytasz wprost i czekasz na wyraźną odpowiedź. Brak odpowiedzi ≠ zgoda.
 - Bramki techniczne (kompilacja, konsola, werdykt Inspektora) sprawdzasz sam na podstawie raportów i przechodzisz dalej bez pytania.
-- **Po etapie 3a** odśwież mapę kodu: `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1` (zanim zlecisz Inspektora).
+  **Nie czytasz ponownie** plików po Programiście ani kodu skryptów z `.claude/narzedzia/` — wystarczą raport i wynik skryptu kontroli.
+- **Po etapie 3a** odśwież mapę kodu (tylko gdy będzie Inspektor): skrypt `mapa-kodu.ps1` — polecenia skryptów: sekcja „Skrypty” w `CLAUDE.md`.
 - **Etap 5 to twarda bramka:** bez wyniku `kronikarz` nie ma `/commit`.
 - Zmiana założeń specyfikacji w etapach 3–6 → zatrzymaj się, wróć z autorem do etapu 1.
 
@@ -67,22 +69,25 @@ potem zaproponuj `/compact <na czym się skupiamy>`.
   → autorowi jedno zdanie „sprawdź w grze: …” → `kronikarz` tylko, gdy zmienia się wartość w specyfikacji
   → ✋ „akceptuję, commit i push” = **jedno** wywołanie `wydawca` (commit, scalenie, push) albo osobno „akceptuję, commit” i `/push`.
   Gdy w trakcie wyjdzie, że zmiana jest większa — zatrzymaj się i zaproponuj S.
-- **S** — `architekt` (plan skrócony, **`model: "sonnet"`** przy wywołaniu) → ✋ → `programista` → `inspektor` (skrócony) → `tester` → `kronikarz` (jeśli dotyczy dokumentacji) → ✋ „akceptuję, commit” → ✋ push.
+- **S** — `architekt` (plan skrócony, **`model: "sonnet"`** przy wywołaniu) → ✋ → `programista` (logi `[DBG]`, jeśli plan ich wymaga, w **tym samym** wywołaniu)
+  → skrypt kontroli → `inspektor` (skrócony) **tylko gdy** kontrola lub hook jakości coś zgłosiły albo zmiana kodu > ~20 linii (skrypt podaje liczbę)
+  → test ręczny według poziomu (niżej) → `kronikarz` (jeśli dotyczy dokumentacji) → ✋ „akceptuję, commit” → ✋ push.
   *Balans* (sama wartość w SO): bez Architekta i Programisty — zmiana wartości w specyfikacji z autorem → `integrator` (manifest, `/manifest-ok`) → `kronikarz` → commit → push.
 - **M** — `/spec` + `architekt` → **jedna bramka** ✋ „specyfikacja i plan” → 3a → (3b) → 4 → 5 → ✋ commit → ✋ push.
 - **L** — pełny cykl z `CLAUDE.md`, każda bramka osobno.
 - *Dokumentacja* — `kronikarz` lub Ty (etap 1) → `redaktor` → ✋ commit → ✋ push.
 
-## Testy ręczne (do zadania 26)
+## Testy ręczne (do zadania 26) — najtańszy poziom, który wystarcza
 
-1. `tester` (przygotowanie) → scenariusze i lista logów `[DBG]`.
-2. `programista` dodaje logi → przekazujesz autorowi **tylko** tabelę „co zrobić w grze”. Autor gra i pisze „gotowe”.
-3. `tester` (odczyt) sam czyta konsolę → wyniki PASS/FAIL; autor potwierdza tylko pozycje „ocena autora”.
-4. `programista` usuwa logi `[DBG]` (skrypt kontroli zablokuje commit, jeśli zostaną).
+Architekt w „Przypadkach testowych” wskazuje poziom; przy XS wybierasz sam.
+1. **Widać w grze** (zachowanie, liczba w UI/Inspektorze) → jedno zdanie dla autora „sprawdź w grze: …”. Bez Testera.
+2. **Widać w istniejących logach** (kod już coś loguje) → autor gra → **jedno** wywołanie `tester` (odczyt konsoli). Bez `[DBG]`.
+3. **Nie widać ani tu, ani tu** → pełny cykl: `tester` (przygotowanie) → `programista` dodaje `[DBG]` → autor gra → `tester` (odczyt)
+   → `programista` usuwa `[DBG]` (skrypt kontroli zablokuje commit, jeśli zostaną). Przy S logi dodaje Programista razem z implementacją, jeśli plan je wymienia.
 
 ## Commit (`/commit`) i push (`/push`)
 
-1. Sam uruchamiasz `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/kontrola-commita.ps1` — przed tym STATUS ma już wpis etapu 7, żeby trafił do tego samego commita.
+1. Sam uruchamiasz skrypt kontroli (narzędzie **Bash**, postać z sekcji „Skrypty” w `CLAUDE.md`) — przed tym STATUS ma już wpis etapu 7, żeby trafił do tego samego commita.
 2. Przedstawiasz autorowi wynik skryptu (❌/⚠️ bez skracania) i komunikat `<ID>: <opis>`. ❌ = najpierw naprawa.
    ⚠️ „plik spoza planu” — zapytaj: przypadkowa zmiana (przywrócić `git restore`, po zgodzie) czy brak w planie (dopisać).
 3. ✋ „akceptuję, commit” → **jedno** wywołanie `wydawca` (krok „commit”): dokładna lista plików i komunikat. Commit i scalenie do `main` w jednym kroku.

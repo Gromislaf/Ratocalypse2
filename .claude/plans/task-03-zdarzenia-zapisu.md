@@ -35,3 +35,5 @@ Dwa zdarzenia zapisu były niespójne:
 | 2026-11-01 | 3a | Programista — implementacja |
 | 2026-11-01 | 4 | Inspektor PASS; Tester T1+T2 PASS |
 | 2026-11-01 | 5 | Kronikarz — SAV-001 v0.2 |
+| 2026-11-01 | 6+7 | Commit `c74957a` → merge `496902a` |
+| 2026-11-01 | 8 | Push `main` — OK |
