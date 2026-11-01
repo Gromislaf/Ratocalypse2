@@ -1,18 +1,18 @@
 ﻿// ============================================================
 //  FMODEvents.cs
-//  Ratpocalypse — Core/FMODEvents.cs
+//  Ratocalypse — Core/FMODEvents.cs
 //
 //  Wszystkie referencje do eventów FMOD w jednym miejscu.
 //  ScriptableObject — przypisz asset w Inspectorze GameManagera.
 //  Dostęp z kodu: GameManager.FMODEvents.playerFootsteps
 //
-//  Tworzenie: Assets → Create → Ratpocalypse → FMOD Events
+//  Tworzenie: Assets → Create → Ratocalypse → FMOD Events
 // ============================================================
 
 using UnityEngine;
 using FMODUnity;
 
-[CreateAssetMenu(menuName = "Ratpocalypse/FMOD Events", fileName = "FMODEvents")]
+[CreateAssetMenu(menuName = "Ratocalypse/FMOD Events", fileName = "FMODEvents")]
 public class FMODEvents : ScriptableObject
 {
     // --------------------------------------------------------

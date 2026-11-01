@@ -1,6 +1,6 @@
 ﻿// ============================================================
 //  AudioManager.cs
-//  Ratpocalypse — Core/AudioManager.cs
+//  Ratocalypse — Core/AudioManager.cs
 //
 //  Singleton opakowujący FMOD. Wszystkie wywołania dźwięku
 //  idą przez tę klasę — nigdzie indziej nie używamy

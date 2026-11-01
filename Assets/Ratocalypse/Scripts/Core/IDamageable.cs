@@ -1,6 +1,6 @@
 // ============================================================
 //  IDamageable.cs
-//  Ratpocalypse � Core/IDamageable.cs
+//  Ratocalypse � Core/IDamageable.cs
 //
 //  Interfejs dla wszystkiego co mo�e otrzyma� obra�enia:
 //  wrog�w, gracza, obiekt�w zniszczalnych.

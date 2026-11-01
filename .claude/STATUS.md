@@ -9,11 +9,13 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | brak |
-| Gałąź | `main` |
-| Czeka na | push #4 i wybór kolejnego zadania |
+| Aktywne zadanie | #8 Literówka „Ratpocalypse" w CreateAssetMenu i komentarzach |
+| Rozmiar | XS |
+| Gałąź | `feature/08-literowka-ratpocalypse` |
+| Etap | 3a — programista |
 
-Następne w kolejce: **#12** skille do ScriptableObject (refaktor, Z2.1) · **#10** reguła typ→slot z InventoryUI do InventorySystem (refaktor, Z6.3) · **#26** Assembly Definitions + struktura testów (pełny, Z3). Pełna kolejka: `/stan`.
+Plan: zamień każde `Ratpocalypse` → `Ratocalypse` w 7 plikach `.cs` (CreateAssetMenu + nagłówki). Sprawdzenie: grep zwraca 0 trafień.
+Następne w kolejce: **#12** Skille do ScriptableObject (refaktor, Z2.1) · **#10** typ→slot z InventoryUI (refaktor, Z6.3) · **#26** Assembly Definitions (pełny, Z3).
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -32,8 +34,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | # | Zadanie | Ścieżka | Zasada | Uwagi |
 |---|---|---|---|---|
-| 2 | Limit pancerza: specyfikacja 75%, kod `Clamp01` | bugfix | Z7.1 | |
-| 9 | `PlayerCombat` bez sprawdzenia `GameManager.Instance` | bugfix | Z5.5 | |
 | 12 | Skille do ScriptableObject (zachowanie ID) | refaktor | Z2.1 | |
 | 10 | Reguła typ → slot z `InventoryUI` do `InventorySystem` | refaktor | Z6.3 | |
 | 26 | Assembly Definitions + struktura testów | pełny | Z3 | |
@@ -49,7 +49,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | 8 | Literówka „Ratpocalypse” w `CreateAssetMenu` | refaktor | — | |
 | 30 | `NavMeshModifier` (GUID `1e3fdca…`) brakuje na `Player` i `Female B (1)` — usuń komponenty lub przeinstaluj AI Navigation | bugfix | — | niekrytyczne |
 | 31 | Brak wywołania `SaveSystem.Load()` z GameManager/menu — T3/T5 zadania #4 nieweryfikowalne | pełny | SAV-002 | wykryte przy testach #4 |
-| 22 | AI Navigation 2.0.12 → 2.0.13 w dokumentacji | dokumentacja | Z11 | |
 | 13 | Drzewko: aktywne umiejętności w planie? | GDD | Z7.4 | decyzja projektowa |
 | 17 | Dźwięk w grze | GDD → pełny | Z9 | obszar roadmapy |
 | 15 | `FindFirstObjectByType` w `Awake` każdego wroga | optymalizacja | — | kandydat na pierwszy `GDD-OPT` |
@@ -76,6 +75,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-11-02 | #22 AI Navigation 2.0.12 → 2.0.13 w dokumentacji | bez zmian — nieaktualne (wersja tylko w manifest.json) |
 | 2026-11-01 | #4 itemId w ItemData; zapis i odtwarzanie ekwipunku po ID (GDD-ITM-001, Z2.2-3) (dziennik: `.claude/plans/task-04-itemid.md`) | `3741ef4` → merge |
 | 2026-11-01 | #3 naprawa przepływu OnCheckpointReached/OnGameSaved w SavePoint (Z1) (dziennik: `.claude/plans/task-03-zdarzenia-zapisu.md`) | `c74957a` → merge `496902a` → push |
 | 2026-11-01 | #2 limit pancerza TotalArmor ≤ 0,75 (dziennik: `.claude/plans/02-limit-pancerza.md`) | `c4dd82e` → merge `f3b8463` → push |

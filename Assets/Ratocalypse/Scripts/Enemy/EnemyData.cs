@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Ratpocalypse/Enemy Data", fileName = "NewEnemyData")]
+[CreateAssetMenu(menuName = "Ratocalypse/Enemy Data", fileName = "NewEnemyData")]
 public class EnemyData : ScriptableObject
 {
     [Header("Identyfikacja")]

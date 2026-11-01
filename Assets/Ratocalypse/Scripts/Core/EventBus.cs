@@ -1,6 +1,6 @@
 ﻿// ============================================================
 //  EventBus.cs
-//  Ratpocalypse — Core/EventBus.cs
+//  Ratocalypse — Core/EventBus.cs
 //
 //  Globalny system zdarzeń oparty na typach.
 //  Systemy komunikują się przez zdarzenia zamiast twardych
