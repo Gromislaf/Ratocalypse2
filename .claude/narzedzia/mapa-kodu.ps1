@@ -1,5 +1,5 @@
 # mapa-kodu.ps1 — generuje .claude/mapa-kodu.md z kodu gry (bez czytania przez agentów).
-# Uruchamianie z katalogu projektu:  pwsh -NoProfile -File .claude/narzedzia/mapa-kodu.ps1
+# Uruchamianie z katalogu projektu:  pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1
 # Mapy NIE edytuje się ręcznie — zawsze generuje się ją od nowa.
 
 param(
@@ -8,6 +8,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 Set-Location $Projekt
 
 $korzenie = @('Assets/Ratocalypse/Scripts', 'Assets/Ratocalypse/Editor', 'Assets/Ratocalypse/Tests') |
@@ -161,7 +162,7 @@ $out = [System.Text.StringBuilder]::new()
 [void]$out.AppendLine('# Mapa kodu — Ratocalypse 2.5')
 [void]$out.AppendLine()
 [void]$out.AppendLine("> Wygenerowano automatycznie: $(Get-Date -Format 'yyyy-MM-dd HH:mm') · gałąź ``$galaz`` · commit ``$sha`` · $($pliki.Count) plików, $sumaLinii linii.")
-[void]$out.AppendLine('> **Nie edytuj ręcznie** — `pwsh -NoProfile -File .claude/narzedzia/mapa-kodu.ps1`. Liczba po dwukropku = numer linii (do `Read` z `offset`).')
+[void]$out.AppendLine('> **Nie edytuj ręcznie** — `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1`. Liczba po dwukropku = numer linii (do `Read` z `offset`).')
 [void]$out.AppendLine('> Pola: `*` = `[SerializeField]` (ustawiane w Inspektorze). Mapa pokazuje API publiczne — logikę czytaj w pliku.')
 [void]$out.AppendLine()
 

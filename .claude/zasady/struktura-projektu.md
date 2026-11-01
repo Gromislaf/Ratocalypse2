@@ -17,7 +17,7 @@ Ratocalypse 2.5/
 ├── ProjectSettings/     ustawienia projektu — tylko autor (Z11)
 ├── Tools/               narzędzia autora (poza zakresem agentów, chyba że zlecenie mówi inaczej)
 └── .claude/             konfiguracja agentów
-    ├── narzedzia/       skrypty bez agentów: mapa-kodu.ps1, kontrola-commita.ps1
+    ├── narzedzia/       skrypty bez agentów: mapa-kodu.ps1, kontrola-commita.ps1, koszty.ps1
     └── mapa-kodu.md     generowana — nie edytuje się ręcznie
 ```
 

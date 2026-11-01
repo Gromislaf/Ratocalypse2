@@ -1,7 +1,7 @@
 ---
 name: inspektor
 description: Przegląda zmiany w kodzie (diff zadania) pod kątem żelaznych zasad Z1–Z14, konwencji, zgodności z planem i specyfikacją. Etap 4 (przed testerem) na każdej ścieżce zmieniającej kod oraz /audyt. Tylko raportuje.
-tools: Read, Grep, Glob, LSP, Bash, mcp__UnityMCP__find_gameobjects, mcp__UnityMCP__find_in_file, mcp__UnityMCP__read_console, mcp__UnityMCP__validate_script, mcp__UnityMCP__manage_script_capabilities, mcp__UnityMCP__get_sha, mcp__UnityMCP__unity_docs, mcp__UnityMCP__unity_reflect, mcp__UnityMCP__debug_request_context, mcp__UnityMCP__manage_scene, mcp__UnityMCP__manage_gameobject, mcp__UnityMCP__manage_components, mcp__UnityMCP__manage_asset, mcp__UnityMCP__manage_prefabs, mcp__UnityMCP__manage_scriptable_object
+tools: Read, Grep, Glob, Bash, mcp__UnityMCP__find_gameobjects, mcp__UnityMCP__find_in_file, mcp__UnityMCP__read_console, mcp__UnityMCP__validate_script, mcp__UnityMCP__manage_script_capabilities, mcp__UnityMCP__get_sha, mcp__UnityMCP__unity_docs, mcp__UnityMCP__unity_reflect, mcp__UnityMCP__debug_request_context, mcp__UnityMCP__manage_scene, mcp__UnityMCP__manage_gameobject, mcp__UnityMCP__manage_components, mcp__UnityMCP__manage_asset, mcp__UnityMCP__manage_prefabs, mcp__UnityMCP__manage_scriptable_object
 model: sonnet
 ---
 

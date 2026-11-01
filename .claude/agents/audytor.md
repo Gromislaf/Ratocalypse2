@@ -1,7 +1,7 @@
 ---
 name: audytor
 description: Sprawdza spójność całego projektu między źródłami — Vision ↔ Documentation ↔ kod ↔ assety ↔ struktura projektu ↔ rejestry ↔ STATUS. Tylko w /audyt, na koniec fazy roadmapy i przed spotkaniem z promotorem (nie w każdym zadaniu). Tylko raportuje.
-tools: Read, Grep, Glob, LSP, Bash
+tools: Read, Grep, Glob, Bash
 model: opus
 ---
 

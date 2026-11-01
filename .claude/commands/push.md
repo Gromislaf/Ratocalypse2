@@ -5,4 +5,6 @@ Warunek: commit i scalenie z `/commit` wykonane. Jeśli nie — powiedz to i zat
 
 1. Sam sprawdź, co zostanie wysłane: `git log --oneline origin/main..main` i `git status -sb`. Pokaż autorowi.
 2. ✋ „tak” → jedno wywołanie `wydawca` (krok „push”).
-3. Zamknij zadanie w STATUS (sekcja „Zamknięte”, hash scalenia), zaproponuj następne z kolejki i `/clear` przed jego rozpoczęciem.
+3. Zamknij zadanie w STATUS: dziennik bramek → na koniec planu `.claude/plans/<ID>.md` (sekcja „Dziennik bramek”), wyczyść dziennik w STATUS,
+   wpis w „Zamknięte” (hash scalenia), punkt kontrolny „brak aktywnego zadania” + 3 następne z kolejki.
+4. Zaproponuj następne zadanie i `/clear` przed jego rozpoczęciem.

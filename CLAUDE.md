@@ -79,7 +79,7 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
 ## Czytanie — zasady wspólne (wszyscy agenci)
 
 1. **Kod: najpierw `.claude/mapa-kodu.md`** — klasy, publiczne API z numerami linii, graf zdarzeń, singletony, SO, pola z Inspektora.
-   Potem `LSP` (definicje, odwołania) i `Read` z `offset`/`limit` tylko tych metod, które zmieniasz lub sprawdzasz. Cały plik — tylko gdy zmieniasz jego większość.
+   Potem `Grep` (definicje, odwołania) i `Read` z `offset`/`limit` tylko tych metod, które zmieniasz lub sprawdzasz. Cały plik — tylko gdy zmieniasz jego większość.
    Mapa jest generowana (nagłówek: commit, data); przy rozbieżności z plikiem wierz plikowi. Mapy nie edytuje się ręcznie.
 2. **Przegląd zmian = diff:** `git diff main...HEAD` i niezatwierdzone `git diff`. Okolice zmian — fragmentami.
 3. **Zasady fragmentami:** skrót Z1–Z14 jest wyżej; pełną sekcję czytasz tylko dla zasad ze zlecenia
@@ -89,7 +89,13 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
 
 ## Narzędzia — zasady wspólne
 
+- **Instalacje** (programy, SDK, pakiety, narzędzia: `winget`, `dotnet tool`, `choco`, `npm -g`, `pip`, `Install-Module`) — tylko tej konkretnej rzeczy, o którą autor poprosił wprost.
+  Brakuje zależności (np. SDK) → zatrzymaj się i zapytaj; nie instaluj „przy okazji”.
 - Używasz **tylko** narzędzi ze swojej definicji. Zablokowane narzędzie = nie szukaj obejścia; zgłoś to w wyniku.
+- **Automaty (hooki)** — ich komunikaty są wiążące:
+  - odmowa czytania w całości pliku zasad/dokumentacji > 8 KB → czytaj sekcję z podanej listy nagłówków;
+  - `[kontrola jakości]` po zapisie `.cs` → popraw albo uzasadnij w wyniku (fałszywy alarm);
+  - blokada `UnityEditor` poza `#if UNITY_EDITOR` w kodzie gry; pliki `.meta`, `.unity`, `.prefab`, `.asset` — nigdy ręcznie.
 - Kod edytuje się wyłącznie zwykłą edycją plików — nigdy przez MCP (`create_script`, `apply_text_edits` itp. są zablokowane).
 - Zapis w scenie i assetach przez MCP: tylko `integrator`, tylko po `/manifest-ok` wpisanym przez autora.
 - Wtyczki, skille i narzędzia MCP: rejestr w `.claude/zasady/zasady-rejestr.md` (Z11.6).
@@ -103,7 +109,8 @@ liczby z jednostkami; ID `GDD-<PREFIKS>-<NNN>`; historia zmian; specyfikacja prz
 |---|---|
 | Stan prac, kolejka | `.claude/STATUS.md` |
 | Mapa kodu (generowana) | `.claude/mapa-kodu.md` ← `.claude/narzedzia/mapa-kodu.ps1` |
-| Skrypty bez agentów (mapa, kontrola przed commitem) | `.claude/narzedzia/` |
+| Skrypty bez agentów (mapa, kontrola przed commitem, koszty) | `.claude/narzedzia/` |
+| Zużycie tokenów (zapisywane przez hooki, poza repozytorium) | `.claude/stan/koszty-*.csv` → `/koszty` |
 | Plany techniczne | `.claude/plans/<ID>.md` |
 | Wytyczne dokumentacji (ładowane automatycznie przy pracy w `Documentation/`) | `.claude/rules/` |
 | Zasady techniczne, konwencje, rejestry, decyzje, struktura — czytane na żądanie, fragmentami | `.claude/zasady/` |

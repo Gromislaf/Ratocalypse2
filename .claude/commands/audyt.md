@@ -4,7 +4,7 @@ argument-hint: [zakres — domyślnie cały projekt]
 ---
 Przegląd w zakresie: $ARGUMENTS (puste = cały projekt).
 
-0. Odśwież mapę kodu: `pwsh -NoProfile -File .claude/narzedzia/mapa-kodu.ps1` — wszyscy trzej zaczynają od niej.
+0. Odśwież mapę kodu: `pwsh -NoProfile -ExecutionPolicy Bypass -File .claude/narzedzia/mapa-kodu.ps1` — wszyscy trzej zaczynają od niej.
 1. `redaktor` — `Documentation/` folder po folderze.
 2. `inspektor` — tryb `/audyt`: `Assets/Ratocalypse/Scripts/` względem Z1–Z14 i konwencji (od mapy kodu).
 3. `audytor` — spójność między źródłami (kod przez mapę kodu).
