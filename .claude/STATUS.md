@@ -9,11 +9,13 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | brak |
-| Gałąź | `main` |
-| Czeka na | wybór zadania |
+| Aktywne zadanie | **#9** `PlayerCombat` null-check `GameManager.Instance` (bugfix XS, Z5.5) |
+| Gałąź | `feature/09-gamemanager-check` |
+| Etap | 6+7 Akceptacja i commit |
+| Czeka na | `wydawca` commit + scalenie |
 
-Następne w kolejce: **#9** `PlayerCombat` bez sprawdzenia `GameManager.Instance` (bugfix, Z5.5) · **#3** zdarzenie zapisu (bugfix + dokumentacja) · **#4** `itemId` w `ItemData` (pełny, Z2.2–3). Pełna kolejka: `/stan`.
+Plan: `PlayerCombat.cs:40` — dodać `GameManager.Instance != null &&` przed `.IsPaused`. Sprawdzić: atak i pauza działają normalnie.
+Następne w kolejce: **#3** zdarzenie zapisu · **#4** `itemId` w `ItemData`. Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
