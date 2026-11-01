@@ -104,12 +104,34 @@ if ($Plan -and (Test-Path $Plan)) {
     }
     foreach ($s in $spozaPlanu) { $ostrz.Add("plik spoza planu: ``$s`` — przypadkowa zmiana czy brak w planie?") }
 }
-else { $ostrz.Add('nie znaleziono planu zadania — kontrola „pliki spoza planu” pominięta (podaj -Plan)') }
+else {
+    # rozmiar zadania z punktu kontrolnego STATUS: XS może nie mieć pliku planu; S/M/L — musi
+    $rozmiar = ''
+    if (Test-Path '.claude/STATUS.md') {
+        foreach ($l in [System.IO.File]::ReadLines((Resolve-Path '.claude/STATUS.md'))) {
+            if ($l -match '^\|\s*Rozmiar[^|]*\|\s*(XS|S|M|L)\b') { $rozmiar = $Matches[1]; break }
+            if ($l -match '/CHECKPOINT') { break }
+        }
+    }
+    if ($galaz -match '^feature/' -and $rozmiar -in @('S','M','L')) {
+        $bledy.Add("brak pliku planu dla zadania rozmiaru $rozmiar — zapisz plan w .claude/plans/task-<NN>-<nazwa>.md (powinien powstać po akceptacji w etapie 2)")
+    }
+    elseif ($rozmiar -ne 'XS' -and $galaz -match '^feature/') { $ostrz.Add('nie znaleziono planu zadania — kontrola „pliki spoza planu” pominięta (podaj -Plan)') }
+}
+
+# --- 7. Liczba zmienionych linii kodu (.cs) — podstawa decyzji o Inspektorze przy S ---
+$dodane = 0; $usuniete = 0
+$numstat = @()
+if ($baza -and $galaz -notin @('main', 'master')) { $numstat = @(git diff --numstat "$baza" -- '*.cs') }
+else { $numstat = @(git diff --numstat HEAD -- '*.cs') }
+foreach ($w in $numstat) { $c = $w -split "`t"; if ($c[0] -match '^\d+$') { $dodane += [int]$c[0]; $usuniete += [int]$c[1] } }
+foreach ($p in $zmiany.Keys) { if ($zmiany[$p] -eq '??' -and $p -match '\.cs$' -and (Test-Path $p)) { $dodane += @(Get-Content $p).Count } }
 
 # --- Raport ---
 Write-Output "# Kontrola przed commitem — gałąź ``$galaz``"
 Write-Output ''
 Write-Output "## Pliki ($($zmiany.Count))"
+Write-Output "Zmienione linie kodu (.cs): +$dodane / -$usuniete"
 foreach ($p in $zmiany.Keys) { Write-Output "- $($zmiany[$p].PadRight(2)) $p" }
 Write-Output ''
 Write-Output '## Wynik'

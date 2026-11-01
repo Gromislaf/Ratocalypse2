@@ -45,7 +45,7 @@ Plan ma być wykonalny bez zgadywania: konkretne pliki, klasy, metody, sygnatury
 
 Na górze planu: `Rozmiar: S | M | L` i `Skille: <z listy w zasady-rejestr.md> | brak`. **Plan skrócony (S):** tylko „Zmiany w kodzie”, „Przypadki testowe”, „Ryzyka”, „Decyzje techniczne” — do ~30 linii. Przy S mapę kodu przeszukujesz `Grep`-em zamiast czytać całą.
 
-**„Przypadki testowe” do zadania #26 = scenariusze ręczne** (warunek, co zrobić w grze, czego oczekiwać). Nie planujesz testów automatycznych ani zmian w `Assets/Ratocalypse/Tests/` — hook to blokuje (konwencje §12).
+**„Przypadki testowe” do zadania #26 = scenariusze ręczne** (warunek, co zrobić w grze, czego oczekiwać) z **poziomem testu**: 1 widać w grze / 2 widać w istniejących logach (podaj który log) / 3 potrzebne `[DBG]` (podaj linie). Wybierz najtańszy wystarczający. Nie planujesz testów automatycznych ani zmian w `Assets/Ratocalypse/Tests/` — hook to blokuje (konwencje §12).
 
 Każdy plan kończy sekcja **„Decyzje techniczne (do wglądu)”** — co rozstrzygnąłeś sam (nazwy, podział, kolejność) w jednej linii każda.
 Autorowi zostawiasz tylko **„Pytania do autora”**: zachowanie gry, liczby, kanon, wnioski Z13 — każde z rekomendacją.

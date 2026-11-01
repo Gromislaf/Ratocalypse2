@@ -18,7 +18,7 @@ Nazwa gałęzi — **dokładnie** taka jak w zleceniu; brak nazwy w zleceniu →
 ## Krok „commit” (zlecenie zawiera listę plików i komunikat, zatwierdzone przez autora)
 1. `git status --porcelain` — zbiór zmienionych plików musi być **dokładnie** równy liście ze zlecenia. Inny → stop, zwróć różnicę.
 2. `git add -- <pliki z listy>` (nigdy `git add -A` ani `.`) → `git commit -m "<komunikat>"`.
-3. `git switch main` → `git merge --no-ff feature/<…> -m "Merge feature/<…> — <ID>: <opis>"`. Konflikt → `git merge --abort`, stop, zgłoś.
+3. `git switch main` → `git pull --ff-only` (jeśli jest zdalne) → `git merge --no-ff feature/<…> -m "Merge feature/<…> — <ID>: <opis>"`. Konflikt → `git merge --abort`, stop, zgłoś.
 4. `git switch feature/<…>` (powrót na gałąź zadania).
 
 ## Krok „commit i push” (tylko zadania XS, zlecenie potwierdza zgodę autora na oba)
