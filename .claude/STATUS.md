@@ -9,13 +9,24 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | #8 Literówka „Ratpocalypse" w CreateAssetMenu i komentarzach |
-| Rozmiar | XS |
-| Gałąź | `feature/08-literowka-ratpocalypse` |
-| Etap | 3a — programista |
+| Aktywne zadanie | **#12** Skille do ScriptableObject (zachowanie ID) |
+| Rozmiar | M |
+| Gałąź | `feature/12-skille-so` |
+| Etap | 6+7 — Akceptacja i commit |
+| Plan | `.claude/plans/task-12-skille-so.md` |
+| Spec | `Documentation/Architecture/SkillSystem.md` GDD-ARC-001 (Zatwierdzona) |
 
-Plan: zamień każde `Ratpocalypse` → `Ratocalypse` w 7 plikach `.cs` (CreateAssetMenu + nagłówki). Sprawdzenie: grep zwraca 0 trafień.
-Następne w kolejce: **#12** Skille do ScriptableObject (refaktor, Z2.1) · **#10** typ→slot z InventoryUI (refaktor, Z6.3) · **#26** Assembly Definitions (pełny, Z3).
+**3a + 3b ukończone:** 2 nowe SO, 3 zmienione .cs, SkillDefinition.cs usunięty; 13 assetów + scena Building ✅; konsola bez nowych błędów.
+
+**Następny krok:** testy T1–T4 w grze (autor) + opcjonalnie T5 → po akceptacji testów `kronikarz` → ✋ commit → `/push`.
+
+**Decyzje autora z bramki:**
+- Prereq jako referencja SO (nie string)
+- `[SerializeField] SkillRegistrySO _registry` w SkillTreeManager + getter `Registry`
+- `SkillDatabase` usunięta całkowicie
+- `Debug.LogWarning` przy nieznanym ID (nie Error)
+- `SkillTreeUI` dostaje rejestr przez `SkillTreeManager.Registry`
+
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -46,7 +57,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | 16 | Enumy z `GameEvents.cs` do osobnych plików | refaktor | konwencje §1 | |
 | 6 | Kodowanie: `GameEvents.cs`, `IDamageable.cs`, `ButtonHoverEffect.cs` → UTF-8 (lista w mapie kodu) | refaktor | konwencje §9 | |
 | 7 | `?.` na obiektach Unity (`PlayerCombat`, `EnemyAI`, `MinimapMarker`) | refaktor | konwencje §4 | |
-| 8 | Literówka „Ratpocalypse” w `CreateAssetMenu` | refaktor | — | |
 | 30 | `NavMeshModifier` (GUID `1e3fdca…`) brakuje na `Player` i `Female B (1)` — usuń komponenty lub przeinstaluj AI Navigation | bugfix | — | niekrytyczne |
 | 31 | Brak wywołania `SaveSystem.Load()` z GameManager/menu — T3/T5 zadania #4 nieweryfikowalne | pełny | SAV-002 | wykryte przy testach #4 |
 | 13 | Drzewko: aktywne umiejętności w planie? | GDD | Z7.4 | decyzja projektowa |
@@ -75,6 +85,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-11-02 | #8 Literówka „Ratpocalypse” w `CreateAssetMenu` | 23d1e2a → merge 97e73f1 → push |
 | 2026-11-02 | #22 AI Navigation 2.0.12 → 2.0.13 w dokumentacji | bez zmian — nieaktualne (wersja tylko w manifest.json) |
 | 2026-11-01 | #4 itemId w ItemData; zapis i odtwarzanie ekwipunku po ID (GDD-ITM-001, Z2.2-3) (dziennik: `.claude/plans/task-04-itemid.md`) | `3741ef4` → merge |
 | 2026-11-01 | #3 naprawa przepływu OnCheckpointReached/OnGameSaved w SavePoint (Z1) (dziennik: `.claude/plans/task-03-zdarzenia-zapisu.md`) | `c74957a` → merge `496902a` → push |

@@ -1,6 +1,6 @@
 # Drzewko umiejętności
 
-**Skrypty:** `Assets/Ratocalypse/Scripts/Player/SkillTreeManager.cs`, `Assets/Ratocalypse/Scripts/Core/SkillDefinition.cs`  
+**Skrypty:** `Assets/Ratocalypse/Scripts/Player/SkillTreeManager.cs`, `Assets/Ratocalypse/Scripts/Core/SkillDefinitionSO.cs`, `Assets/Ratocalypse/Scripts/Core/SkillRegistrySO.cs`  
 
 
 ---
