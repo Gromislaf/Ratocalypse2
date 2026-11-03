@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d89dff2302996d1438edaf71da3bf881, type: 3}
-  m_Name: New Quest Data
+  m_Name: NewQuestData
   m_EditorClassIdentifier: Assembly-CSharp::QuestData
   questId: 1
   questName: "znajd\u017A mi"

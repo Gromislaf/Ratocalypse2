@@ -354,7 +354,6 @@
   <h2>Ratocalypse 2.5</h2>
   <span class="nav-section">Fundament</span>
   <a href="#eventbus">EventBus</a>
-  <a href="#gamemanager">GameManager</a>
   <a href="#audio">Audio (FMOD)</a>
 
   <span class="nav-section">Gracz</span>
@@ -426,23 +425,27 @@
 
     <h3>Zdarzenia w grze</h3>
     <table>
-      <tr><th>Zdarzenie</th><th>Kto publikuje</th><th>Kto nasłuchuje</th></tr>
-      <tr><td><code>OnPlayerDamaged</code></td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
-      <tr><td><code>OnPlayerHealed</code></td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
-      <tr><td><code>OnPlayerStaminaChanged</code></td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
-      <tr><td><code>OnPlayerDied</code></td><td>PlayerHealthComponent</td><td>GameManager</td></tr>
-      <tr><td><code>OnPlayerXPGained</code></td><td>PlayerHealthComponent</td><td>(przyszły XPSystem)</td></tr>
-      <tr><td><code>OnPlayerLevelUp</code></td><td>PlayerHealthComponent</td><td>PlayerController, PlayerCombat</td></tr>
-      <tr><td><code>OnEnemyDamaged</code></td><td>EnemyAI</td><td>(przyszły floating text)</td></tr>
-      <tr><td><code>OnEnemyDied</code></td><td>EnemyAI</td><td>(przyszły XPSystem)</td></tr>
-      <tr><td><code>OnCriticalHit</code></td><td>PlayerCombat</td><td>(przyszły efekt wizualny)</td></tr>
-      <tr><td><code>OnItemPickedUp</code></td><td>InventorySystem</td><td>—</td></tr>
-      <tr><td><code>OnItemEquipped</code></td><td>InventorySystem</td><td>PlayerController, PlayerCombat, InventoryUI</td></tr>
-      <tr><td><code>OnItemUnequipped</code></td><td>InventorySystem</td><td>PlayerController, PlayerCombat, InventoryUI</td></tr>
-      <tr><td><code>OnInventoryChanged</code></td><td>InventorySystem</td><td>InventoryUI</td></tr>
-      <tr><td><code>OnGamePaused</code></td><td>GameManager</td><td>—</td></tr>
-      <tr><td><code>OnCheckpointReached</code></td><td>(przyszły trigger)</td><td>GameManager</td></tr>
-      <tr><td><code>OnInventoryToggled</code></td><td>InventoryUI</td><td>—</td></tr>
+      <tr><th>Zdarzenie</th><th>Dane</th><th>Kto publikuje</th><th>Kto nasłuchuje</th></tr>
+      <tr><td><code>OnPlayerDamaged</code></td><td>amount, currentHp, maxHp</td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
+      <tr><td><code>OnPlayerHealed</code></td><td>amount, currentHp, maxHp</td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
+      <tr><td><code>OnPlayerStaminaChanged</code></td><td>current, max</td><td>PlayerHealthComponent</td><td>PlayerHUD</td></tr>
+      <tr><td><code>OnPlayerDied</code></td><td>—</td><td>PlayerHealthComponent</td><td>GameManager</td></tr>
+      <tr><td><code>OnPlayerXPGained</code></td><td>amount, totalXP</td><td>PlayerHealthComponent</td><td>XPBarUI</td></tr>
+      <tr><td><code>OnPlayerLevelUp</code></td><td>newLevel, remainingPoints</td><td>PlayerHealthComponent</td><td>XPBarUI, PlayerController, PlayerCombat</td></tr>
+      <tr><td><code>OnEnemyDamaged</code></td><td>amount, isCritical, worldPosition</td><td>EnemyAI</td><td>⏳ (floating damage text)</td></tr>
+      <tr><td><code>OnEnemyDied</code></td><td>xpReward</td><td>EnemyAI</td><td>XPSystem</td></tr>
+      <tr><td><code>OnCriticalHit</code></td><td>—</td><td>PlayerCombat</td><td>⏳ (efekt wizualny)</td></tr>
+      <tr><td><code>OnItemPickedUp</code></td><td>item</td><td>InventorySystem</td><td>—</td></tr>
+      <tr><td><code>OnItemEquipped</code></td><td>item, slot</td><td>InventorySystem</td><td>PlayerController, PlayerCombat, InventoryUI</td></tr>
+      <tr><td><code>OnItemUnequipped</code></td><td>item, slot</td><td>InventorySystem</td><td>PlayerController, PlayerCombat, InventoryUI</td></tr>
+      <tr><td><code>OnInventoryChanged</code></td><td>—</td><td>InventorySystem</td><td>InventoryUI, QuestManager</td></tr>
+      <tr><td><code>OnInventoryToggled</code></td><td>isOpen</td><td>InventoryUI</td><td>—</td></tr>
+      <tr><td><code>OnSkillUnlocked</code></td><td>skillId, branch, remainingPoints</td><td>SkillTreeManager</td><td>SkillTreeUI</td></tr>
+      <tr><td><code>OnQuestAccepted</code></td><td>quest, searchAreaCenter, searchAreaRadius</td><td>QuestManager</td><td>MinimapController</td></tr>
+      <tr><td><code>OnQuestItemFound</code></td><td>quest</td><td>QuestManager</td><td>NPCInteraction</td></tr>
+      <tr><td><code>OnQuestCompleted</code></td><td>questId, xpReward</td><td>QuestManager</td><td>XPSystem</td></tr>
+      <tr><td><code>OnGamePaused</code></td><td>isPaused</td><td>GameManager</td><td>—</td></tr>
+      <tr><td><code>OnCheckpointReached</code></td><td>savePointId</td><td>SavePoint</td><td>GameManager</td></tr>
     </table>
 
     <div class="callout warn">
@@ -450,51 +453,6 @@
       musi wywołać <code>Unsubscribe</code> w <code>OnDisable</code>. Inaczej EventBus będzie wywoływał
       callback na zniszczonym obiekcie → błąd.
     </div>
-  </section>
-
-  <!-- ══════════ GAMEMANAGER ══════════ -->
-  <section id="gamemanager">
-    <h2><span class="icon">🎮</span> GameManager — serce gry</h2>
-
-    <p>
-      Singleton <code>DontDestroyOnLoad</code> — jeden obiekt przechodzi przez wszystkie sceny.
-      Zarządza stanem gry, przechowuje globalne referencje i reaguje na śmierć gracza.
-    </p>
-
-    <h3>Stany gry</h3>
-    <div class="fsm" style="margin-bottom:8px">
-      <div class="fsm-step"><div class="fsm-state">MainMenu</div></div>
-      <div class="fsm-arrow">→</div>
-      <div class="fsm-step"><div class="fsm-state">Playing</div></div>
-      <div class="fsm-arrow">→</div>
-      <div class="fsm-step"><div class="fsm-state alert">Paused</div></div>
-      <div class="fsm-arrow">⇄</div>
-      <div class="fsm-step"><div class="fsm-state">Playing</div></div>
-      <div class="fsm-arrow">→</div>
-      <div class="fsm-step"><div class="fsm-state dead">GameOver</div></div>
-    </div>
-    <p style="font-size:12px;color:#555;margin-top:4px">Cutscene — osobny stan dla Timeline/cinematic</p>
-
-    <h3>Globalne referencje</h3>
-    <div class="card-grid">
-      <div class="card">
-        <span class="tag">ScriptableObject</span>
-        <h4>PlayerStats</h4>
-        <p>Dane gracza dostępne przez <code>GameManager.Instance.PlayerStats</code>. Jeden asset, jeden gracz.</p>
-      </div>
-      <div class="card">
-        <span class="tag">ScriptableObject</span>
-        <h4>FMODEvents</h4>
-        <p>Wszystkie eventy dźwiękowe przez <code>GameManager.FMODEvents</code>. Nie używamy <code>Resources.Load</code>.</p>
-      </div>
-    </div>
-
-    <h3>Obsługa Game Over</h3>
-    <p>
-      Gdy <code>PlayerHealthComponent</code> opublikuje <code>OnPlayerDied</code>, GameManager
-      czeka 2 sekundy (coroutine) i przechodzi do stanu GameOver. Pauza przez
-      <code>Time.timeScale = 0</code>.
-    </p>
   </section>
 
   <!-- ══════════ AUDIO ══════════ -->
@@ -522,11 +480,28 @@
     <h3>Typy odtwarzania</h3>
     <table>
       <tr><th>Metoda</th><th>Kiedy używać</th></tr>
-      <tr><td><code>PlayOneShot(ref, pos)</code></td><td>Ataki, footstepy, pickup itemów — krótki dźwięk 3D</td></tr>
-      <tr><td><code>PlayOneShot(ref)</code></td><td>UI, dźwięki 2D bez pozycji</td></tr>
-      <tr><td><code>CreateInstance(ref)</code></td><td>Pętle z kontrolą (muzyka, ambient) — wymaga ręcznego <code>Release()</code></td></tr>
-      <tr><td><code>CreateAndAttach(ref, transform)</code></td><td>Dźwięk przywiązany do obiektu (np. wróg chodzi)</td></tr>
-      <tr><td><code>PlayMusic(ref)</code></td><td>Muzyka z automatycznym zatrzymaniem poprzedniej i fadeout</td></tr>
+      <tr><td><code>PlayOneShot(ref, pos)</code></td><td>Krótki dźwięk 3D (ataki, footstepy, pickup)</td></tr>
+      <tr><td><code>PlayOneShot(ref)</code></td><td>Krótki dźwięk 2D bez pozycji (UI)</td></tr>
+      <tr><td><code>CreateInstance(ref)</code></td><td>Pętle z kontrolą (muzyka, ambient) — wymaga <code>Release()</code></td></tr>
+      <tr><td><code>CreateAndAttach(ref, transform)</code></td><td>Dźwięk przywiązany do obiektu (wróg, ambient punktowy)</td></tr>
+      <tr><td><code>PlayMusic(ref)</code></td><td>Muzyka — auto-stop poprzedniej + fadeout</td></tr>
+    </table>
+
+    <div class="callout info">
+      <strong>Alternatywa:</strong> <code>StudioEventEmitter</code> — komponent bezpośrednio na GameObject dla dźwięków przestrzennych.
+    </div>
+
+    <h3>Katalog zdarzeń FMOD (FMODEvents.cs)</h3>
+    <!-- TODO: uzupełnić event paths po konfiguracji FMOD Studio -->
+    <table>
+      <tr><th>Kategoria</th><th>Zdarzenia</th></tr>
+      <tr><td>Ruch gracza</td><td>Footstepy</td></tr>
+      <tr><td>Walka gracza</td><td>Atak, trafienie krytyczne, unik</td></tr>
+      <tr><td>Walka wrogów</td><td>Atak wroga, śmierć wroga</td></tr>
+      <tr><td>Muzyka</td><td>Eksploracja, walka, boss</td></tr>
+      <tr><td>Ambient</td><td>Miasto (Akt 1), Kanały (Akt 2), Gniazdo (Akt 3)</td></tr>
+      <tr><td>Status efekty</td><td>Trucizna, ogłuszenie</td></tr>
+      <tr><td>UI</td><td>Klik menu, toggle ekwipunku, level up</td></tr>
     </table>
   </section>
 
@@ -567,22 +542,25 @@
 
     <h3>Wzory obliczeniowe</h3>
     <div class="formula">
-      MaxHp = baseMaxHp + (hpPerLevel × (level − 1)) + bonusMaxHp<br>
-      TotalDamage = baseDamage + (damagePerLevel × (level − 1)) + bonusDamage<br>
-      TotalArmor = Clamp01(baseArmor + bonusArmor) <span class="comment">// max 100%</span><br>
-      TotalAttackSpeed = baseAttackSpeed + (attackSpeedPerLevel × (level − 1)) + bonusAttackSpeed<br>
-      TotalCritChance = Clamp01(baseCritChance + bonusCritChance)<br>
+      MaxHp           = baseMaxHp + (hpPerLevel × (level − 1)) + bonusMaxHp + skillBonusMaxHp<br>
+      TotalDamage     = baseDamage + (damagePerLevel × (level − 1)) + bonusDamage + skillBonusDamage<br>
+      TotalArmor      = Clamp(baseArmor + bonusArmor + skillBonusArmor, 0, 0.75) <span class="comment">// max 75%</span><br>
+      TotalAttackSpeed= baseAttackSpeed + bonusAttackSpeed + skillBonusAttackSpeed<br>
+      TotalCritChance = Clamp01(baseCritChance + bonusCritChance + skillBonusCritChance)<br>
+      TotalMoveSpeed  = moveSpeed + bonusMoveSpeed + skillBonusMoveSpeed<br>
       <br>
       XP do następnego levelu = xpForLevel2 × (1.4 ^ (level − 1))
     </div>
 
-    <h3>Bonusy z ekwipunku</h3>
-    <p>
-      Pola <code>bonus*</code> (bonusDamage, bonusArmor, bonusCritChance, bonusMoveSpeed,
-      bonusMaxHp, bonusAttackSpeed) są resetowane i przeliczane przez
-      <strong>InventorySystem.RecalculateBonuses()</strong> za każdym razem gdy gracz zakłada
-      lub zdejmuje przedmiot.
-    </p>
+    <h3>Bonusy — dwa niezależne źródła</h3>
+    <table>
+      <tr><th>Typ</th><th>Pola</th><th>Kto ustawia</th><th>Kiedy resetowane</th></tr>
+      <tr><td>Ekwipunek</td><td><code>bonus*</code> (bonusDamage, bonusArmor…)</td><td>InventorySystem.RecalculateBonuses()</td><td>Przy każdym equip/unequip</td></tr>
+      <tr><td>Drzewko umiejętności</td><td><code>skillBonus*</code> (skillBonusDamage…)</td><td>SkillTreeManager.ApplyBonus()</td><td>ResetSkillBonuses() — tylko przy RestoreFromSave</td></tr>
+    </table>
+    <div class="callout info">
+      <strong>Ważne:</strong> <code>ResetBonuses()</code> (ekwipunek) <strong>nie dotyka</strong> pól <code>skillBonus*</code>. Są od siebie niezależne.
+    </div>
 
     <h3>Level up</h3>
     <p>
@@ -602,34 +580,32 @@
       trafiają gracza przez te interfejsy bez twardej referencji.
     </p>
 
-    <h3>Przepływ obrażeń</h3>
-    <div class="event-flow">
-      <div class="row">
-        <span class="pill sys">EnemyAI</span>
-        <span class="arrow-right">→</span>
-        <span style="color:#c0bbb5;font-size:13px"><code>playerDamageable.TakeDamage(10f)</code></span>
-      </div>
-      <div class="row">
-        <span class="pill sub">PlayerHealthComponent</span>
-        <span class="arrow-right">→</span>
-        <span style="color:#c0bbb5;font-size:13px">sprawdza IsInvincible → woła <code>stats.TakeDamage()</code> → redukuje przez Armor</span>
-      </div>
-      <div class="row">
-        <span class="pill pub">EventBus</span>
-        <span class="arrow-right">→</span>
-        <span style="color:#c0bbb5;font-size:13px">publikuje <code>OnPlayerDamaged { amount, currentHp, maxHp }</code></span>
-      </div>
-      <div class="row">
-        <span class="pill sub">PlayerHUD</span>
-        <span class="arrow-right">→</span>
-        <span style="color:#c0bbb5;font-size:13px">aktualizuje pasek HP</span>
-      </div>
+    <h3>Reguły odbioru obrażeń (GDD-CMB-006)</h3>
+    <ol style="margin:10px 0 10px 24px;font-size:14px;color:#c0bbb5;line-height:2">
+      <li>Jeśli <code>IsInvincible == true</code> (iframes aktywne) → przerwij; 0 obrażeń, brak zdarzeń</li>
+      <li>Jeśli <code>info.source == null</code> → <code>Debug.LogWarning</code></li>
+      <li>Oblicz redukcję pancerzem: <code>reduced = Round(info.value × (1 − TotalArmor), 1 m.p.p.)</code></li>
+      <li>Zastosuj limit dolny: <code>reduced = max(reduced, 1)</code> — minimalna strata 1 HP</li>
+      <li>Odejmij: <code>currentHp = max(currentHp − reduced, 0)</code></li>
+      <li>Opublikuj <code>OnPlayerDamaged { amount = reduced, currentHp, maxHp }</code></li>
+      <li>Jeśli <code>currentHp == 0</code> → opublikuj <code>OnPlayerDied</code></li>
+    </ol>
+
+    <h3>Wzór redukcji obrażeń</h3>
+    <div class="formula">
+      reduced     = Round(info.value × (1 − TotalArmor), 1 m.p.p.) <span class="comment">// Mathf.Round(x*10f)/10f</span><br>
+      finalDamage = max(reduced, 1) <span class="comment">// zawsze co najmniej 1 obrażenie</span><br>
+      currentHp   = max(currentHp − finalDamage, 0)
+    </div>
+
+    <div class="callout warn">
+      <strong>Limit pancerza:</strong> <code>TotalArmor</code> ograniczony przez <code>Mathf.Clamp</code> do 0,75 (max 75% redukcji).
     </div>
 
     <h3>Iframes (nieśmiertelność podczas uniku)</h3>
     <p>
       <code>PlayerController</code> ustawia <code>playerHealth.IsInvincible = true</code>
-      na czas trwania uniku. <code>TakeDamage()</code> zwraca wtedy 0 bez żadnego efektu.
+      na czas trwania uniku (0.3 s). <code>TakeDamage()</code> zwraca wtedy 0 bez żadnego efektu.
     </p>
 
     <h3>Regeneracja staminy</h3>
@@ -638,12 +614,6 @@
       <code>stats.RegenerateStamina(deltaTime)</code>. Jeśli stamina wzrosła, publikuje
       <code>OnPlayerStaminaChanged</code> → HUD aktualizuje pasek staminy.
     </p>
-
-    <h3>Wzór redukcji obrażeń</h3>
-    <div class="formula">
-      reduced = rawDamage × (1 − TotalArmor)<br>
-      reduced = max(reduced, 1) <span class="comment">// zawsze co najmniej 1 obrażenie</span>
-    </div>
   </section>
 
   <!-- ══════════ RUCH ══════════ -->
@@ -658,10 +628,11 @@
 
     <h3>Kliknięcie — priorytety</h3>
     <table>
-      <tr><th>Co trafiło</th><th>Efekt</th></tr>
-      <tr><td>UI (EventSystem)</td><td>Ignorowane — klik nie przechodzi do gry</td></tr>
-      <tr><td>Warstwa wrogów (EnemyLayer)</td><td>Ustawia cel ataku, gracz podchodzi automatycznie</td></tr>
-      <tr><td>Warstwa ziemi (GroundLayer)</td><td>Gracz idzie do punktu, cel ataku czyszczony</td></tr>
+      <tr><th>Warstwa</th><th>Efekt</th></tr>
+      <tr><td>UI (<code>EventSystem.IsPointerOverGameObject()</code>)</td><td>Ignorowane — klik nie przechodzi do gry</td></tr>
+      <tr><td>Warstwa <code>Interactable</code> lub <code>NPC</code></td><td>Gracz podchodzi i wywołuje <code>IInteractable.Interact()</code></td></tr>
+      <tr><td>Warstwa <code>EnemyLayer</code></td><td>Ustawia <code>CurrentTarget</code>, gracz podchodzi i atakuje</td></tr>
+      <tr><td>Warstwa <code>GroundLayer</code></td><td>Gracz idzie do punktu, <code>CurrentTarget</code> czyszczony</td></tr>
     </table>
 
     <h3>Podążanie za wrogiem</h3>
@@ -733,12 +704,14 @@
       </div>
     </div>
 
-    <h3>Obliczanie obrażeń</h3>
+    <h3>Obliczanie obrażeń (GDD-CMB-002)</h3>
     <div class="formula">
-      damage = TotalDamage <span class="comment">// base + level + bonusy z ekwipunku</span><br>
-      if (Random.value &lt; TotalCritChance) damage *= critMultiplier <span class="comment">// krit!</span><br>
-      damage = Round(damage)<br>
-      target.TakeDamage(damage, isCritical, knockbackDirection)
+      damage = TotalDamage <span class="comment">// base + level + bonus* + skillBonus*</span><br>
+      isCritical = RollCrit() <span class="comment">// true z prawdopodobieństwem TotalCritChance</span><br>
+      if (isCritical) damage *= critMultiplier<br>
+      damage = Round(damage) <span class="comment">// Mathf.Round — 0 miejsc po przecinku</span><br>
+      knockback = (targetPosition − sourcePosition).normalized<br>
+      target.TakeDamage(new DamageInfo { value=damage, type=Physical, isCritical, knockback, source })
     </div>
 
     <h3>Fallback timer</h3>
@@ -760,12 +733,11 @@
       w OnAttackEnd i TickFallback — zapobiega zakleszczeniu triggera w Any State.
     </div>
 
-    <h3>Interfejsy walki</h3>
+    <h3>Interfejsy walki (GDD-CMB-004)</h3>
     <table>
-      <tr><th>Interfejs</th><th>Metody</th><th>Implementuje</th></tr>
-      <tr><td><code>IDamageable</code></td><td><code>IsAlive</code>, <code>TakeDamage()</code></td><td>PlayerHealthComponent, EnemyAI</td></tr>
-      <tr><td><code>IHealable</code></td><td><code>Heal()</code></td><td>PlayerHealthComponent</td></tr>
-      <tr><td><code>IStatusEffectable</code></td><td><code>ApplyStatusEffect()</code></td><td>(przyszłe systemy)</td></tr>
+      <tr><th>Interfejs</th><th>Sygnatura</th><th>Plik</th><th>Implementuje</th></tr>
+      <tr><td><code>IDamageable</code></td><td><code>bool IsAlive</code>, <code>void TakeDamage(DamageInfo)</code></td><td>Core/IDamageable.cs</td><td>PlayerHealthComponent, EnemyAI</td></tr>
+      <tr><td><code>IHealable</code></td><td><code>void Heal(float amount)</code></td><td>Core/IHealable.cs</td><td>PlayerHealthComponent</td></tr>
     </table>
   </section>
 
@@ -799,9 +771,12 @@
       <tr><td>Odległość XZ</td><td>Tylko w promieniu <code>occlusionRadiusXZ</code> od gracza</td></tr>
       <tr><td>Kierunek (dot product)</td><td>Tylko ściany po stronie kamery — próg <code>occlusionDotThreshold</code></td></tr>
     </table>
+    <div class="callout info">
+      <strong>Wymagania sceny:</strong> warstwa <code>Buildings</code> przypisana do ścian budynków; Main Camera Culling Mask zawiera <code>Buildings</code>.
+    </div>
     <div class="callout warn">
-      OcclusionFader wymagał 7+ iteracji. Nie modyfikować logiki bez dyskusji.
-      Upgrade do płynnego fade (Shader Graph + MaterialPropertyBlock) jest planowany.
+      ⚠️ Nie modyfikować logiki OcclusionFader.
+      Planowany upgrade: płynne fade (Shader Graph, Surface Transparent + <code>_Alpha</code> + MaterialPropertyBlock).
     </div>
   </section>
 
@@ -931,13 +906,16 @@
       <div class="slot"><strong>Boots</strong>Buty</div>
     </div>
 
-    <h3>Reguły zakładania</h3>
+    <h3>Reguły zakładania (INV-003)</h3>
+    <p>
+      Publiczny punkt wejścia dla domyślnego ekwipowania z plecaka: <code>EquipFromBag(ItemData item)</code> — wyznacza właściwy slot na podstawie <code>itemType</code> i wywołuje <code>Equip(item, slot)</code>. Zwraca <code>false</code>, gdy typ itemu nie ma przypisanego slotu (np. <code>Consumable</code>).
+    </p>
     <table>
       <tr><th>Sytuacja</th><th>Co się dzieje</th></tr>
-      <tr><td>Zakładasz item gdy slot zajęty</td><td>Poprzedni item wraca do plecaka</td></tr>
+      <tr><td>Slot zajęty</td><td>Poprzedni item wraca do plecaka</td></tr>
       <tr><td>Broń dwuręczna w MainHand</td><td>OffHand automatycznie zwalniany → item wraca do plecaka</td></tr>
       <tr><td>Coś w OffHand gdy MainHand ma dwuręczną</td><td>MainHand zwalniany przed założeniem</td></tr>
-      <tr><td>Plecak pełny przy zdejmowaniu</td><td>Operacja nie może być wykonana</td></tr>
+      <tr><td>Plecak pełny przy zdejmowaniu</td><td>Operacja zablokowana — <code>Unequip()</code> zwraca false</td></tr>
     </table>
 
     <h3>Efekt na statystyki</h3>
@@ -968,6 +946,25 @@
       Każdy przedmiot to jeden ScriptableObject (ItemData). Dane są tylko do odczytu —
       nie modyfikujemy assetu w runtime, tylko czytamy bonusy.
     </p>
+
+    <h3>Pola ItemData</h3>
+    <table>
+      <tr><th>Pole</th><th>Typ</th><th>Opis</th></tr>
+      <tr><td><code>itemId</code></td><td>string</td><td>Trwały unikalny identyfikator (format: <code>item_&lt;typ&gt;_&lt;nazwa&gt;</code>) — używany przez SaveSystem</td></tr>
+      <tr><td><code>itemName</code></td><td>string</td><td>Wyświetlana nazwa</td></tr>
+      <tr><td><code>icon</code></td><td>Sprite</td><td>Ikona w UI</td></tr>
+      <tr><td><code>itemType</code></td><td>ItemType</td><td>Weapon / Shield / Helmet / Chest / Legs / Boots / Consumable</td></tr>
+      <tr><td><code>weaponType</code></td><td>WeaponType</td><td>Fists / OneHanded / TwoHanded / Ranged (tylko Weapon)</td></tr>
+      <tr><td><code>isTwoHanded</code></td><td>bool</td><td>Blokuje OffHand gdy true</td></tr>
+      <tr><td><code>bonusDamage</code></td><td>float</td><td>Dodatkowe obrażenia (flat)</td></tr>
+      <tr><td><code>bonusArmor</code></td><td>float</td><td>Procentowa redukcja obrażeń</td></tr>
+      <tr><td><code>bonusCritChance</code></td><td>float</td><td>Dodatkowa szansa na krit</td></tr>
+      <tr><td><code>bonusMoveSpeed</code></td><td>float</td><td>Dodatkowa prędkość ruchu</td></tr>
+      <tr><td><code>bonusMaxHp</code></td><td>float</td><td>Dodatkowe maksymalne HP</td></tr>
+      <tr><td><code>bonusAttackSpeed</code></td><td>float</td><td>Dodatkowa szybkość ataku</td></tr>
+      <tr><td><code>healAmount</code></td><td>float</td><td>HP przywracane przy użyciu (Consumable)</td></tr>
+      <tr><td><code>staminaRestore</code></td><td>float</td><td>Stamina przywracana przy użyciu (Consumable)</td></tr>
+    </table>
 
     <h3>Typy przedmiotów</h3>
     <table>
@@ -1001,23 +998,35 @@
       nie modyfikuje danych. Dwa elementy graficzne:
     </p>
 
-    <div class="card-grid">
-      <div class="card">
-        <span class="tag">Image — pionowy fill</span>
-        <h4>Pasek HP</h4>
-        <p>HealthFull nad HealthEmpty. <code>fillAmount = currentHp / maxHp</code>. Reaguje na <code>OnPlayerDamaged</code> i <code>OnPlayerHealed</code>.</p>
-      </div>
-      <div class="card">
-        <span class="tag">Image — poziomy fill</span>
-        <h4>Pasek Staminy</h4>
-        <p><code>fillAmount = current / max</code>. Reaguje na <code>OnPlayerStaminaChanged</code> — aktualizuje się przy każdym użyciu uniku i podczas regeneracji.</p>
-      </div>
-    </div>
+    <table>
+      <tr><th>Element</th><th>Widoczność</th><th>Wartość</th><th>Typ</th><th>Aktualizacja</th></tr>
+      <tr>
+        <td>Pasek HP</td>
+        <td>Zawsze podczas rozgrywki</td>
+        <td><code>currentHp / maxHp</code></td>
+        <td>Pionowy <code>Image.fillAmount</code> (HealthFull nad HealthEmpty)</td>
+        <td>Subskrybuje <code>OnPlayerDamaged</code>, <code>OnPlayerHealed</code></td>
+      </tr>
+      <tr>
+        <td>Pasek Staminy</td>
+        <td>Zawsze podczas rozgrywki</td>
+        <td><code>currentStamina / maxStamina</code></td>
+        <td>Poziomy <code>Image.fillAmount</code></td>
+        <td>Subskrybuje <code>OnPlayerStaminaChanged</code></td>
+      </tr>
+      <tr>
+        <td>Pasek XP</td>
+        <td>Zawsze podczas rozgrywki</td>
+        <td><code>currentXP / xpToNextLevel</code></td>
+        <td>Poziomy <code>Image.fillAmount</code> + tekst poziomu</td>
+        <td>Subskrybuje <code>OnPlayerXPGained</code>; przy level up aktywuje "LEVEL UP!" na <code>levelUpDisplayTime</code> s</td>
+      </tr>
+    </table>
 
     <h3>Inicjalizacja</h3>
     <p>
-      W <code>Start()</code> HUD czyta aktualne wartości z PlayerStats i ustawia paski
-      do właściwego stanu — żeby nie zaczynać od pustych pasków przy wczytaniu sceny.
+      W <code>Start()</code> HUD (PlayerHUD, XPBarUI) czyta aktualne wartości z PlayerStats i ustawia
+      paski do właściwego stanu — żeby nie zaczynać od pustych pasków przy wczytaniu sceny.
     </p>
   </section>
 
@@ -1028,6 +1037,7 @@
     <p>
       <strong>InventoryUI</strong> to panel toggle klawiszem <code>I</code>. Dwa oddzielne GameObjecty:
       <code>panel</code> (zawartość) i <code>background</code> (przyciemnione tło) — oba toggle razem.
+      Otwarcie Inventory (<code>I</code>) zamyka SkillTree (<code>C</code>) i odwrotnie.
     </p>
 
     <h3>Układ</h3>
@@ -1044,14 +1054,13 @@
       </div>
     </div>
 
-    <h3>Klik w plecaku — logika auto-equip</h3>
+    <h3>Klik w plecaku</h3>
     <table>
       <tr><th>Typ itemu</th><th>Akcja</th></tr>
-      <tr><td>Consumable</td><td><code>inventory.UseConsumable(item)</code> — używa natychmiast</td></tr>
-      <tr><td>Weapon</td><td>Equip do MainHand</td></tr>
-      <tr><td>Shield</td><td>Equip do OffHand</td></tr>
-      <tr><td>Helmet / Chest / Legs / Boots</td><td>Equip do odpowiedniego slotu</td></tr>
+      <tr><td>Consumable</td><td><code>inventory.UseConsumable(item)</code> — natychmiastowe użycie</td></tr>
+      <tr><td>Pozostałe typy</td><td><code>inventory.EquipFromBag(item)</code> — UI deleguje dobór slotu do <code>InventorySystem</code></td></tr>
     </table>
+    <p style="font-size:13px;color:#c0bbb5">Kliknięcie w slocie ekwipunku: <code>Unequip(slot)</code> — item wraca do plecaka.</p>
 
     <h3>InventorySlotUI</h3>
     <p>
@@ -1072,30 +1081,10 @@
   <section id="future">
     <h2><span class="icon">⏳</span> Planowane systemy</h2>
 
-    <p>Logika częściowo gotowa, brakuje implementacji lub UI:</p>
+    <p>Elementy bez pokrycia w <code>Documentation/</code> — brakuje implementacji lub pliku spec:</p>
 
     <table>
-      <tr><th>System</th><th>Stan</th><th>Co jest gotowe</th></tr>
-      <tr>
-        <td>XP / Level System UI</td>
-        <td>⏳ Logika gotowa</td>
-        <td><code>PlayerStats.GainXP()</code>, <code>OnPlayerXPGained</code>, <code>OnPlayerLevelUp</code>, <code>OnEnemyDied.xpReward</code> — brakuje odbiorcy XP i paska doświadczenia</td>
-      </tr>
-      <tr>
-        <td>SkillTree UI</td>
-        <td>⏳ Szkielet eventów</td>
-        <td><code>availableSkillPoints</code> w PlayerStats, <code>OnSkillUnlocked</code>, <code>SkillBranch</code> enum (Warrior/Hunter/Survivor)</td>
-      </tr>
-      <tr>
-        <td>QuestSystem</td>
-        <td>⏳ Eventy gotowe</td>
-        <td><code>OnQuestStarted</code>, <code>OnQuestProgressUpdated</code>, <code>OnQuestCompleted</code> — brakuje managera misji</td>
-      </tr>
-      <tr>
-        <td>SaveSystem</td>
-        <td>⏳ Placeholder</td>
-        <td>Checkpoint trigger i <code>OnCheckpointReached</code> gotowe. Format zapisu (JSON/Binary) do potwierdzenia przed implementacją.</td>
-      </tr>
+      <tr><th>System</th><th>Stan</th><th>Co jest gotowe / co brakuje</th></tr>
       <tr>
         <td>Floating damage text</td>
         <td>⏳ Event gotowy</td>
@@ -1104,12 +1093,12 @@
       <tr>
         <td>OcclusionFader fade</td>
         <td>⏳ Planowany upgrade</td>
-        <td>Aktualnie instant hide. Plan: Shader Graph (Surface Transparent + _Alpha) + MaterialPropertyBlock</td>
+        <td>Aktualnie instant hide. Plan: Shader Graph (Surface Transparent + <code>_Alpha</code>) + MaterialPropertyBlock</td>
       </tr>
       <tr>
         <td>Status efekty (Poison, Bleed, Slow)</td>
-        <td>⏳ Interfejs gotowy</td>
-        <td><code>IStatusEffectable.ApplyStatusEffect()</code>, <code>OnStatusEffectApplied</code> — brakuje implementacji tick damage</td>
+        <td>⏳ Brak implementacji</td>
+        <td><!-- TODO: brak pokrycia w Documentation/ -->Brak pliku spec. Planowane: <code>IStatusEffectable.ApplyStatusEffect()</code>, tick damage</td>
       </tr>
     </table>
   </section>
