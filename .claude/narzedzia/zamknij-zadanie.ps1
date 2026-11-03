@@ -49,6 +49,23 @@ foreach ($para in @(@('Dziennik bramek', $iDz), @('Kolejka', $iKol), @('Zamknię
     if ($para[1] -lt 0) { Write-Output "❌ Nie znaleziono w STATUS: $($para[0])"; exit 1 }
 }
 
+# --- 0. Najpierw sprawdzenia (zanim cokolwiek zmienimy): wiersz w kolejce albo wcześniejszy wpis w Zamknięte ---
+$tKol = Tabela $iKol
+if (-not $tKol) { Write-Output '❌ Nie znaleziono tabeli kolejki'; exit 1 }
+$iWiersz = -1
+for ($i = $tKol.od; $i -le $tKol.do; $i++) { if ($W[$i] -match "^\|\s*#?$Zadanie\s*\|") { $iWiersz = $i; break } }
+$tZam = Tabela $iZam
+$iZamWiersz = -1
+if ($tZam) { for ($i = $tZam.od; $i -le $tZam.do; $i++) { if ($W[$i] -match "^\|[^|]*\|\s*#$Zadanie(\s|\|)") { $iZamWiersz = $i; break } } }
+$aktualizacja = ($iWiersz -lt 0 -and $iZamWiersz -ge 0)   # drugi przebieg (np. po commicie, potem po pushu) — tylko aktualizacja kolumny Commit
+$ostrz = [System.Collections.Generic.List[string]]::new()
+if ($iWiersz -ge 0) {
+    if (-not $Opis) { $Opis = (Kolumny $W[$iWiersz])[1] }
+}
+elseif ($aktualizacja) { $ostrz.Add("zadanie #$Zadanie było już zamknięte — zaktualizowano tylko kolumnę Commit w Zamknięte") }
+elseif (-not $Opis) { Write-Output "❌ Zadania #$Zadanie nie ma w kolejce ani w Zamknięte — sprawdź numer albo podaj -Opis (STATUS bez zmian)."; exit 1 }
+else { $ostrz.Add("zadania #$Zadanie nie było w kolejce — wpis w Zamknięte z opisem z -Opis") }
+
 # --- 1. Dziennik ze STATUS ---
 $tDz = Tabela $iDz
 $dziennik = [System.Collections.Generic.List[string]]::new()
@@ -87,18 +104,7 @@ if ($plan) {
     }
 }
 
-# --- 3. Kolejka: usuń zadanie, weź 3 następne ---
-$tKol = Tabela $iKol
-if (-not $tKol) { Write-Output '❌ Nie znaleziono tabeli kolejki'; exit 1 }
-$iWiersz = -1
-for ($i = $tKol.od; $i -le $tKol.do; $i++) { if ($W[$i] -match "^\|\s*#?$Zadanie\s*\|") { $iWiersz = $i; break } }
-$ostrz = [System.Collections.Generic.List[string]]::new()
-if ($iWiersz -ge 0) {
-    if (-not $Opis) { $Opis = (Kolumny $W[$iWiersz])[1] }
-}
-elseif (-not $Opis) { Write-Output "❌ Zadania #$Zadanie nie ma w kolejce — sprawdź numer albo podaj -Opis (STATUS bez zmian)."; exit 1 }
-else { $ostrz.Add("zadania #$Zadanie nie było w kolejce — wpis w Zamknięte z opisem z -Opis") }
-
+# --- 3. Kolejka: 3 następne ---
 $nastepne = [System.Collections.Generic.List[string]]::new()
 for ($i = $tKol.od; $i -le $tKol.do -and $nastepne.Count -lt 3; $i++) {
     if ($i -eq $iWiersz -or (Pusty $W[$i])) { continue }
@@ -115,14 +121,17 @@ $strefy = 'Strefy czasowe: brak.'
 for ($i = $iCp; $i -le $iCpK; $i++) { if ($W[$i] -match '^Strefy czasowe:') { $strefy = $W[$i] } }
 
 # --- 5. Zmiany w STATUS: od dołu do góry, żeby indeksy się nie przesuwały ---
-$tZam = Tabela $iZam
 $data = Get-Date -Format 'yyyy-MM-dd'
 $wpis = "| $data | #$Zadanie $Opis" + $(if ($planRel) { " (dziennik: ``$planRel``)" } else { '' }) + " | $Commit |"
 
 # Zamknięte (najniżej w pliku z trzech tabel — kolejność sekcji sprawdzana)
 $operacje = @(
     @{ i = $iZam; f = {
-        if ($tZam) {
+        if ($aktualizacja) {
+            $k = Kolumny $W[$iZamWiersz]; $k[$k.Count - 1] = $Commit
+            $W[$iZamWiersz] = '| ' + ($k -join ' | ') + ' |'
+        }
+        elseif ($tZam) {
             $W.Insert($tZam.od, $wpis)
             $dane = @(); for ($i = $tZam.od; $i -le $tZam.do + 1; $i++) { $dane += $i }
             $nadmiar = $dane.Count - 10
@@ -150,11 +159,11 @@ foreach ($op in ($operacje | Sort-Object { $_.i } -Descending)) { & $op.f }
 
 [System.IO.File]::WriteAllText($plikStatus, ($W -join $nl), [System.Text.UTF8Encoding]::new($false))
 
-Write-Output "# Zamknięto zadanie #$Zadanie"
+Write-Output $(if ($aktualizacja) { "# Zadanie #$Zadanie — aktualizacja wpisu w Zamknięte" } else { "# Zamknięto zadanie #$Zadanie" })
 Write-Output "- dziennik: $($dziennik.Count) wierszy → $(if ($planRel) { $planRel } elseif ($dziennik.Count) { 'brak planu (XS) — wiersze tylko tutaj:' } else { 'brak planu (XS)' })"
 if (-not $planRel) { foreach ($d in $dziennik) { Write-Output "  $d" } }
 Write-Output "- kolejka: $(if ($iWiersz -ge 0) { "usunięto #$Zadanie" } else { 'bez zmian' })"
-Write-Output "- zamknięte: $wpis"
+Write-Output "- zamknięte: $(if ($aktualizacja) { $W | Where-Object { $_ -match "^\|[^|]*\|\s*#$Zadanie(\s|\|)" } | Select-Object -First 1 } else { $wpis })"
 Write-Output "- punkt kontrolny: brak zadania; następne: $($nastepne -join ' · ')"
 foreach ($o in $ostrz) { Write-Output "⚠️ $o" }
 exit 0

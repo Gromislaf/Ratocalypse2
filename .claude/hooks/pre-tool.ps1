@@ -1,6 +1,6 @@
 # PreToolUse: kontrole, których nie da się wyrazić samymi uprawnieniami.
 #  G. Bash/PowerShell: git commit/merge/push wykonuje wyłącznie wydawca.
-#  0. Read: główna sesja nie czyta .cs; pliki zasad i dokumentacji > 8 KB tylko fragmentami (lista nagłówków w odpowiedzi).
+#  0. Główna sesja: Read/Grep/Glob/szukanie w Bash tylko w STATUS, planach, mapach (Read także Documentation/, Vision/, decyzje.md); Read: pliki zasad i dokumentacji > 8 KB tylko fragmentami (lista nagłówków w odpowiedzi).
 #  1. Skille Unity kolidujące z zasadami (Z9, Z11, Z12) -> zablokowane.
 #  2. MCP Unity: akcje zapisu w narzędziach wielofunkcyjnych tylko po /manifest-ok (i tylko dla integratora, jeśli znana nazwa agenta);
 #     manage_editor tylko play/pause/stop; manage_camera tylko screenshot.
@@ -17,6 +17,22 @@ $stan  = Join-Path $root '.claude/stan'
 
 function Deny([string]$msg) { [Console]::Error.WriteLine("[hook] ZABLOKOWANE: $msg"); exit 2 }
 
+function Wzgledna([string]$p) {
+    $x = "$p".Replace('\','/')
+    $r = $root.Replace('\','/').TrimEnd('/') + '/'
+    if ($x.StartsWith($r, [StringComparison]::OrdinalIgnoreCase)) { return $x.Substring($r.Length) }
+    return $x
+}
+function WProjekcie([string]$p) {
+    if (-not $p) { return $true }   # brak ścieżki = cały projekt
+    $x = "$p".Replace('\','/'); $r = $root.Replace('\','/').TrimEnd('/')
+    return (-not [System.IO.Path]::IsPathRooted($p)) -or $x.StartsWith($r, [StringComparison]::OrdinalIgnoreCase)
+}
+# Główna sesja (Prowadzący) — co wolno jej czytać i przeszukiwać samej (poprawka 3.5); reszta → zwiadowca / zwiadowca-scena
+$mapyIStan = '^\.claude/(STATUS\.md|plans/|mapa-kodu\.md|mapa-dokumentacji\.md)'
+$czytaniePS = '^\.claude/(STATUS\.md|plans/|commands/|mapa-kodu\.md|mapa-dokumentacji\.md|zasady/decyzje\.md)|^Documentation/|^Vision/'
+$komunikatZwiad = 'Prowadzący nie szuka i nie czyta sam (poprawka 3.5). Zleć jedno konkretne pytanie: zwiadowca (kod, dokumentacja, zasady, rejestry) albo zwiadowca-scena (scena, prefaby, assety, stan edytora). Sam czytasz tylko STATUS, plany, mapę kodu i mapę dokumentacji (oraz Documentation/, Vision/, decyzje.md — fragment przed edycją).'
+
 function ManifestOpen {
     $lock = Join-Path $stan 'manifest-ok.json'
     if (-not (Test-Path $lock)) { return $false }
@@ -27,6 +43,11 @@ function ManifestOpen {
 # --- G. Git: commit / merge / push tylko przez wydawcę -------------------------
 if ($tool -in @('Bash','PowerShell')) {
     $cmd = "$($ti.command)"
+    if (-not $agent) {
+        $szukanie = '(^|[;&|(]\s*)(grep|rg|find|ls|dir|cat|head|tail|type|less|more|tree|Get-ChildItem|gci|Get-Content|gc|Select-String|sls)(\s|$)|Select-String|Get-Content|Get-ChildItem|\bgit\s+(show|grep|ls-files|ls-tree|cat-file|blame)\b'
+        $tylkoGit = $cmd -match '^\s*git\s+(status|diff|log|branch|rev-parse)\b' -and $cmd -notmatch '\bgit\s+(show|grep|ls-files|ls-tree|cat-file|blame)\b' -and $cmd -notmatch '[;&]'
+        if ($cmd -match $szukanie -and -not $tylkoGit) { Deny $komunikatZwiad }
+    }
     if ($cmd -notmatch '\bgit\b') { exit 0 }
     if ($cmd -match '\bgit\b[^|;&\n]*?\s(commit|merge|push|rebase)(\s|$)') {
         $op = $Matches[1]
@@ -38,6 +59,17 @@ if ($tool -in @('Bash','PowerShell')) {
     exit 0
 }
 
+# --- 0a. Grep / Glob w głównej sesji: tylko STATUS, plany i mapy ---
+if ($tool -in @('Grep','Glob')) {
+    if (-not $agent) {
+        $gdzie = "$($ti.path)"
+        $wzorG = "$($ti.pattern)"
+        $cel = if ($tool -eq 'Glob') { ((Wzgledna $gdzie).TrimEnd('/') + '/' + $wzorG).TrimStart('/') } else { Wzgledna $gdzie }
+        if ((WProjekcie $gdzie) -and $cel -notmatch $mapyIStan) { Deny $komunikatZwiad }
+    }
+    exit 0
+}
+
 # --- 0. Strażnik czytania: główna sesja nie czyta kodu; duże pliki zasad i dokumentacji tylko fragmentami ---------
 if ($tool -eq 'Read') {
     $path = "$($ti.file_path)"
@@ -45,9 +77,7 @@ if ($tool -eq 'Read') {
     $rel = $path.Replace('\','/')
     $r   = $root.Replace('\','/').TrimEnd('/') + '/'
     if ($rel.StartsWith($r, [StringComparison]::OrdinalIgnoreCase)) { $rel = $rel.Substring($r.Length) }
-    if (-not $agent -and $rel -match '^Assets/.*\.cs$') {
-        Deny "Prowadzący nie czyta kodu (poprawka 3.4). Rozmiar zadania: wiersz kolejki + Grep w .claude/mapa-kodu.md. Fakty o kodzie: zleć zwiadowcy konkretne pytanie — wróci streszczenie."
-    }
+    if (-not $agent -and (WProjekcie $path) -and $rel -notmatch $czytaniePS) { Deny $komunikatZwiad }
     if ($null -ne $ti.offset -or $null -ne $ti.limit) { exit 0 }
     if ($rel -notmatch '^(\.claude/(zasady|rules)/|Documentation/|Vision/)' -or $rel -notmatch '\.md$') { exit 0 }
     if (-not (Test-Path $path -PathType Leaf)) { exit 0 }
@@ -184,7 +214,7 @@ if ($tool -in @('Edit','Write','MultiEdit','NotebookEdit')) {
             foreach ($pre in $allowed[$agent]) { if ($rel.StartsWith($pre, [StringComparison]::OrdinalIgnoreCase)) { $ok = $true } }
             if (-not $ok) { Deny "agent '$agent' nie może zapisywać w '$rel'." }
         }
-        elseif ($agent -in @('architekt','redaktor','inspektor','audytor','adwokat','wydawca','integrator','zwiadowca')) {
+        elseif ($agent -in @('architekt','redaktor','inspektor','audytor','adwokat','wydawca','integrator','zwiadowca','zwiadowca-scena')) {
             Deny "agent '$agent' nie zapisuje plików."
         }
     }

@@ -8,4 +8,5 @@ Warunek: etap 5 zakończony (wynik `kronikarz`) i testy z etapu 4 bez FAIL. Jeś
 3. Pokaż autorowi wynik skryptu bez skracania + komunikat `<ID>: <opis>` (w treści: specyfikacje, numery zadań).
    ❌ → najpierw naprawa właściwym agentem, potem ponownie krok 2. ⚠️ „plik spoza planu” → zapytaj: przywrócić czy dopisać do planu.
 4. ✋ „akceptuję, commit” → jedno wywołanie `wydawca` (krok „commit”) z dokładną listą plików ze skryptu i komunikatem.
-5. Przypomnij, że push to osobny krok: `/push`.
+5. Przypomnij, że push to osobny krok: `/push`. **Skryptu zamknięcia nie uruchamiasz teraz** — dopiero po pushu (`/push`, krok 2).
+   ⚠️ „szum Unity” i przypadkowe zmiany przywracasz jednym zleceniem `wydawca` (krok „przywrócenie”) po zgodzie autora, potem ponownie krok 2.

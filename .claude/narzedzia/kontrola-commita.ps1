@@ -84,25 +84,54 @@ foreach ($p in $zmiany.Keys) {
     }
 }
 
-# --- 6. Pliki spoza planu ---
+# --- Plan zadania (po numerze z nazwy gałęzi) ---
 if (-not $Plan -and $galaz -match '^feature/(?:task-)?0*(\d+)') {
     $nr = [int]$Matches[1]
     $kand = Get-ChildItem '.claude/plans' -Filter '*.md' -ErrorAction SilentlyContinue |
         Where-Object { $_.BaseName -match "(^|[^0-9])0*$nr([^0-9]|$)" } | Select-Object -First 1
     if ($kand) { $Plan = [System.IO.Path]::GetRelativePath($projekt, $kand.FullName) -replace '\\', '/' }
 }
+$tekstPlanu = if ($Plan -and (Test-Path $Plan)) { Get-Content $Plan -Raw } else { '' }
+
+# --- 5b. Zmiana nazwy pola serializowanego bez [FormerlySerializedAs] (referencje w scenach/assetach przepadają) ---
+$wzorPola = '(?m)^\s*(?:\[[^\]]*\]\s*)*(?:public|\[[^\]]*\bSerializeField\b[^\]]*\][^;=\n]*?)\s+(?:readonly\s+)?[\w<>\[\],\.]+\s+(\w+)\s*(?:=[^;]*)?;'
+$odniesienie = if ($baza -and $galaz -notin @('main', 'master')) { $baza } else { 'HEAD' }
+foreach ($p in $zmiany.Keys) {
+    if ($zmiany[$p] -notin @('M', 'MM', 'AM') -or $p -notmatch '^Assets/.*\.cs$' -or -not (Test-Path $p -PathType Leaf)) { continue }
+    $stary = (git show "${odniesienie}:$p" 2>$null) -join "`n"
+    if (-not $stary) { continue }
+    $nowy = [System.IO.File]::ReadAllText((Resolve-Path $p))
+    $stareP = @([regex]::Matches($stary, $wzorPola) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+    $noweP  = @([regex]::Matches($nowy, $wzorPola) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+    $usuniete = @($stareP | Where-Object { $noweP -notcontains $_ -and $nowy -notmatch ('FormerlySerializedAs\(\s*"' + [regex]::Escape($_) + '"') -and $tekstPlanu -notmatch ('usunięte pole:\s*`?' + [regex]::Escape($_) + '\b') })
+    $dodane   = @($noweP | Where-Object { $stareP -notcontains $_ })
+    if ($usuniete.Count -and $dodane.Count) {
+        $bledy.Add("zmiana nazwy pola serializowanego bez ``[FormerlySerializedAs]``: ``$p`` — zniknęło: $($usuniete -join ', '); nowe: $($dodane -join ', '). Przypięte referencje w scenach/prefabach/assetach przepadną. Jeśli pole celowo usunięte (nie przemianowane) — dopisz w planie linię: usunięte pole: <nazwa>.")
+    }
+}
+
+# --- 6. Pliki spoza planu ---
 $spozaPlanu = [System.Collections.Generic.List[string]]::new()
-if ($Plan -and (Test-Path $Plan)) {
-    $tekstPlanu = Get-Content $Plan -Raw
+if ($tekstPlanu) {
+    $folderyPlanu = @([regex]::Matches($tekstPlanu, '(?<![\w/.])((?:[\w.\- ]+/){2,})(?=[`\s|),;]|$)') | ForEach-Object { $_.Groups[1].Value.Trim() } | Select-Object -Unique)
     $zawsze = '^\.claude/(STATUS\.md|mapa-kodu\.md|plans/|zasady/decyzje\.md)|^Documentation/|^Vision/'
     foreach ($p in $zmiany.Keys) {
         if ($p -match $zawsze) { continue }
         $rdzen = $p -replace '\.meta$', ''
         $nazwa = Split-Path $rdzen -Leaf
         if ($tekstPlanu.Contains($rdzen) -or $tekstPlanu.Contains($nazwa)) { continue }
+        # folder wymieniony w planie jako ścieżka zakończona „/” (np. `Data/Skills/`, co najmniej 2 człony) obejmuje pliki w nim
+        $folderPliku = '/' + ((Split-Path $rdzen -Parent) -replace '\\', '/') + '/'
+        $wFolderze = $false
+        foreach ($f in $folderyPlanu) { if ($folderPliku.Contains('/' + $f)) { $wFolderze = $true; break } }
+        if ($wFolderze) { continue }
         $spozaPlanu.Add($p)
     }
-    foreach ($s in $spozaPlanu) { $ostrz.Add("plik spoza planu: ``$s`` — przypadkowa zmiana czy brak w planie?") }
+    $szum = '^Assets/TextMesh Pro/|SDF[^/]*\.asset(\.meta)?$'
+    foreach ($s in $spozaPlanu) {
+        if ($s -match $szum) { $ostrz.Add("szum Unity (fonty / ustawienia TMP): ``$s`` — prawie na pewno przypadkowa zmiana; przywrócić (``git restore``, po zgodzie autora)") }
+        else { $ostrz.Add("plik spoza planu: ``$s`` — przypadkowa zmiana czy brak w planie?") }
+    }
 }
 else {
     # rozmiar zadania z punktu kontrolnego STATUS: XS może nie mieć pliku planu; S/M/L — musi

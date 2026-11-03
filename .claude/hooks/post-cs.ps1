@@ -83,15 +83,18 @@ for ($i = 0; $i -lt $linie.Count; $i++) {
     }
 }
 
-# --- e: zmiana nazwy pola serializowanego ---
-if ($stareTekst) {
-    $wzor = '(?m)^\s*(?:\[[^\]]*\]\s*)*(?:public|\[SerializeField\][^;=\n]*?)\s+(?:readonly\s+)?[\w<>\[\],\.]+\s+(\w+)\s*(?:=[^;]*)?;'
-    $stareP = @([regex]::Matches($stareTekst, $wzor) | ForEach-Object { $_.Groups[1].Value })
-    $noweP  = @([regex]::Matches($noweTekst, $wzor) | ForEach-Object { $_.Groups[1].Value })
-    $usuniete = @($stareP | Where-Object { $noweP -notcontains $_ })
+# --- e: zmiana nazwy pola serializowanego (porównanie z wersją z ostatniego commita — działa też dla Write) ---
+$wzorPola = '(?m)^\s*(?:\[[^\]]*\]\s*)*(?:public|\[[^\]]*\bSerializeField\b[^\]]*\][^;=\n]*?)\s+(?:readonly\s+)?[\w<>\[\],\.]+\s+(\w+)\s*(?:=[^;]*)?;'
+$zHead = (& git -C $root show "HEAD:$rel" 2>$null) -join "`n"
+$porownaj = if ($zHead) { $zHead } else { $stareTekst }   # plik nowy (brak w HEAD) → tylko fragment z Edit
+$poZmianie = if ($zHead) { $tekst } else { $noweTekst }
+if ($porownaj) {
+    $stareP = @([regex]::Matches($porownaj, $wzorPola) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+    $noweP  = @([regex]::Matches($poZmianie, $wzorPola) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+    $usuniete = @($stareP | Where-Object { $noweP -notcontains $_ -and $poZmianie -notmatch ('FormerlySerializedAs\(\s*"' + [regex]::Escape($_) + '"') })
     $dodane   = @($noweP | Where-Object { $stareP -notcontains $_ })
-    if ($usuniete.Count -and $dodane.Count -and $noweTekst -notmatch 'FormerlySerializedAs') {
-        $uwagi.Add("[e, konwencje §3] zmiana nazwy pola serializowanego ($($usuniete -join ', ') → $($dodane -join ', ')) bez ``[FormerlySerializedAs]`` — wartości z Inspektora i assetów przepadną.")
+    if ($usuniete.Count -and $dodane.Count) {
+        $uwagi.Add("[e, konwencje §3] pole serializowane zniknęło ($($usuniete -join ', ')), a doszło nowe ($($dodane -join ', ')) bez ``[FormerlySerializedAs(""stara_nazwa"")]`` — przypięte referencje w scenach, prefabach i assetach PRZEPADNĄ. Dodaj atrybut albo zostaw starą nazwę. Skrypt kontroli zablokuje commit.")
     }
 }
 

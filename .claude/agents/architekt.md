@@ -26,6 +26,8 @@ Specyfikacje: <ID>          Ścieżka: <pełny | refaktor | bugfix>
 ## Strefy chronione                      ← dotknięte strefy z powodem (Z12.2) albo „brak”
 
 ## Zmiany w kodzie                       ← dla programisty: plik → nowy/zmieniony, co, dlaczego
+                                         ← pole serializowane (`[SerializeField]`/public): przemianowanie → wprost `[FormerlySerializedAs("stara")]`;
+                                           usunięcie → linia `usunięte pole: <nazwa>` (inaczej skrypt kontroli zablokuje commit)
 
 ## Zdarzenia i interfejsy                ← nowe/zmienione, z sygnaturami
 
