@@ -168,6 +168,28 @@ public class InventorySystem : MonoBehaviour
         };
     }
 
+    // Zaklada item z plecaka do domyslnego slotu dla jego typu.
+    public bool EquipFromBag(ItemData item)
+    {
+        EquipmentSlot? slot = GetDefaultSlot(item);
+        if (!slot.HasValue) return false;
+        return Equip(item, slot.Value);
+    }
+
+    private static EquipmentSlot? GetDefaultSlot(ItemData item)
+    {
+        return item.itemType switch
+        {
+            ItemType.Weapon  => EquipmentSlot.MainHand,
+            ItemType.Shield  => EquipmentSlot.OffHand,
+            ItemType.Helmet  => EquipmentSlot.Helmet,
+            ItemType.Chest   => EquipmentSlot.Chest,
+            ItemType.Legs    => EquipmentSlot.Legs,
+            ItemType.Boots   => EquipmentSlot.Boots,
+            _                => null
+        };
+    }
+
     // ---- SaveSystem ----
 
     public List<string> GetBagIds()

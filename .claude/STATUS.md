@@ -9,11 +9,13 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | brak |
-| Gałąź | `main` |
-| Czeka na | wybór kolejnego zadania (zamknięte: #12) |
+| Aktywne zadanie | #10 Reguła typ → slot: `InventoryUI` → `InventorySystem` |
+| Rozmiar | S (refaktor) |
+| Gałąź | `feature/10-typ-slot-rule` |
+| Etap | 6+7 — commit |
+| Czeka na | wydawca: commit + scalenie do main |
 
-Następne w kolejce: **#10** Reguła typ → slot z `InventoryUI` do `InventorySystem` (refaktor, Z6.3) · **#26** Assembly Definitions + struktura testów (pełny, Z3) · **#25** Plik akcji Input Systemu (5 plików + mapa `Debug`) (pełny, Z14). Pełna kolejka: `/stan`.
+Następne w kolejce: **#26** Assembly Definitions + struktura testów · **#25** Plik akcji Input Systemu. Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -35,6 +37,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 | 10 | Reguła typ → slot z `InventoryUI` do `InventorySystem` | refaktor | Z6.3 | |
 | 26 | Assembly Definitions + struktura testów | pełny | Z3 | |
 | 25 | Plik akcji Input Systemu (5 plików + mapa `Debug`) | pełny | Z14 | **przed serią pomiarów**; po nim włączyć kontrolę `Input.` w `post-cs.ps1` |
+| 32 | `InventoryUI.Toggle` odpytuje `Keyboard.current` bezpośrednio — Z14 | refaktor | Z14 | znalezione przy #10 |
 | 18 | Źródło losowości z seedem i strumieniami | pełny | Z10.1 | **przed serią pomiarów**; po nim włączyć kontrolę `Random` w `post-cs.ps1` |
 | 19 | Metryki obciążenia w CSV + tolerancja | pełny | Z10.2 | w ramach `GDD-OPT-001` |
 | 20 | Overlay i alokacje `PerformanceMonitor` podczas pomiaru | bugfix | Z10.3 | |

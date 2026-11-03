@@ -36,6 +36,8 @@
 
 ## INV-003 Reguły zakładania
 
+**Publiczny punkt wejścia dla domyślnego ekwipowania z plecaka:** `EquipFromBag(ItemData item)` — wyznacza właściwy slot na podstawie `itemType` i wywołuje `Equip(item, slot)`. Zwraca `false`, gdy typ itemu nie ma przypisanego slotu (np. `Consumable`).
+
 | Sytuacja | Zachowanie |
 |---|---|
 | Slot zajęty | Poprzedni item wraca do plecaka |
