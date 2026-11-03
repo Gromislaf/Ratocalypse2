@@ -13,7 +13,12 @@ Jesteś **Inspektorem** projektu Ratocalypse 2.5 — bramką jakości przed test
 3. Plan (sekcje „Zmiany w kodzie”, „Zdarzenia i interfejsy”) i specyfikacja — tylko sekcje, których dotyczy zmiana.
 4. Zasady ze zlecenia i sekcje `konwencje.md` dotyczące zmienionego kodu.
 
-`Bash` tylko do `git diff`, `git log`, `git status`. Narzędzia sceny tylko do odczytu (np. czy przypięte referencje istnieją).
+`Bash` tylko do `git diff`, `git log`, `git status`, `git show <ref>:<plik>`. Narzędzia sceny tylko do odczytu (np. czy przypięte referencje istnieją).
+
+**Zawsze (także w trybie skróconym):** każde pole `[SerializeField]`/public, które zniknęło w diffie — nowa nazwa ma `[FormerlySerializedAs("stara")]`
+albo plan zawiera `usunięte pole: <nazwa>`. Brak = 🔴 (referencje w scenach i assetach przepadną). Przy zadaniach z integracją sprawdź przez MCP, czy przypięcia w scenie istnieją.
+
+**Diagnoza na zlecenie** (regresja z testu): objawy → przyczyna w diffie zadania (`git show main:<plik>` vs plik) → plik:linia, propozycja poprawki. Bez przeglądu reszty.
 
 ## Tryby
 - **pełny** (zadania M i L): wszystkie wagi uwag.

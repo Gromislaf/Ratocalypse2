@@ -9,24 +9,11 @@
 
 | | |
 |---|---|
-| Aktywne zadanie | **#12** Skille do ScriptableObject (zachowanie ID) |
-| Rozmiar | M |
-| Gałąź | `feature/12-skille-so` |
-| Etap | 6+7 — Akceptacja i commit |
-| Plan | `.claude/plans/task-12-skille-so.md` |
-| Spec | `Documentation/Architecture/SkillSystem.md` GDD-ARC-001 (Zatwierdzona) |
+| Aktywne zadanie | brak |
+| Gałąź | `main` |
+| Czeka na | wybór kolejnego zadania (zamknięte: #12) |
 
-**3a + 3b ukończone:** 2 nowe SO, 3 zmienione .cs, SkillDefinition.cs usunięty; 13 assetów + scena Building ✅; konsola bez nowych błędów.
-
-**Następny krok:** testy T1–T4 w grze (autor) + opcjonalnie T5 → po akceptacji testów `kronikarz` → ✋ commit → `/push`.
-
-**Decyzje autora z bramki:**
-- Prereq jako referencja SO (nie string)
-- `[SerializeField] SkillRegistrySO _registry` w SkillTreeManager + getter `Registry`
-- `SkillDatabase` usunięta całkowicie
-- `Debug.LogWarning` przy nieznanym ID (nie Error)
-- `SkillTreeUI` dostaje rejestr przez `SkillTreeManager.Registry`
-
+Następne w kolejce: **#10** Reguła typ → slot z `InventoryUI` do `InventorySystem` (refaktor, Z6.3) · **#26** Assembly Definitions + struktura testów (pełny, Z3) · **#25** Plik akcji Input Systemu (5 plików + mapa `Debug`) (pełny, Z14). Pełna kolejka: `/stan`.
 Strefy czasowe: brak.
 <!-- /CHECKPOINT -->
 
@@ -45,7 +32,6 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | # | Zadanie | Ścieżka | Zasada | Uwagi |
 |---|---|---|---|---|
-| 12 | Skille do ScriptableObject (zachowanie ID) | refaktor | Z2.1 | |
 | 10 | Reguła typ → slot z `InventoryUI` do `InventorySystem` | refaktor | Z6.3 | |
 | 26 | Assembly Definitions + struktura testów | pełny | Z3 | |
 | 25 | Plik akcji Input Systemu (5 plików + mapa `Debug`) | pełny | Z14 | **przed serią pomiarów**; po nim włączyć kontrolę `Input.` w `post-cs.ps1` |
@@ -85,6 +71,7 @@ Kolejność = priorytet. Numery z przeglądu zasad (2026-10-25/26). Faza A roadm
 
 | Data | Zadanie | Commit |
 |---|---|---|
+| 2026-11-03 | #12 Skille do ScriptableObject (zachowanie ID) (dziennik: `.claude/plans/task-12-skille-so.md`) | 0086001 → merge 52c7144 → push |
 | 2026-11-02 | #8 Literówka „Ratpocalypse” w `CreateAssetMenu` | 23d1e2a → merge 97e73f1 → push |
 | 2026-11-02 | #22 AI Navigation 2.0.12 → 2.0.13 w dokumentacji | bez zmian — nieaktualne (wersja tylko w manifest.json) |
 | 2026-11-01 | #4 itemId w ItemData; zapis i odtwarzanie ekwipunku po ID (GDD-ITM-001, Z2.2-3) (dziennik: `.claude/plans/task-04-itemid.md`) | `3741ef4` → merge |

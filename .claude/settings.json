@@ -265,7 +265,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash|PowerShell|Read|Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
+        "matcher": "Bash|PowerShell|Read|Grep|Glob|Skill|Edit|Write|MultiEdit|NotebookEdit|mcp__UnityMCP__.*",
         "hooks": [
           {
             "type": "command",
