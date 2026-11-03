@@ -114,23 +114,7 @@ namespace Ratocalypse
                 return;
             }
 
-            EquipmentSlot? target = GetDefaultSlot(item);
-            if (target.HasValue)
-                inventory.Equip(item, target.Value);
-        }
-
-        private static EquipmentSlot? GetDefaultSlot(ItemData item)
-        {
-            return item.itemType switch
-            {
-                ItemType.Weapon     => EquipmentSlot.MainHand,
-                ItemType.Shield     => EquipmentSlot.OffHand,
-                ItemType.Helmet     => EquipmentSlot.Helmet,
-                ItemType.Chest      => EquipmentSlot.Chest,
-                ItemType.Legs       => EquipmentSlot.Legs,
-                ItemType.Boots      => EquipmentSlot.Boots,
-                _                   => null
-            };
+            inventory.EquipFromBag(item);
         }
     }
 }

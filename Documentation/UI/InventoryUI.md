@@ -28,9 +28,7 @@
 | Typ itemu | Akcja |
 |---|---|
 | `Consumable` | `inventory.UseConsumable(item)` — natychmiastowe użycie |
-| `Weapon` | `Equip(item, MainHand)` |
-| `Shield` | `Equip(item, OffHand)` |
-| `Helmet / Chest / Legs / Boots` | `Equip(item, odpowiedni slot)` |
+| Pozostałe typy | `inventory.EquipFromBag(item)` — UI deleguje dobór slotu do `InventorySystem` |
 
 **Kliknięcie w slocie ekwipunku:** `Unequip(slot)` — item wraca do plecaka.
 
