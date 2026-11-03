@@ -72,13 +72,13 @@ public class SkillTreeUI : MonoBehaviour
 
     private void BuildNodes()
     {
-        var allSkills = SkillDatabase.All;
-        _nodes = new SkillNodeUI[allSkills.Length];
+        var allSkills = skillTreeManager.Registry.All;
+        _nodes = new SkillNodeUI[allSkills.Count];
 
-        for (int i = 0; i < allSkills.Length; i++)
+        for (int i = 0; i < allSkills.Count; i++)
         {
-            ref readonly var skill = ref allSkills[i];
-            Transform column = skill.branch switch
+            var skill = allSkills[i];
+            Transform column = skill.Branch switch
             {
                 SkillBranch.Warrior  => warriorColumn,
                 SkillBranch.Hunter   => hunterColumn,

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Ratocalypse;
 
 // Jeden node w drzewku umiejętności.
 // Prefab: Image (tło) + Button + TMP "Nazwa" + TMP "Opis".
@@ -12,22 +13,23 @@ public class SkillNodeUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
 
     [Header("Kolory stanów")]
-    [SerializeField] private Color colorUnlocked   = new Color(0.95f, 0.78f, 0.15f); // złoty
-    [SerializeField] private Color colorAvailable  = new Color(0.85f, 0.85f, 0.85f); // jasny szary
+    [SerializeField] private Color colorUnlocked    = new Color(0.95f, 0.78f, 0.15f); // złoty
+    [SerializeField] private Color colorAvailable   = new Color(0.85f, 0.85f, 0.85f); // jasny szary
     [SerializeField] private Color colorUnavailable = new Color(0.20f, 0.20f, 0.20f); // ciemny
 
-    private SkillDefinition _skill;
+    private SkillDefinitionSO _skill;
     private SkillTreeManager _manager;
     private SkillTreeUI _treeUI;
 
-    public void Initialize(in SkillDefinition skill, SkillTreeManager manager, SkillTreeUI treeUI)
+    public void Initialize(SkillDefinitionSO skill, SkillTreeManager manager, SkillTreeUI treeUI)
     {
-        _skill = skill;
+        _skill   = skill;
         _manager = manager;
-        _treeUI = treeUI;
+        _treeUI  = treeUI;
 
-        nameText.text = skill.displayName;
-        descriptionText.text = skill.description;
+        nameText.text = skill.DisplayName;
+        // SkillDefinitionSO nie ma pola Description — pole puste; integrator może uzupełnić
+        if (descriptionText != null) descriptionText.text = string.Empty;
 
         GetComponent<Button>().onClick.AddListener(OnClick);
         Refresh();
@@ -35,17 +37,17 @@ public class SkillNodeUI : MonoBehaviour
 
     public void Refresh()
     {
-        bool unlocked  = _manager.IsUnlocked(_skill.id);
+        bool unlocked  = _manager.IsUnlocked(_skill.Id);
         bool available = _manager.CanUnlock(_skill);
 
-        background.color = unlocked ? colorUnlocked
+        background.color = unlocked  ? colorUnlocked
                          : available ? colorAvailable
-                         : colorUnavailable;
+                                     : colorUnavailable;
     }
 
     private void OnClick()
     {
-        if (_manager.TryUnlock(_skill.id))
+        if (_manager.TryUnlock(_skill.Id))
             _treeUI.RefreshAll();
     }
 }

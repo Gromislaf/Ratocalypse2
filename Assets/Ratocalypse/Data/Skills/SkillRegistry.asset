@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e957a0efdc88e5942b7f339e1ffa55b2, type: 3}
+  m_Name: SkillRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::Ratocalypse.SkillRegistrySO
+  _skills:
+  - {fileID: 11400000, guid: 73ef1711f9590f34e95f373e92545622, type: 2}
+  - {fileID: 11400000, guid: 6f03f6c40c0a3de40ad7d473b482e715, type: 2}
+  - {fileID: 11400000, guid: 6ba0192445fd8844f9b49efce12530b0, type: 2}
+  - {fileID: 11400000, guid: f45fce063439b8b418c53a0457581d20, type: 2}
+  - {fileID: 11400000, guid: dcd5136c2109d47448769ad6800fb79d, type: 2}
+  - {fileID: 11400000, guid: 3affbf4dbbc58b844a258150c4144a55, type: 2}
+  - {fileID: 11400000, guid: 07a05f98c6d9a564db534bfb836e8c2b, type: 2}
+  - {fileID: 11400000, guid: 119095fd7db5184429e179927c6720b7, type: 2}
+  - {fileID: 11400000, guid: 859b079d2023b78418934667e36406d5, type: 2}
+  - {fileID: 11400000, guid: 35dedb28b3236784cbe98ab37ed0b757, type: 2}
+  - {fileID: 11400000, guid: ebec293ec956e5b478e208fe95e32f29, type: 2}
+  - {fileID: 11400000, guid: ee9bc9ddf7363f243bc410b7de070318, type: 2}
