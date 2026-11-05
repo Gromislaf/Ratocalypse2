@@ -134,3 +134,4 @@ Uwaga: `move` zachowuje GUID → referencje w scenach nie pękną (Z2).
 | Data | Etap | Zdarzenie |
 |---|---|---|
 | 2026-11-03 | 0+1+2 | Rozmiar M zatwierdzony; spec + plan zaakceptowane; decyzje: 1a, 2c, 3a, 4b, 5a |
+| 2026-11-03 | 3a+3b+4+5 | docs_mechanics.html, GameDesignDoc.html, GDD-ARC-002 gotowe; assety zmigrowane; T1–T5 ✓; Kronikarz ✓ |

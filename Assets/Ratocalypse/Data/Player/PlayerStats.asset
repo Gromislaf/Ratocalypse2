@@ -23,6 +23,8 @@ MonoBehaviour:
   moveSpeed: 5
   dodgeSpeed: 12
   dodgeDuration: 0.3
+  baseAttackSpeed: 1
+  attackSpeedPerLevel: 0.02
   baseArmor: 0
   baseCritChance: 0.05
   critMultiplier: 2
